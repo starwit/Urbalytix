@@ -94,6 +94,7 @@ public class SecurityConfig {
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
         Converter<Jwt, Collection<GrantedAuthority>> grantedAuthoritiesConverter = jwt -> {
+            @SuppressWarnings("unchecked")
             List<String> tokenRoles = (List<String>) jwt.getClaimAsMap("realm_access").get("roles");
             return tokenRoles.stream().map(r -> (GrantedAuthority) new SimpleGrantedAuthority("ROLE_" + r)).toList();
         };
