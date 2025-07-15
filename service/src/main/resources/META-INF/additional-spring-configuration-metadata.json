@@ -1,0 +1,9 @@
+{
+    "properties": [
+        {
+            "name": "rest.base-path",
+            "type": "java.lang.String",
+            "description": "path to rest api'"
+        }
+    ]
+}
