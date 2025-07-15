@@ -1,0 +1,79 @@
+replicaCount: 1
+
+image:
+  repository: starwitorg/urbalytix
+  pullPolicy: Always
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ${project.version}
+
+nameOverride: ""
+fullnameOverride: "urbalytix"
+
+app:
+  context_path: "/urbalytix"
+
+service:
+  port: 8081
+
+auth:
+  enabled: false
+  keycloakRealmUrlInternal: http://internal-hostname/realms/urbalytix
+  keycloakRealmUrlExternal: https://external-hostname/realms/urbalytix
+  clientId: urbalytix
+  clientSecret: urbalytix 
+
+postgresql:
+  auth:
+    database: urbalytix
+    username: urbalytix
+    password: urbalytix
+
+# extraEnv: |
+#   - name: JAVA_TOOL_OPTIONS
+#     value: -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=5000
+#   - name: LOGGING_LEVEL_ORG_SPRINGFRAMEWORK_SECURITY
+#     value: INFO
+#   - name: LOGGING_LEVEL_ROOT
+#     value: DEBUG
+
+ingress:
+  enabled: true
+  annotations: 
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  hosts:
+    - host: aic.starwit-infra.de
+      paths:
+        - path: /urbalytix
+          pathType: ImplementationSpecific
+  tls: 
+    - secretName: aic.starwit-infra.de
+      hosts:
+        - aic.starwit-infra.de
+
+resources: {}
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

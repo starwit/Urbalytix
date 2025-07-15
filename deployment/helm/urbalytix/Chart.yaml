@@ -1,0 +1,14 @@
+apiVersion: v2
+name: urbalytix-chart
+description: A Helm chart to deploy AI Cockpit to Kubernetes
+
+type: application
+
+version: ${project.version}
+
+appVersion: "${project.version}"
+
+dependencies:
+  - name: postgresql
+    version: "12.11.2"
+    repository: "oci://registry-1.docker.io/bitnamicharts"

@@ -1,0 +1,14 @@
+{
+    "Servers": {
+        "databackend": {
+            "Name": "urbalytix",
+            "Group": "Servers",
+            "Port": 5432,
+            "Username": "urbalytix",
+            "Host": "postgres",
+            "SSLMode": "prefer",
+            "MaintenanceDB": "postgres",
+            "PasswordExecCommand": "echo 'urbalytix'"
+        }
+    }
+}
