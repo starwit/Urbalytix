@@ -1,6 +1,6 @@
 apiVersion: v2
 name: urbalytix-chart
-description: A Helm chart to deploy AI Cockpit to Kubernetes
+description: A Helm chart to deploy urbalytix to Kubernetes
 
 type: application
 
