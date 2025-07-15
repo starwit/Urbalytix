@@ -1,0 +1,69 @@
+{
+    "files.exclude": {
+        "**/.classpath": true,
+        "**/.project": true,
+        "**/.settings": true,
+        "**/.factorypath": true
+    },
+    "diffEditor.ignoreTrimWhitespace": false,
+    "editor.codeActionsOnSave": {
+        "source.fixAll": "explicit"
+    },
+    "editor.suggestSelection": "first",
+    "editor.renderWhitespace": "none",
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "java.format.settings.url": "",
+    "java.format.settings.profile": "CodeFormatterProfile",
+    "[java]": {
+
+
+        "editor.defaultFormatter": null,
+        "editor.tabSize": 4,
+        "editor.guides.indentation": true
+    },
+    "editor.tabSize": 4,
+    "editor.defaultFormatter": "redhat.vscode-commons",
+    "editor.autoIndent": "keep",
+    "[xml]": {
+        "editor.defaultFormatter": "redhat.vscode-xml",
+        "editor.tabSize": 4
+    },
+    "javascript.updateImportsOnFileMove.enabled": "always",
+    "javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": false,
+    "typescript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": false,
+    "git.confirmSync": false,
+    "editor.guides.indentation": true,
+    "[html]": {
+        "editor.defaultFormatter": "vscode.html-language-features"
+    },
+    "editor.formatOnSave": true,
+    "[javascript]": {
+        "editor.defaultFormatter": "vscode.typescript-language-features"
+    },
+    "editor.wrappingIndent": "none",
+    "[json]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "[javascriptreact]": {
+        "editor.defaultFormatter": "vscode.typescript-language-features"
+    },
+    "emmet.variables": {
+        "lang": "en"
+    },
+    "workbench.editor.revealIfOpen": true,
+    "workbench.tree.indent": 20,
+    "[bat]": {
+        "files.eol": "\r\n"
+    },
+    "terminal.integrated.enablePersistentSessions": false,
+    "terminal.integrated.tabs.hideCondition": "never",
+    "java.debug.settings.hotCodeReplace": "auto",
+    "java.sources.organizeImports.staticStarThreshold": 1,
+    "terminal.integrated.defaultProfile.linux": "bash",
+    "terminal.explorerKind": "external",
+    "terminal.integrated.localEchoStyle": "dim",
+    "terminal.integrated.automationProfile.linux": {
+},
+"java.configuration.detectJdksAtStart": false,
+"java.compile.nullAnalysis.mode": "automatic"
+}
