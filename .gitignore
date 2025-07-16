@@ -23,5 +23,5 @@
 hs_err_pid*
 replay_pid*
 
-./docker-compose.yml
-./application.properties
+docker-compose.yml
+application.properties
