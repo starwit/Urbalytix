@@ -1,5 +1,7 @@
 # Compiled class file
 *.class
+docker-compose.yml
+application.properties
 
 # Log file
 *.log
