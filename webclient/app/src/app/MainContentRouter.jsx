@@ -8,16 +8,17 @@ import DecisionHeatmapView from "./features/decision/DecisionHeatmapView";
 import DecisionOverview from "./features/decision/DecisionOverview";
 import DecisionOverviewMap from "./features/decision/DecisionOverviewMap";
 import ModuleOverview from "./features/module/ModuleOverview";
-import LayoutSimple from "./commons/LayoutSimple";
 import InfoModuleOverview from "./features/info/InfoModuleOverview";
 */
 }
+import Layout from "./commons/Layout";
+import Home from "./features/home/Home";
 
 function MainContentRouter() {
     return (
         <Routes>
-            {/* <Route path="/" element={<LayoutSimple disabled={true}><ModuleOverview /></LayoutSimple>} />
-            <Route path="/decision/:moduleId?" element={<Layout><DecisionOverview /></Layout>} />
+            <Route path="/" element={<Layout disabled={true}><Home /></Layout>} />
+            {/* <Route path="/decision/:moduleId?" element={<Layout><DecisionOverview /></Layout>} />
             <Route path="/decision-map-view/:moduleId?" element={<LayoutSimple><DecisionOverviewMap /></LayoutSimple>} />
             <Route path="/decision-heatmap-view/:moduleId?" element={<LayoutSimple><DecisionHeatmapView /></LayoutSimple>} />
             <Route path="/action-type/:moduleId?" element={<Layout><ActionTypeOverview /></Layout>} />
