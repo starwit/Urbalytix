@@ -131,6 +131,8 @@ jobs:
         context: .
         file: ./dockerfile
         push: true
+        sbom: true
+        provenance: mode=max
         tags: ${{ env.DOCKERHUB_ORG }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
 
   publish_helm:
