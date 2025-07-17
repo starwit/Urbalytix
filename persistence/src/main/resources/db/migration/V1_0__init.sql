@@ -1,6 +1,6 @@
 CREATE SEQUENCE IF NOT EXISTS "detection_count_id_seq";
 
-CREATE TABLE "decision"
+CREATE TABLE "detection_count"
 (
     "detection_time" TIMESTAMP WITH TIME ZONE,
     "latitude" DECIMAL(22,19),
