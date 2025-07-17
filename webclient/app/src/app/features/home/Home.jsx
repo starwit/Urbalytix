@@ -1,18 +1,19 @@
 import {Typography} from '@mui/material';
 import React from 'react';
-import IconLayerMap from '../../commons/geographicalMaps/IconLayerMap';
+import HeatmapLayerMap from '../../commons/geographicalMaps/HeatmapLayerMap';
 
 const VIEW_STATE = {
-    longitude: 10.716988775029739, // Initial longitude
-    latitude: 52.41988232741599,    // Initial latitude
-    zoom: 5,                        // Initial zoom level
+    longitude: -122.4,
+    latitude: 37.74
+    //longitude: 10.716988775029739, // Initial longitude
+    //latitude: 52.41988232741599,    // Initial latitude
 };
 
 function Home() {
 
     return (
         <>
-            <IconLayerMap
+            <HeatmapLayerMap
                 latitude={VIEW_STATE.latitude}
                 longitude={VIEW_STATE.longitude}
             />

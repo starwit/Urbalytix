@@ -4,29 +4,29 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
-import de.starwit.persistence.entity.DecisionEntity;
-import de.starwit.rest.controller.DecisionController;
-import de.starwit.service.impl.DecisionService;
+import de.starwit.persistence.entity.DetectionCountEntity;
+import de.starwit.rest.controller.DetectionCountController;
+import de.starwit.service.impl.DetectionCountService;
 
 /**
- * Tests for DecisionController
+ * Tests for DetectionCountController
  *
  * <pre>
  * @WebMvcTest also auto-configures MockMvc which offers a powerful way of
  * easy testing MVC controllers without starting a full HTTP server.
  * </pre>
  */
-@WebMvcTest(controllers = DecisionController.class)
-public class DecisionControllerIntegrationTest extends AbstractControllerIntegrationTest<DecisionEntity> {
+@WebMvcTest(controllers = DetectionCountController.class)
+public class DetectionCountControllerIntegrationTest extends AbstractControllerIntegrationTest<DetectionCountEntity> {
 
     @MockitoBean
-    private DecisionService decisionService;
+    private DetectionCountService detectionCountService;
 
-    private static final String restpath = "/api/decisions/";
+    private static final String restpath = "/api/detection-count/";
 
     @Override
-    public Class<DecisionEntity> getEntityClass() {
-        return DecisionEntity.class;
+    public Class<DetectionCountEntity> getEntityClass() {
+        return DetectionCountEntity.class;
     }
 
     @Override
@@ -38,7 +38,8 @@ public class DecisionControllerIntegrationTest extends AbstractControllerIntegra
     @Test
     public void canRetrieveById() throws Exception {
 
-        // DecisionEntity entityToTest = readFromFile(data + "decision.json");
+        // DetectionCountEntity entityToTest = readFromFile(data +
+        // "detectionCount.json");
         // when(appService.findById(0L)).thenReturn(entityToTest);
 
         // MockHttpServletResponse response = retrieveById(0L);

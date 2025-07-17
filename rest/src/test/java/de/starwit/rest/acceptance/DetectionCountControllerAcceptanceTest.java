@@ -14,21 +14,21 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-import de.starwit.persistence.entity.DecisionEntity;
+import de.starwit.persistence.entity.DetectionCountEntity;
 
 @SpringBootTest
 @EnableAutoConfiguration
 @AutoConfigureMockMvc(addFilters = false)
-public class DecisionControllerAcceptanceTest extends AbstractControllerAcceptanceTest<DecisionEntity> {
+public class DetectionCountControllerAcceptanceTest extends AbstractControllerAcceptanceTest<DetectionCountEntity> {
 
-        final static Logger LOG = LoggerFactory.getLogger(DecisionControllerAcceptanceTest.class);
-        private static final String restpath = "/api/decisions/";
+        final static Logger LOG = LoggerFactory.getLogger(DetectionCountControllerAcceptanceTest.class);
+        private static final String restpath = "/api/detection-count/";
 
-        private JacksonTester<DecisionEntity> jsonTester;
+        private JacksonTester<DetectionCountEntity> jsonTester;
 
         @Override
-        public Class<DecisionEntity> getEntityClass() {
-                return DecisionEntity.class;
+        public Class<DetectionCountEntity> getEntityClass() {
+                return DetectionCountEntity.class;
         }
 
         @Override
@@ -37,29 +37,31 @@ public class DecisionControllerAcceptanceTest extends AbstractControllerAcceptan
         }
 
         @Override
-        public JacksonTester<DecisionEntity> getJsonTester() {
+        public JacksonTester<DetectionCountEntity> getJsonTester() {
                 return jsonTester;
         }
 
         @Test
         public void canCreate() throws Exception {
                 // given
-                // DecisionEntity entity = readFromFile(data + "Decision.json");
+                // DetectionCountEntity entity = readFromFile(data + "DetectionCount.json");
 
                 // when
                 // MockHttpServletResponse response = create(entity);
 
                 // then
                 // assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-                // DecisionEntity entityresult = mapper.readValue(response.getContentAsString(),
-                // DecisionEntity.class);
+                // DetectionCountEntity entityresult =
+                // mapper.readValue(response.getContentAsString(),
+                // DetectionCountEntity.class);
                 // assertThat(entityresult.getBranch()).isEqualTo("v2");
         }
 
         @Test
         public void isValidated() throws Exception {
                 // given
-                // DecisionEntity entity = readFromFile(data + "Decision-wrong.json");
+                // DetectionCountEntity entity = readFromFile(data +
+                // "DetectionCount-wrong.json");
 
                 // when
                 // MockHttpServletResponse response = create(entity);
@@ -83,18 +85,20 @@ public class DecisionControllerAcceptanceTest extends AbstractControllerAcceptan
         @Test
         public void canRetrieveById() throws Exception {
                 // given
-                // DecisionEntity entity = readFromFile(data + "Decision.json");
+                // DetectionCountEntity entity = readFromFile(data + "DetectionCount.json");
                 // MockHttpServletResponse response = create(entity);
-                // DecisionEntity entity2 = mapper.readValue(response.getContentAsString(),
-                // DecisionEntity.class);
+                // DetectionCountEntity entity2 =
+                // mapper.readValue(response.getContentAsString(),
+                // DetectionCountEntity.class);
 
                 // when
                 // response = retrieveById(entity2.getId());
 
                 // then
                 // assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-                // DecisionEntity entityresult = mapper.readValue(response.getContentAsString(),
-                // DecisionEntity.class);
+                // DetectionCountEntity entityresult =
+                // mapper.readValue(response.getContentAsString(),
+                // DetectionCountEntity.class);
                 // assertThat(dtoresult.getBranch()).isEqualTo("v2");
         }
 
@@ -102,18 +106,20 @@ public class DecisionControllerAcceptanceTest extends AbstractControllerAcceptan
         public void canUpdate() throws Exception {
 
                 // given
-                // DecisionEntity entity = readFromFile(data + "Decision.json");
+                // DetectionCountEntity entity = readFromFile(data + "DetectionCount.json");
                 // MockHttpServletResponse response = create(entity);
-                // DecisionEntity entity2 = mapper.readValue(response.getContentAsString(),
-                // DecisionEntity.class);
+                // DetectionCountEntity entity2 =
+                // mapper.readValue(response.getContentAsString(),
+                // DetectionCountEntity.class);
 
                 // when
                 // response = update(entity2);
 
                 // then
                 // assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
-                // DecisionEntity entityresult = mapper.readValue(response.getContentAsString(),
-                // DecisionEntity.class);
+                // DetectionCountEntity entityresult =
+                // mapper.readValue(response.getContentAsString(),
+                // DetectionCountEntity.class);
                 // assertThat(dtoresult.getBranch()).isEqualTo("v2");
         }
 
@@ -121,10 +127,11 @@ public class DecisionControllerAcceptanceTest extends AbstractControllerAcceptan
         @Test
         public void canDelete() throws Exception {
                 // given
-                // DecisionEntity entity = readFromFile(data + "Decision.json");
+                // DetectionCountEntity entity = readFromFile(data + "DetectionCount.json");
                 // MockHttpServletResponse response = create(entity);
-                // DecisionEntity entity2 = mapper.readValue(response.getContentAsString(),
-                // DecisionEntity.class);
+                // DetectionCountEntity entity2 =
+                // mapper.readValue(response.getContentAsString(),
+                // DetectionCountEntity.class);
                 // response = retrieveById(entity2.getId());
                 // assertThat(response.getStatus()).isEqualTo(HttpStatus.OK.value());
 
