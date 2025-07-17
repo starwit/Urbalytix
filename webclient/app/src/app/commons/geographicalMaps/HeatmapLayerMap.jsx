@@ -6,7 +6,7 @@ import {HeatmapLayer} from "@deck.gl/aggregation-layers";
 
 
 function HeatmapLayerMap(props) {
-    const {latitude, longitude} = props;
+    const {latitude, longitude, data} = props;
     const INITIAL_VIEW_STATE = {
         longitude: longitude,
         latitude: latitude,
@@ -36,10 +36,10 @@ function HeatmapLayerMap(props) {
         }),
         new HeatmapLayer({
             id: 'HeatmapLayer',
-            data: 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/sf-bike-parking.json',
+            data: data,
             aggregation: 'SUM',
-            getPosition: d => d.COORDINATES,
-            getWeight: d => d.SPACES,
+            getPosition: d => [d.longitude, d.latitude],
+            getWeight: d => d.count,
             colorRange: [
                 [255, 255, 178, 200], // Light Yellow
                 [254, 217, 118, 200],   // Yellow
