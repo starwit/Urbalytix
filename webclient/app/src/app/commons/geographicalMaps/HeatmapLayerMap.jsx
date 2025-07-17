@@ -6,14 +6,30 @@ import {HeatmapLayer} from "@deck.gl/aggregation-layers";
 
 
 function HeatmapLayerMap(props) {
-    const {latitude, longitude} = props;
+    const {latitude, longitude, data} = props;
     const INITIAL_VIEW_STATE = {
         longitude: longitude,
         latitude: latitude,
-        zoom: 12,
+        zoom: 19,
         pitch: 0,
         bearing: 0
     };
+
+    const colorRangeYR = [
+        [255, 255, 178, 200], // Light Yellow
+        [254, 217, 118, 200],   // Yellow
+        [254, 178, 76, 200],   // Orange-Yellow
+        [253, 141, 60, 200],   // Orange
+        [240, 59, 32, 200],   // Orange-Red
+        [189, 0, 38, 200],     // Red
+    ]
+
+    const colorRangeR = [
+        [239, 59, 44, 200],
+        [203, 24, 29, 200],
+        [165, 15, 21, 200],
+        [103, 0, 13, 200],
+    ]
 
     const layers = [
         new TileLayer({
@@ -36,18 +52,11 @@ function HeatmapLayerMap(props) {
         }),
         new HeatmapLayer({
             id: 'HeatmapLayer',
-            data: 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/sf-bike-parking.json',
+            data: data,
             aggregation: 'SUM',
-            getPosition: d => d.COORDINATES,
-            getWeight: d => d.SPACES,
-            colorRange: [
-                [255, 255, 178, 200], // Light Yellow
-                [254, 217, 118, 200],   // Yellow
-                [254, 178, 76, 200],   // Orange-Yellow
-                [253, 141, 60, 200],   // Orange
-                [240, 59, 32, 200],   // Orange-Red
-                [189, 0, 38, 200],     // Red
-            ],
+            getPosition: d => [d.longitude, d.latitude],
+            getWeight: d => d.count,
+            colorRange: colorRangeR,
             radiusPixels: 25
         })
     ];
