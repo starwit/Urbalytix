@@ -11,7 +11,7 @@
 
     <groupId>de.starwit</groupId>
     <artifactId>urbalytix</artifactId>
-    <version>1.0.9-SNAPSHOT</version>
+    <version>0.0.1-SNAPSHOT</version>
     <description>Starwit's implementation of urbalytix</description>
     <licenses>
         <license>
@@ -24,7 +24,7 @@
 
     <scm>
         <connection>scm:git:https://github.com/starwit/urbalytix.git</connection>
-        <tag>0.0.10</tag>
+        <tag>0.0.1</tag>
     </scm>
 
     <properties>
