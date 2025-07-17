@@ -4,15 +4,15 @@ import HeatmapLayerMap from '../../commons/geographicalMaps/HeatmapLayerMap';
 import DetectionCountRest from "../../services/DetectionCountRest";
 
 const VIEW_STATE = {
-    longitude: -86.1352523571874,
-    latitude: 39.96476671476241
+    longitude: -86.12679199569024,
+    latitude: 39.95841206473967
     //longitude: 10.716988775029739, // Initial longitude
     //latitude: 52.41988232741599,    // Initial latitude
 };
 
 function Home() {
-    const [data, setData] = React.useState([]);
-    const detectionCountRest = React.useMemo(() => new DetectionCountRest(), []);
+    const [data, setData] = useState([]);
+    const detectionCountRest = useMemo(() => new DetectionCountRest(), []);
 
 
     useEffect(() => {
