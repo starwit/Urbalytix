@@ -40,7 +40,7 @@ const translationDeDE = {
     "map.tooltip": "Auf der Karte anzeigen",
     "list.tooltip": "Liste anzeigen",
     "automatic.next.tooltip": "automatisch den nächsten Dialog öffnen",
-    "app.baseName": "ai-cockpit",
+    "app.baseName": "urbalytix",
     "home.title": "Human in the loop",
     "home.copyright": "© Starwit Technologies GmbH",
     "home.welcome": "Willkommen im KI Cockpit",
