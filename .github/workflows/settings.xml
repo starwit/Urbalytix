@@ -15,7 +15,7 @@
                     <url>https://repo1.maven.org/maven2</url>
                 </repository>
                 <repository>
-                    <id>github</id>
+                    <id>github-vision-api</id>
                     <url>https://maven.pkg.github.com/starwit/vision-api</url>
                     <snapshots>
                         <enabled>true</enabled>
@@ -27,7 +27,7 @@
 
     <servers>
         <server>
-            <id>github</id>
+            <id>github-vision-api</id>
             <username>${env.PRIVATE_REPO_USERNAME}</username>
             <password>${env.MAVEN_REPO_READ}</password>
         </server>
