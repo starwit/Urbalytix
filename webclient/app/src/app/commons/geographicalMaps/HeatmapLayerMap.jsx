@@ -1,21 +1,16 @@
-import {MapView} from "@deck.gl/core";
 import {TileLayer} from "@deck.gl/geo-layers";
 import {BitmapLayer, IconLayer} from "@deck.gl/layers";
 import DeckGL from "@deck.gl/react";
-import cameraicon from "./../../assets/images/camera3.png";
 import {HeatmapLayer} from "@deck.gl/aggregation-layers";
 
-const MAP_VIEW = new MapView({repeat: true});
-const ICON_MAPPING = {
-    marker: {x: 0, y: 0, width: 128, height: 128, mask: false}
-};
 
-function IconLayerMap(props) {
+
+function HeatmapLayerMap(props) {
     const {latitude, longitude} = props;
     const INITIAL_VIEW_STATE = {
         longitude: longitude,
         latitude: latitude,
-        zoom: 15,
+        zoom: 12,
         pitch: 0,
         bearing: 0
     };
@@ -39,30 +34,27 @@ function IconLayerMap(props) {
                 });
             }
         }),
-        new IconLayer({
-            id: "icon-layer",
-            data: [INITIAL_VIEW_STATE],
-            pickable: true,
-            iconAtlas: cameraicon,
-            iconMapping: ICON_MAPPING,
-            getIcon: d => "marker",
-
-            sizeScale: 10,
-            getPosition: d => {
-                const c = [2];
-                c[0] = d.longitude ?? 91;
-                c[1] = d.latitude ?? 181;
-                return c;
-            },
-            getSize: d => 5,
-            getColor: d => [Math.sqrt(d.exits), 140, 0]
+        new HeatmapLayer({
+            id: 'HeatmapLayer',
+            data: 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/sf-bike-parking.json',
+            aggregation: 'SUM',
+            getPosition: d => d.COORDINATES,
+            getWeight: d => d.SPACES,
+            colorRange: [
+                [255, 255, 178, 200], // Light Yellow
+                [254, 217, 118, 200],   // Yellow
+                [254, 178, 76, 200],   // Orange-Yellow
+                [253, 141, 60, 200],   // Orange
+                [240, 59, 32, 200],   // Orange-Red
+                [189, 0, 38, 200],     // Red
+            ],
+            radiusPixels: 25
         })
     ];
 
     return (
         <DeckGL
             layers={layers}
-            views={MAP_VIEW}
             initialViewState={INITIAL_VIEW_STATE}
             controller={{dragRotate: false}}
         >
@@ -70,5 +62,5 @@ function IconLayerMap(props) {
     );
 }
 
-export default IconLayerMap;
+export default HeatmapLayerMap;
 

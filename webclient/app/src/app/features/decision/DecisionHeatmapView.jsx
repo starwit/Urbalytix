@@ -2,7 +2,7 @@ import React, {useState, useEffect, useMemo} from 'react';
 import {IconButton} from '@mui/material';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import DecisionRest from '../../services/DecisionRest';
+import DecisionRest from '../../services/DetectionCountRest';
 import DecisionResultPanel from './DecisionResultPanel';
 import DecisionDetail from './DecisionDetail';
 import DecisionTypeFilter from './DecisionTypeFilter';
