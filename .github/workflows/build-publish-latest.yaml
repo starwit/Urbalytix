@@ -51,8 +51,7 @@ jobs:
       run: mvn clean -B package -P frontend --settings .github/workflows/settings.xml --file pom.xml
       env:
          CI: false
-         PRIVATE_REPO_USERNAME: ${{ vars.PRIVATE_REPO_USERNAME }}
-         MAVEN_REPO_READ: ${{ secrets.MAVEN_REPO_READ }}
+         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: get version from pom.xml
       id: get-version
