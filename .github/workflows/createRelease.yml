@@ -11,6 +11,7 @@ on:
 
 permissions:
   contents: write
+  packages: read
 
 env:
   RELEASE_VERSION: ${{ github.event.inputs.release-version }}

@@ -3,6 +3,9 @@ name: Build and publish latest image
 on:
   workflow_dispatch:
 
+permissions:
+  packages: read
+
 env:
   IMAGE_NAME: urbalytix
   DOCKERHUB_USERNAME: starwit
