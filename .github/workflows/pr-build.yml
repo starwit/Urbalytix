@@ -7,6 +7,8 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+permissions:
+  packages: read
 
 # just runs Maven, NPM and Docker build
 jobs:
