@@ -11,6 +11,7 @@ on:
 
 permissions:
   contents: write
+  packages: read
 
 env:
   RELEASE_VERSION: ${{ github.event.inputs.release-version }}
@@ -76,8 +77,7 @@ jobs:
         mvn -B release:clean --settings .github/workflows/settings.xml --settings .github/workflows/settings.xml --file pom.xml
       env:
          CI: false
-         PRIVATE_REPO_USERNAME: ${{ vars.PRIVATE_REPO_USERNAME }}
-         MAVEN_REPO_READ: ${{ secrets.MAVEN_REPO_READ }}
+         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Get tag name
       run: |
@@ -100,11 +100,10 @@ jobs:
         fi
 
     - name: Build with Maven
-      run: mvn clean -B package -P frontend --file pom.xml
+      run: mvn clean -B package -P frontend --settings .github/workflows/settings.xml --file pom.xml
       env:
          CI: false
-         PRIVATE_REPO_USERNAME: ${{ vars.PRIVATE_REPO_USERNAME }}
-         MAVEN_REPO_READ: ${{ secrets.MAVEN_REPO_READ }}
+         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   publish_docker:
     name: "Build and publish docker"

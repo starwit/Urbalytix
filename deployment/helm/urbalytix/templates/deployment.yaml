@@ -81,6 +81,18 @@ spec:
             - name: SPRING_PROFILES_ACTIVE
               value: default
             {{- end }}
+            {{- if .Values.app.spring_data.redis_active }}
+            - name: SPRING_DATA_REDIS_ACTIVE
+              value: "true"
+            - name: SPRING_DATA_STREAM_PREFIX
+              value: {{ .Values.app.spring_data.stream_prefix | quote}}
+            - name: SPRING_DATA_REDIS_HOST
+              value: {{ .Values.app.spring_data.redis_host | quote}}
+            - name: SPRING_DATA_REDIS_PORT
+              value: {{ .Values.app.spring_data.redis_port | quote}}
+            - name: SPRING_DATA_REDIS_STREAM_IDS
+              value: {{ .Values.app.spring_data.redis_stream_ids | quote}}
+            {{- end }}
             {{- with .Values.extraEnv }}
             {{- tpl . $ | nindent 12 }}
             {{- end }}
