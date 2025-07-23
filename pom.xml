@@ -9,7 +9,7 @@
 
     <groupId>de.starwit</groupId>
     <artifactId>urbalytix</artifactId>
-    <version>0.0.4-SNAPSHOT</version>
+    <version>0.0.5-SNAPSHOT</version>
     <description>Starwit's implementation of urbalytix</description>
     <licenses>
         <license>
