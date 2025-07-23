@@ -36,7 +36,7 @@ const ColorTheme = createTheme({
         body1: {},
         body2: {},
         h1: {
-            fontSize: "2rem",
+            fontSize: "1.9rem",
             fontWeight: 400,
             textTransform: "uppercase"
         },
