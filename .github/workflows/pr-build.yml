@@ -9,6 +9,7 @@ on:
 
 permissions:
   packages: read
+  contents: read
 
 # just runs Maven, NPM and Docker build
 jobs:
