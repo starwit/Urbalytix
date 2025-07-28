@@ -44,7 +44,19 @@ function Home() {
         if (response.data == null) {
             return;
         }
-        setFeatures(response.data)
+
+        var list = response.data.features;
+        const groupedFeatures = list.reduce((acc, feature) => {
+            const objectType = feature.properties.objectTypeLabel;
+            if (!acc[objectType]) {
+                acc[objectType] = [];
+            }
+            acc[objectType].push(feature);
+            return acc;
+        }, {});
+
+        console.log(Object.keys(groupedFeatures));
+        setFeatures(groupedFeatures);
     }
 
     return (

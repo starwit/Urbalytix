@@ -70,16 +70,26 @@ function HeatmapLayerMap(props) {
             colorRange: colorRangeR,
             radiusPixels: 25
         }),
-        new IconLayer({
-            id: 'IconLayer',
-            data: features.features,
-            getColor: d => [200, 50, 50],
-            getIcon: d => 'marker',
-            getPosition: d => d.geometry.coordinates,
-            getSize: 40,
-            iconAtlas: ICON_ATLAS,
-            iconMapping: iconMapping,
-            pickable: true
+        ...Object.entries(features).map(([objectType, featureList], index) => {
+            const colors = [
+                [155, 50, 50],    // Redish
+                [100, 155, 100],    // Green
+                [50, 50, 155],    // Blue
+                [185, 185, 0],  // Yellow
+                [255, 0, 255],  // Magenta
+                [0, 255, 255]   // Cyan
+            ];
+            return new IconLayer({
+                id: `IconLayer-${objectType}`,
+                data: featureList,
+                getColor: d => colors[index % colors.length],
+                getIcon: d => 'marker',
+                getPosition: d => d.geometry.coordinates,
+                getSize: 40,
+                iconAtlas: ICON_ATLAS,
+                iconMapping: iconMapping,
+                pickable: true
+            });
         })
     ];
 
