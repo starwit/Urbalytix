@@ -1,8 +1,8 @@
 import CrudRest from "./CrudRest";
 
-class DetectionCountRest extends CrudRest {
+class DecisionRest extends CrudRest {
     constructor() {
         super(window.location.pathname + "api/detection-count");
     }
 }
-export default DetectionCountRest;
+export default DecisionRest;
