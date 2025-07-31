@@ -7,7 +7,7 @@ const ICON_ATLAS = 'src/app/assets/icons/recycling.png';
 const ICON_MAPPING_URL = 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/icon-atlas.json';
 
 function HeatmapLayerMap(props) {
-    const {latitude, longitude, features} = props;
+    const {latitude, longitude, data, features} = props;
 
 
 
