@@ -29,21 +29,21 @@ import jakarta.validation.Valid;
 @RequestMapping(path = "${rest.base-path}/detection-count")
 public class DetectionCountController {
 
-    static final Logger LOG = LoggerFactory.getLogger(DetectionCountController.class);
+    private static final Logger LOG = LoggerFactory.getLogger(DetectionCountController.class);
 
     @Autowired
-    private DetectionCountService decisionService;
+    private DetectionCountService detectionCountService;
 
     @Operation(summary = "Get all detection count")
     @GetMapping
     public List<DetectionCountEntity> findAll() {
-        return this.decisionService.findAll();
+        return this.detectionCountService.findAll();
     }
 
     @Operation(summary = "Get detection count with id")
     @GetMapping(value = "/{id}")
     public DetectionCountEntity findById(@PathVariable("id") Long id) {
-        return this.decisionService.findById(id);
+        return this.detectionCountService.findById(id);
     }
 
     @Operation(summary = "Create detection count")
@@ -52,17 +52,23 @@ public class DetectionCountController {
         return this.update(entity);
     }
 
+    /**
+     * Deletes a detection count by its id.
+     *
+     * @param id the id of the detection count to delete
+     * @throws NotificationException if a notification error occurs during deletion
+     */
+    @Operation(summary = "Delete detection count")
+    @DeleteMapping(value = "/{id}")
+    public void delete(@PathVariable("id") Long id) throws NotificationException {
+        detectionCountService.delete(id);
+    }
+
     @Operation(summary = "Update detection count")
     @PutMapping
     public DetectionCountEntity update(@Valid @RequestBody DetectionCountEntity entity) {
         LOG.info("Updating detection count with id: {}", entity.getId());
-        return decisionService.saveOrUpdate(entity);
-    }
-
-    @Operation(summary = "Delete detection count")
-    @DeleteMapping(value = "/{id}")
-    public void delete(@PathVariable("id") Long id) throws NotificationException {
-        decisionService.delete(id);
+        return detectionCountService.saveOrUpdate(entity);
     }
 
     @ExceptionHandler(value = { EntityNotFoundException.class })

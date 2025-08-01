@@ -28,6 +28,7 @@ public class DetectionCountService implements ServiceInterface<DetectionCountEnt
         if (message == null || message.getDetectionCountsList().isEmpty()) {
             return; // No data to process
         }
+
         for (DetectionCount dto : message.getDetectionCountsList()) {
             DetectionCountEntity entity = new DetectionCountEntity();
             ZonedDateTime dateTime = Instant.ofEpochMilli(message.getTimestampUtcMs())
