@@ -12,6 +12,12 @@ fullnameOverride: "urbalytix"
 app:
   context_path: "/urbalytix"
 
+  # configuration for an endpoint from which app will collect GeoJSON features
+  feature_collection:
+    enabled: true
+    endpoint: https://hostname:port
+    secret: supersecret
+
   spring_data: # Configuration to connect to Redis/ValKey
     redis_active: false # if true connection config is used
     stream_prefix: aggregator

@@ -81,6 +81,12 @@ spec:
             - name: SPRING_PROFILES_ACTIVE
               value: default
             {{- end }}
+            {{- if .Values.app.feature_collection.enabled }}
+            - name: INFRA_TRASH_ENDPOINT
+              value: {{ .Values.app.feature_collection.endpoint | quote}}
+            - name: INFRA_TRASH_SECRET
+              value: {{ .Values.app.feature_collection.secret | quote}}
+            {{- end }}
             {{- if .Values.app.spring_data.redis_active }}
             - name: SPRING_DATA_REDIS_ACTIVE
               value: "true"
