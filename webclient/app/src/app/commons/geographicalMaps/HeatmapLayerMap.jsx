@@ -3,6 +3,7 @@ import {useEffect, useState} from "react";
 import {MapLayerFactory} from './MapLayerFactory';
 import {MAP_VIEW, HEATMAP_COLOR_RANGES} from './BaseMapConfig';
 import recyclingImage from "../../assets/icons/recycling.png"
+import MapFilter from "./MapFilter";
 
 const ICON_MAPPING_URL = 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/icon-atlas.json';
 
@@ -42,12 +43,19 @@ function HeatmapLayerMap(props) {
     ];
 
     return (
-        <DeckGL
-            layers={layers}
-            views={MAP_VIEW}
-            initialViewState={INITIAL_VIEW_STATE}
-            controller={{dragRotate: false}}
-        />
+        <>
+            <MapFilter
+                selectedType={[]}
+                decisionTypes={[]}
+                selected={[]}
+            />
+            <DeckGL
+                layers={layers}
+                views={MAP_VIEW}
+                initialViewState={INITIAL_VIEW_STATE}
+                controller={{dragRotate: false}}
+            />
+        </>
     );
 }
 
