@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
     Box,
     FormControl,
@@ -37,11 +37,9 @@ const TIME_FILTERS = [
 
 function MapFilter({
     selectedType,
-    onTypeChange,
-    decisionTypes,
-    // New props for state and time filters
-    selectedStates = [],
-    onStateChange = () => { },
+    availableFeatures,
+    selectedFeatures = [],
+    onSelectedFeatureChange = () => { },
     timeFilter = 0,
     onTimeFilterChange = () => { },
     startDate = '',
@@ -50,8 +48,14 @@ function MapFilter({
     onEndDateChange = () => { },
     filteredCount = 0
 }) {
+
     const {t} = useTranslation();
     const [showFilter, setShowFilter] = useState(true);
+
+    const features = availableFeatures.map((item, index) => ({
+        id: index + 1,   // or you could use item itself if you prefer
+        name: item
+    }));
 
     const handleTypeChange = (values) => {
         const newValues = values || [];
@@ -95,63 +99,30 @@ function MapFilter({
                     overflowY: 'auto'
                 }}>
                     <Paper elevation={3} sx={{p: 2}}>
-                        {/* Decision Type Filter */}
-                        <FormControl fullWidth>
-                            <InputLabel>{t('decision.type.filter')}</InputLabel>
-                            <Select
-                                multiple
-                                value={selectedType || ['all']}
-                                onChange={(e) => onTypeChange(handleTypeChange(e.target.value))}
-                                label={t('decision.type.filter')}
-                                renderValue={(selected) => {
-                                    return selected.map(value =>
-                                        value === 'all' ? t('decision.type.all') : value
-                                    ).join(', ');
-                                }}
-                                size="small"
-                            >
-                                <MenuItem
-                                    value="all"
-                                    sx={{fontWeight: selectedType.includes('all') ? 'bold' : 'normal'}}
-                                >
-                                    {t('decision.type.all')}
-                                </MenuItem>
-                                {decisionTypes.map(type => (
-                                    <MenuItem
-                                        key={type}
-                                        value={type}
-                                        sx={{fontWeight: selectedType.includes(type) ? 'bold' : 'normal'}}
-                                    >
-                                        {type}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
 
                         {/* State filter section */}
-                        <Divider sx={{marginY: 2}} />
                         <Typography variant="subtitle2" gutterBottom>
-                            {t('decision.state')}
+                            {t('features.selection')}
                         </Typography>
                         <FormGroup row>
-                            {STATES.map(({id, name}) => (
+                            {features.map(({id, name}) => (
                                 <FormControlLabel
                                     key={`state-label-${id}`}
                                     control={
                                         <Checkbox
                                             key={`state-checkbox-${id}`}
-                                            checked={selectedStates.includes(name)}
+                                            checked={selectedFeatures.includes(name)}
                                             onChange={(e) => {
                                                 if (e.target.checked) {
-                                                    onStateChange([...selectedStates, name]);
+                                                    onSelectedFeatureChange([...selectedFeatures, name]);
                                                 } else {
-                                                    onStateChange(selectedStates.filter(s => s !== name));
+                                                    onSelectedFeatureChange(selectedFeatures.filter(s => s !== name));
                                                 }
                                             }}
                                             size="small"
                                         />
                                     }
-                                    label={t(`decision.state.${name.toLowerCase()}`)}
+                                    label={t(`feature.${name.toLowerCase()}`)}
                                 />
                             ))}
                         </FormGroup>

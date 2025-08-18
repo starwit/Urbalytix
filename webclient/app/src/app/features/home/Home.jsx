@@ -55,7 +55,6 @@ function Home() {
             return acc;
         }, {});
 
-        console.log(Object.keys(groupedFeatures));
         setFeatures(groupedFeatures);
     }
 
