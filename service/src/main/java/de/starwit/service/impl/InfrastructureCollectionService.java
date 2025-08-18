@@ -1,5 +1,9 @@
 package de.starwit.service.impl;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.geojson.Feature;
 import org.geojson.FeatureCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,6 +52,17 @@ public class InfrastructureCollectionService {
         log.debug("Parsing trash bin data: " + json);
         try {
             fc = mapper.readValue(json, FeatureCollection.class);
+            List<Feature> featureList = new ArrayList<>();
+
+            if (fc != null && fc.getFeatures() != null && fc.getFeatures().size() > 0) {
+                for (Feature feature : fc.getFeatures()) {
+                    if (feature.getProperty("deactivated").equals(0)) {
+                        featureList.add(feature);
+                    }
+                }
+                fc.setFeatures(featureList);
+            }
+
         } catch (JsonProcessingException e) {
             log.error("Parsing trash bin data failed " + e.getMessage());
         }

@@ -28,7 +28,7 @@ public class InfrastructureCollectionTests {
 
         var fc = collectionService.parseGeoFeatures(strJson);
 
-        assertEquals(1187, fc.getFeatures().size());
+        assertEquals(1114, fc.getFeatures().size());
     }
 
 }
