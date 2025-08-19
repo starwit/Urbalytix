@@ -5,8 +5,6 @@ import DetectionCountRest from "../../services/DetectionCountRest";
 import FeatureCollectorRest from '../../services/FeatureCollectorRest';
 
 const VIEW_STATE = {
-    //longitude: -86.12679199569024,
-    //latitude: 39.95841206473967
     longitude: 10.716988775029739, // Initial longitude
     latitude: 52.41988232741599    // Initial latitude
 };
@@ -16,17 +14,25 @@ function Home() {
     const detectionCountRest = useMemo(() => new DetectionCountRest(), []);
     const [features, setFeatures] = useState([]);
     const featureCollectorRest = useMemo(() => new FeatureCollectorRest(), []);
+    const [objectClasses, setObjectClasses] = useState([]);
 
 
     useEffect(() => {
-        reloadDecisions();
+        reloadDetectionCounts();
         reloadFeatures();
-        const interval = setInterval(reloadDecisions, 5000); // Update every five seconds
+        reloadObjectClasses();
+        const interval = setInterval(reloadDetectionCounts, 5000); // Update every five seconds
         return () => clearInterval(interval);
     }, []);
 
-    function reloadDecisions() {
-        detectionCountRest.findAll().then(response => handleLoadDecisions(response));
+    function reloadDetectionCounts() {
+        detectionCountRest.findAllLimited(1000).then(response => handleLoadDecisions(response));
+    }
+
+    function reloadObjectClasses() {
+        detectionCountRest.getObjectClasses().then(response => {
+            setObjectClasses(response.data);
+        });
     }
 
     function handleLoadDecisions(response) {
@@ -65,6 +71,7 @@ function Home() {
                 longitude={VIEW_STATE.longitude}
                 data={data}
                 features={features}
+                objectClasses={objectClasses}
             />
             <Typography
                 variant="h1"

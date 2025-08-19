@@ -8,9 +8,10 @@ import MapFilter from "./MapFilter";
 const ICON_MAPPING_URL = 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/icon-atlas.json';
 
 function HeatmapLayerMap(props) {
-    const {latitude, longitude, data, features} = props;
+    const {latitude, longitude, data: heatMapData, features, objectClasses} = props;
 
     const [selectedFeatures, setSelectedFeatures] = useState([]);
+    const [selectedObjectClasses, setSelectedObjectClasses] = useState([]);
 
     const INITIAL_VIEW_STATE = {
         longitude,
@@ -46,9 +47,24 @@ function HeatmapLayerMap(props) {
                 obj[key] = features[key]; return obj;
             }, {});
 
+        var filteredHeatMapData = heatMapData.filter(d => {
+            if (selectedObjectClasses.includes(getNameForObjectClass(d.classId))) {
+                return true;
+            }
+            return false;
+        });
+
+        function getNameForObjectClass(idOfClass) {
+            for (const [key, value] of Object.entries(objectClasses)) {
+                if (value === idOfClass) {
+                    return key;
+                }
+            }
+        }
+
         return [
             MapLayerFactory.createBaseMapLayer(),
-            MapLayerFactory.createHeatmapLayer(data, HEATMAP_COLOR_RANGES.redScale, {
+            MapLayerFactory.createHeatmapLayer(filteredHeatMapData, HEATMAP_COLOR_RANGES.redScale, {
                 id: 'HeatmapLayer',
                 getWeight: d => d.count,
                 radiusPixels: 25
@@ -62,6 +78,9 @@ function HeatmapLayerMap(props) {
     return (
         <>
             <MapFilter
+                objectClasses={objectClasses}
+                selectedObjectClasses={selectedObjectClasses}
+                onSelectedObjectClassesChange={setSelectedObjectClasses}
                 availableFeatures={Object.keys(features)}
                 selectedFeatures={filteredFeatures}
                 onSelectedFeatureChange={setSelectedFeatures}

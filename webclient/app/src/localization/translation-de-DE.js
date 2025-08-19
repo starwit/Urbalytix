@@ -41,8 +41,6 @@ const translationDeDE = {
     "error.app.notfound": "Diese App konnte nicht gefunden werden.",
     "error.entity.notfound": "Dieses Element konnte nicht gefunden werden.",
     "home.about": "Informationen über die Anwendung",
-    "home.decisionTab.title.open": "Offen",
-    "home.decisionTab.title.done": "Erledigt",
     "menu.config": "Konfiguration",
     "menu.info": "Allgemeine Informationen",
     "menu.info.componentbreakdown": "Modulübersicht",
@@ -63,10 +61,12 @@ const translationDeDE = {
     "heatmap.description": "Die Wärmekarte zeigt Konzentrationsbereiche von KI-Entscheidungen",
     "map.normal": "Normalmodus",
     "map.heatmap": "Heatmap-Modus",
-    "features.selection": "Elemente auswählen",
+    "wastedata.selection": "Messdaten",
+    "features.selection": "zusätzliche Elemente",
     "feature.papierkorb": "Papierkorb",
     "feature.bigbelly": "BigBelly",
     "feature.hundekotsammler": "Hundekotsammler",
     "feature.containerstandplatz": "Containerstandplatz",
+
 };
 export default translationDeDE;

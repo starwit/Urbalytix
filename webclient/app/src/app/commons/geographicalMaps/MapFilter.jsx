@@ -36,7 +36,9 @@ const TIME_FILTERS = [
 ];
 
 function MapFilter({
-    selectedType,
+    objectClasses,
+    selectedObjectClasses = [],
+    onSelectedObjectClassesChange = () => { },
     availableFeatures,
     selectedFeatures = [],
     onSelectedFeatureChange = () => { },
@@ -46,7 +48,6 @@ function MapFilter({
     onStartDateChange = () => { },
     endDate = '',
     onEndDateChange = () => { },
-    filteredCount = 0
 }) {
 
     const {t} = useTranslation();
@@ -56,19 +57,6 @@ function MapFilter({
         id: index + 1,   // or you could use item itself if you prefer
         name: item
     }));
-
-    const handleTypeChange = (values) => {
-        const newValues = values || [];
-        if (newValues.includes('all')) {
-            if (!selectedType.includes('all')) {
-                return ['all'];
-            } else {
-                const filteredValues = newValues.filter(value => value !== 'all');
-                return filteredValues.length ? filteredValues : ['all'];
-            }
-        }
-        return newValues.length ? newValues : ['all'];
-    };
 
     return (
         <>
@@ -100,29 +88,29 @@ function MapFilter({
                 }}>
                     <Paper elevation={3} sx={{p: 2}}>
 
-                        {/* State filter section */}
                         <Typography variant="subtitle2" gutterBottom>
-                            {t('features.selection')}
+                            {t('wastedata.selection')}
                         </Typography>
+
                         <FormGroup row>
-                            {features.map(({id, name}) => (
+                            {Object.keys(objectClasses).map((key, idx, arr) => (
                                 <FormControlLabel
-                                    key={`state-label-${id}`}
+                                    key={`object-checkbox-${objectClasses[key]}`}
                                     control={
                                         <Checkbox
-                                            key={`state-checkbox-${id}`}
-                                            checked={selectedFeatures.includes(name)}
+                                            key={`object-label-${objectClasses[key]}`}
+                                            checked={selectedObjectClasses.includes(key)}
                                             onChange={(e) => {
                                                 if (e.target.checked) {
-                                                    onSelectedFeatureChange([...selectedFeatures, name]);
+                                                    onSelectedObjectClassesChange([...selectedObjectClasses, key]);
                                                 } else {
-                                                    onSelectedFeatureChange(selectedFeatures.filter(s => s !== name));
+                                                    onSelectedObjectClassesChange(selectedObjectClasses.filter(s => s !== key));
                                                 }
                                             }}
                                             size="small"
                                         />
                                     }
-                                    label={t(`feature.${name.toLowerCase()}`)}
+                                    label={key.toLowerCase()}
                                 />
                             ))}
                         </FormGroup>
@@ -179,9 +167,33 @@ function MapFilter({
                             </Box>
                         )}
 
-                        <Typography variant="caption" sx={{marginTop: 2, display: 'block'}}>
-                            {t('decision.found', {count: filteredCount})}
+                        <Divider sx={{marginY: 2}} />
+                        {/* Feature filter section */}
+                        <Typography variant="subtitle2" gutterBottom>
+                            {t('features.selection')}
                         </Typography>
+                        <FormGroup row>
+                            {features.map(({id, name}) => (
+                                <FormControlLabel
+                                    key={`state-label-${id}`}
+                                    control={
+                                        <Checkbox
+                                            key={`state-checkbox-${id}`}
+                                            checked={selectedFeatures.includes(name)}
+                                            onChange={(e) => {
+                                                if (e.target.checked) {
+                                                    onSelectedFeatureChange([...selectedFeatures, name]);
+                                                } else {
+                                                    onSelectedFeatureChange(selectedFeatures.filter(s => s !== name));
+                                                }
+                                            }}
+                                            size="small"
+                                        />
+                                    }
+                                    label={t(`feature.${name.toLowerCase()}`)}
+                                />
+                            ))}
+                        </FormGroup>
                     </Paper>
                 </Box>
             )}
