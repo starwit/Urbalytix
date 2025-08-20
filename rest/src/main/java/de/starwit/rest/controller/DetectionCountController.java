@@ -1,29 +1,24 @@
 package de.starwit.rest.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.starwit.persistence.entity.DetectionCountEntity;
-import de.starwit.persistence.exception.NotificationException;
 import de.starwit.rest.exception.NotificationDto;
 import de.starwit.service.impl.DetectionCountService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping(path = "${rest.base-path}/detection-count")
@@ -40,35 +35,22 @@ public class DetectionCountController {
         return this.detectionCountService.findAll();
     }
 
+    @Operation(summary = "Find latest data")
+    @GetMapping(value = "/limited/{amount}")
+    public List<DetectionCountEntity> findAllLimited(@PathVariable("amount") int amount) {
+        return this.detectionCountService.findAllLimited(amount);
+    }
+
     @Operation(summary = "Get detection count with id")
     @GetMapping(value = "/{id}")
     public DetectionCountEntity findById(@PathVariable("id") Long id) {
         return this.detectionCountService.findById(id);
     }
 
-    @Operation(summary = "Create detection count")
-    @PostMapping
-    public DetectionCountEntity save(@Valid @RequestBody DetectionCountEntity entity) {
-        return this.update(entity);
-    }
-
-    /**
-     * Deletes a detection count by its id.
-     *
-     * @param id the id of the detection count to delete
-     * @throws NotificationException if a notification error occurs during deletion
-     */
-    @Operation(summary = "Delete detection count")
-    @DeleteMapping(value = "/{id}")
-    public void delete(@PathVariable("id") Long id) throws NotificationException {
-        detectionCountService.delete(id);
-    }
-
-    @Operation(summary = "Update detection count")
-    @PutMapping
-    public DetectionCountEntity update(@Valid @RequestBody DetectionCountEntity entity) {
-        LOG.info("Updating detection count with id: {}", entity.getId());
-        return detectionCountService.saveOrUpdate(entity);
+    @Operation(summary = "Get all detected object classes")
+    @GetMapping(value = "/classes")
+    public Map<String, Long> getAllDetectedObjectClasses() {
+        return this.detectionCountService.getAllDetectedObjectClassesWithNames();
     }
 
     @ExceptionHandler(value = { EntityNotFoundException.class })
