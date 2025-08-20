@@ -80,4 +80,8 @@ public class DetectionCountService implements ServiceInterface<DetectionCountEnt
         Page<DetectionCountEntity> p = repository.findAll(PageRequest.of(0, amount));
         return p.toList();
     }
+
+    public List<DetectionCountEntity> getDataFromTimeFrame(ZonedDateTime startTime, ZonedDateTime endTime) {
+        return repository.findByDetectionTimeBetween(startTime, endTime);
+    }
 }

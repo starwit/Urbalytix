@@ -15,18 +15,29 @@ function Home() {
     const [features, setFeatures] = useState([]);
     const featureCollectorRest = useMemo(() => new FeatureCollectorRest(), []);
     const [objectClasses, setObjectClasses] = useState([]);
+    const [selectedTimeFilter, setSelectedTimeFilter] = useState(24);
 
 
     useEffect(() => {
         reloadDetectionCounts();
         reloadFeatures();
         reloadObjectClasses();
-        const interval = setInterval(reloadDetectionCounts, 5000); // Update every five seconds
+        //const interval = setInterval(reloadDetectionCounts, 5000); // Update every five seconds
         return () => clearInterval(interval);
     }, []);
 
-    function reloadDetectionCounts() {
-        detectionCountRest.findAllLimited(1000).then(response => handleLoadDecisions(response));
+    const selectedTimeRange = useMemo(() => {
+        reloadDetectionCounts(selectedTimeFilter);
+        return selectedTimeFilter;
+    }, [selectedTimeFilter]);
+
+    function reloadDetectionCounts(timeFilter) {
+        if (timeFilter === undefined) {
+            timeFilter = 24;
+        }
+        const end = Date.now();
+        const start = new Date((new Date()).getTime() - timeFilter * 60 * 60 * 1000).getTime();
+        detectionCountRest.findByTimeFrame(Math.floor(start / 1000), Math.floor(end / 1000)).then(response => handleLoadDecisions(response));
     }
 
     function reloadObjectClasses() {
@@ -69,6 +80,8 @@ function Home() {
             <HeatmapLayerMap
                 latitude={VIEW_STATE.latitude}
                 longitude={VIEW_STATE.longitude}
+                selectedTimeFilter={selectedTimeRange}
+                onTimeFilterChange={setSelectedTimeFilter}
                 data={data}
                 features={features}
                 objectClasses={objectClasses}

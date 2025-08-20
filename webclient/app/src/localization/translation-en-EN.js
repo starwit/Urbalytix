@@ -48,11 +48,10 @@ const translationEnEN = {
     "time.range": "Time Range",
     "time.range.custom": "User defined",
     "time.range.allTime": "All time",
-    "time.range.lastHour": "Last hour",
-    "time.range.last3Hours": "Last 3 hours",
-    "time.range.last6Hours": "Last 6 hours",
-    "time.range.last12Hours": "Last 12 hours",
+    "time.range.last12Hours": "Letzte 12 Stunden",
     "time.range.last24Hours": "Last 24 hours",
+    "time.range.last48Hours": "Last 2 days",
+    "time.range.last72Hours": "Last 3 days",
     "time.range.start": "Date start",
     "time.range.end": "Date end",
     "view.mode": "View Mode",
@@ -62,11 +61,10 @@ const translationEnEN = {
     "map.normal": "Normal mode",
     "map.heatmap": "Heatmap mode",
     "wastedata.selection": "Collected data",
-    "features.selection": "Show additional Features",
+    "features.selection": "Additional Data",
     "feature.papierkorb": "Papierkorb",
     "feature.bigbelly": "BigBelly",
     "feature.hundekotsammler": "Hundekotsammler",
     "feature.containerstandplatz": "Containerstandplatz",
-
 };
 export default translationEnEN;

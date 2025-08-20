@@ -8,7 +8,7 @@ import MapFilter from "./MapFilter";
 const ICON_MAPPING_URL = 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/icon-atlas.json';
 
 function HeatmapLayerMap(props) {
-    const {latitude, longitude, data: heatMapData, features, objectClasses} = props;
+    const {latitude, longitude, data: heatMapData, features, objectClasses, selectedTimeFilter, onTimeFilterChange} = props;
 
     const [selectedFeatures, setSelectedFeatures] = useState([]);
     const [selectedObjectClasses, setSelectedObjectClasses] = useState([]);
@@ -84,6 +84,8 @@ function HeatmapLayerMap(props) {
                 availableFeatures={Object.keys(features)}
                 selectedFeatures={filteredFeatures}
                 onSelectedFeatureChange={setSelectedFeatures}
+                timeFilter={selectedTimeFilter}
+                onTimeFilterChange={onTimeFilterChange}
             />
             <DeckGL
                 layers={layers}
