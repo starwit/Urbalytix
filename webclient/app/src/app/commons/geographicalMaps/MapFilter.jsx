@@ -80,7 +80,7 @@ function MapFilter({
                     maxHeight: '80vh',
                     overflowY: 'auto'
                 }}>
-                    <Paper elevation={3} sx={{p: 2}}>
+                    <Box sx={(theme) => ({padding: theme.spacing(1, 2, 1, 2)})} >
 
                         <Typography variant="subtitle2" gutterBottom>
                             {t('wastedata.selection')}
@@ -169,7 +169,7 @@ function MapFilter({
                                 ))}
                             </FormGroup>
                         </Accordion>
-                    </Paper>
+                    </Box>
                 </Box>
             )}
         </>
