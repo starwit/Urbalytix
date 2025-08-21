@@ -1,5 +1,8 @@
 package de.starwit.rest.controller;
 
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +36,17 @@ public class DetectionCountController {
     @GetMapping
     public List<DetectionCountEntity> findAll() {
         return this.detectionCountService.findAll();
+    }
+
+    @Operation(summary = "Get detection count from start/end")
+    @GetMapping(value = "/timeframe/{start}/{end}")
+    public List<DetectionCountEntity> findAllFromTimeFrame(@PathVariable("start") String startTimestamp,
+            @PathVariable("end") String endTimestamp) {
+        ZonedDateTime startTime = Instant.ofEpochSecond(Long.parseLong(startTimestamp.split("\\.")[0]))
+                .atZone(ZoneId.systemDefault());
+        ZonedDateTime endTime = Instant.ofEpochSecond(Long.parseLong(endTimestamp.split("\\.")[0]))
+                .atZone(ZoneId.systemDefault());
+        return this.detectionCountService.getDataFromTimeFrame(startTime, endTime);
     }
 
     @Operation(summary = "Find latest data")

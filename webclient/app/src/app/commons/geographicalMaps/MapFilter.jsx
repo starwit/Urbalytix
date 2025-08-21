@@ -1,4 +1,6 @@
 import React, {useState, useEffect} from 'react';
+import Accordion from '@mui/material/Accordion';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {
     Box,
     FormControl,
@@ -12,27 +14,19 @@ import {
     FormControlLabel,
     Checkbox,
     TextField,
-    Paper
+    Paper,
+    AccordionSummary
 } from '@mui/material';
 import {useTranslation} from 'react-i18next';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
-// Constants from DecisionHeatmap.jsx
-const STATES = [
-    {id: 'NEW', name: 'NEW'},
-    {id: 'ACCEPTED', name: 'ACCEPTED'},
-    {id: 'REJECTED', name: 'REJECTED'}
-];
-
 const TIME_FILTERS = [
-    {value: -1, label: 'time.range.custom'},
     {value: 0, label: 'time.range.allTime'},
-    {value: 1, label: 'time.range.lastHour'},
-    {value: 3, label: 'time.range.last3Hours'},
-    {value: 6, label: 'time.range.last6Hours'},
     {value: 12, label: 'time.range.last12Hours'},
-    {value: 24, label: 'time.range.last24Hours'}
+    {value: 24, label: 'time.range.last24Hours'},
+    {value: 48, label: 'time.range.last48Hours'},
+    {value: 72, label: 'time.range.last72Hours'},
 ];
 
 function MapFilter({
@@ -86,7 +80,7 @@ function MapFilter({
                     maxHeight: '80vh',
                     overflowY: 'auto'
                 }}>
-                    <Paper elevation={3} sx={{p: 2}}>
+                    <Box sx={(theme) => ({padding: theme.spacing(1, 2, 1, 2)})} >
 
                         <Typography variant="subtitle2" gutterBottom>
                             {t('wastedata.selection')}
@@ -121,6 +115,7 @@ function MapFilter({
                             <FormControl fullWidth size="small">
                                 <InputLabel>{t('time.range')}</InputLabel>
                                 <Select
+                                    key={`time-range-${timeFilter}`}
                                     value={timeFilter}
                                     onChange={(e) => {
                                         onTimeFilterChange(e.target.value);
@@ -140,61 +135,41 @@ function MapFilter({
                                 </Select>
                             </FormControl>
                         </Box>
-
-                        {/* Custom date range inputs */}
-                        {timeFilter === -1 && (
-                            <Box sx={{mt: 2}}>
-                                <TextField
-                                    type="date"
-                                    label={t('time.range.start')}
-                                    value={startDate}
-                                    onChange={(e) => onStartDateChange(e.target.value)}
-                                    size="small"
-                                    fullWidth
-                                    InputLabelProps={{shrink: true}}
-                                    sx={{mb: 1}}
-                                />
-                                <TextField
-                                    type="date"
-                                    label={t('time.range.end')}
-                                    value={endDate}
-                                    onChange={(e) => onEndDateChange(e.target.value)}
-                                    size="small"
-                                    fullWidth
-                                    InputLabelProps={{shrink: true}}
-                                    inputProps={{min: startDate}}
-                                />
-                            </Box>
-                        )}
-
                         <Divider sx={{marginY: 2}} />
-                        {/* Feature filter section */}
-                        <Typography variant="subtitle2" gutterBottom>
-                            {t('features.selection')}
-                        </Typography>
-                        <FormGroup row>
-                            {features.map(({id, name}) => (
-                                <FormControlLabel
-                                    key={`state-label-${id}`}
-                                    control={
-                                        <Checkbox
-                                            key={`state-checkbox-${id}`}
-                                            checked={selectedFeatures.includes(name)}
-                                            onChange={(e) => {
-                                                if (e.target.checked) {
-                                                    onSelectedFeatureChange([...selectedFeatures, name]);
-                                                } else {
-                                                    onSelectedFeatureChange(selectedFeatures.filter(s => s !== name));
-                                                }
-                                            }}
-                                            size="small"
-                                        />
-                                    }
-                                    label={t(`feature.${name.toLowerCase()}`)}
-                                />
-                            ))}
-                        </FormGroup>
-                    </Paper>
+                        <Accordion>
+                            <AccordionSummary
+                                expandIcon={<ExpandMoreIcon />}
+                                aria-controls="panel1-content"
+                                id="panel1-header"
+                            >
+                                <Typography variant="subtitle2" gutterBottom>
+                                    {t('features.selection')}
+                                </Typography>
+                            </AccordionSummary>
+                            <FormGroup row>
+                                {features.map(({id, name}) => (
+                                    <FormControlLabel
+                                        key={`state-label-${id}`}
+                                        control={
+                                            <Checkbox
+                                                key={`state-checkbox-${id}`}
+                                                checked={selectedFeatures.includes(name)}
+                                                onChange={(e) => {
+                                                    if (e.target.checked) {
+                                                        onSelectedFeatureChange([...selectedFeatures, name]);
+                                                    } else {
+                                                        onSelectedFeatureChange(selectedFeatures.filter(s => s !== name));
+                                                    }
+                                                }}
+                                                size="small"
+                                            />
+                                        }
+                                        label={t(`feature.${name.toLowerCase()}`)}
+                                    />
+                                ))}
+                            </FormGroup>
+                        </Accordion>
+                    </Box>
                 </Box>
             )}
         </>

@@ -48,11 +48,10 @@ const translationDeDE = {
     "time.range": "Zeitbereich",
     "time.range.custom": "Benutzerdefiniert",
     "time.range.allTime": "Gesamte Zeit",
-    "time.range.lastHour": "Letzte Stunde",
-    "time.range.last3Hours": "Letzte 3 Stunden",
-    "time.range.last6Hours": "Letzte 6 Stunden",
     "time.range.last12Hours": "Letzte 12 Stunden",
     "time.range.last24Hours": "Letzte 24 Stunden",
+    "time.range.last48Hours": "Zwei Tage",
+    "time.range.last72Hours": "Drei Tage",
     "time.range.start": "Startdatum",
     "time.range.end": "Enddatum",
     "view.mode": "Ansichtsmodus",
@@ -62,11 +61,10 @@ const translationDeDE = {
     "map.normal": "Normalmodus",
     "map.heatmap": "Heatmap-Modus",
     "wastedata.selection": "Messdaten",
-    "features.selection": "zusätzliche Elemente",
+    "features.selection": "Weitere Daten",
     "feature.papierkorb": "Papierkorb",
     "feature.bigbelly": "BigBelly",
     "feature.hundekotsammler": "Hundekotsammler",
     "feature.containerstandplatz": "Containerstandplatz",
-
 };
 export default translationDeDE;

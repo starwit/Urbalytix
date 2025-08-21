@@ -1,5 +1,6 @@
 package de.starwit.persistence.repository;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,5 +14,7 @@ public interface DetectionCountRepository extends JpaRepository<DetectionCountEn
 
     @Query("SELECT DISTINCT d.classId FROM DetectionCountEntity d WHERE d.classId IS NOT NULL")
     List<Long> findDistinctClassIds();
+
+    List<DetectionCountEntity> findByDetectionTimeBetween(ZonedDateTime startTimeStamp, ZonedDateTime endTimeStamp);
 
 }
