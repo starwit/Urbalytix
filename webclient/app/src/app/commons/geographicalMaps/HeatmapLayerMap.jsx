@@ -66,8 +66,6 @@ function HeatmapLayerMap(props) {
             MapLayerFactory.createBaseMapLayer(),
             MapLayerFactory.createHeatmapLayer(filteredHeatMapData, HEATMAP_COLOR_RANGES.redScale, {
                 id: 'HeatmapLayer',
-                getWeight: d => d.count,
-                radiusPixels: 25
             }),
             ...Object.entries(selectedLayers).map(([objectType, featureList], index) =>
                 MapLayerFactory.createIconLayer(featureList, objectType, index, iconMapping, recyclingImage)

@@ -24,7 +24,7 @@ export class MapLayerFactory {
 
     static createHeatmapLayer(data, colorRange, options = {}) {
         return new HeatmapLayer({
-            id: 'heatmap-layer',
+            id: options.id || 'heatmap-layer',
             data,
             getPosition: d => [d.longitude, d.latitude],
             getWeight: d => d.count || 1,
