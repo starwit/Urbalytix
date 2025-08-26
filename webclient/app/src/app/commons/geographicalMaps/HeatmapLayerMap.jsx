@@ -29,6 +29,10 @@ function HeatmapLayerMap(props) {
             .catch(err => console.error('Failed to load icon mapping', err));
     }, []);
 
+    useEffect(() => {
+        setSelectedFeatures(Object.keys(features));
+    }, [features]);
+
     const filteredFeatures = useMemo(() => {
         var availableFeatures = Object.keys(features);
         return availableFeatures.filter(f => {

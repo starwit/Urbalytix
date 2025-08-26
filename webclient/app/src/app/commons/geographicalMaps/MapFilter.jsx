@@ -1,25 +1,22 @@
-import React, {useState, useEffect} from 'react';
-import Accordion from '@mui/material/Accordion';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import {
-    Box,
-    FormControl,
-    InputLabel,
-    Select,
-    MenuItem,
-    IconButton,
-    Divider,
-    Typography,
-    FormGroup,
-    FormControlLabel,
-    Checkbox,
-    TextField,
-    Paper,
-    AccordionSummary
-} from '@mui/material';
-import {useTranslation} from 'react-i18next';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import {
+    Accordion,
+    AccordionDetails,
+    AccordionSummary,
+    Box,
+    Checkbox,
+    FormControl,
+    FormControlLabel,
+    FormGroup,
+    IconButton,
+    MenuItem,
+    Select,
+    Typography
+} from '@mui/material';
+import {useState} from 'react';
+import {useTranslation} from 'react-i18next';
 
 const TIME_FILTERS = [
     {value: 0, label: 'time.range.allTime'},
@@ -80,73 +77,72 @@ function MapFilter({
                     maxHeight: '80vh',
                     overflowY: 'auto'
                 }}>
-                    <Box sx={(theme) => ({padding: theme.spacing(1, 2, 1, 2)})} >
-
-                        <Typography variant="subtitle2" gutterBottom>
-                            {t('wastedata.selection')}
-                        </Typography>
-
-                        <FormGroup row>
-                            {Object.keys(objectClasses).map((key, idx, arr) => (
-                                <FormControlLabel
-                                    key={`object-checkbox-${objectClasses[key]}`}
-                                    control={
-                                        <Checkbox
-                                            key={`object-label-${objectClasses[key]}`}
-                                            checked={selectedObjectClasses.includes(key)}
-                                            onChange={(e) => {
-                                                if (e.target.checked) {
-                                                    onSelectedObjectClassesChange([...selectedObjectClasses, key]);
-                                                } else {
-                                                    onSelectedObjectClassesChange(selectedObjectClasses.filter(s => s !== key));
-                                                }
-                                            }}
-                                            size="small"
-                                        />
-                                    }
-                                    label={key.toLowerCase()}
-                                />
+                    <FormControl fullWidth size="small">
+                        <Select
+                            key={`time-range-${timeFilter}`}
+                            value={timeFilter}
+                            onChange={(e) => {
+                                onTimeFilterChange(e.target.value);
+                                // Clear date range if not custom filter
+                                if (e.target.value !== -1) {
+                                    onStartDateChange('');
+                                    onEndDateChange('');
+                                }
+                            }}
+                        >
+                            {TIME_FILTERS.map((filter) => (
+                                <MenuItem key={filter.value} value={filter.value}>
+                                    {t(filter.label)}
+                                </MenuItem>
                             ))}
-                        </FormGroup>
-
-                        {/* Time filter section */}
-                        <Divider sx={{marginY: 2}} />
-                        <Box sx={{marginTop: 2}}>
-                            <FormControl fullWidth size="small">
-                                <InputLabel>{t('time.range')}</InputLabel>
-                                <Select
-                                    key={`time-range-${timeFilter}`}
-                                    value={timeFilter}
-                                    onChange={(e) => {
-                                        onTimeFilterChange(e.target.value);
-                                        // Clear date range if not custom filter
-                                        if (e.target.value !== -1) {
-                                            onStartDateChange('');
-                                            onEndDateChange('');
+                        </Select>
+                    </FormControl>
+                    <Accordion defaultExpanded={true} disableGutters>
+                        <AccordionSummary
+                            sx={{
+                                backgroundColor: theme => theme.palette.secondary.main,
+                            }}
+                            expandIcon={<ExpandMoreIcon />}
+                        >
+                            <Typography component="span">{t('wastedata.selection')}</Typography>
+                        </AccordionSummary>
+                        <AccordionDetails >
+                            <FormControl>
+                                {Object.keys(objectClasses).map((key, idx, arr) => (
+                                    <FormControlLabel
+                                        key={`object-checkbox-${objectClasses[key]}`}
+                                        control={
+                                            <Checkbox
+                                                key={`object-label-${objectClasses[key]}`}
+                                                checked={selectedObjectClasses.includes(key)}
+                                                onChange={(e) => {
+                                                    if (e.target.checked) {
+                                                        onSelectedObjectClassesChange([...selectedObjectClasses, key]);
+                                                    } else {
+                                                        onSelectedObjectClassesChange(selectedObjectClasses.filter(s => s !== key));
+                                                    }
+                                                }}
+                                                size="small"
+                                            />
                                         }
-                                    }}
-                                    label={t('time.range')}
-                                >
-                                    {TIME_FILTERS.map((filter) => (
-                                        <MenuItem key={filter.value} value={filter.value}>
-                                            {t(filter.label)}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
+                                        label={key.toLowerCase()}
+                                    />
+                                ))}
                             </FormControl>
-                        </Box>
-                        <Divider sx={{marginY: 2}} />
-                        <Accordion>
-                            <AccordionSummary
-                                expandIcon={<ExpandMoreIcon />}
-                                aria-controls="panel1-content"
-                                id="panel1-header"
-                            >
-                                <Typography variant="subtitle2" gutterBottom>
-                                    {t('features.selection')}
-                                </Typography>
-                            </AccordionSummary>
-                            <FormGroup row>
+
+                        </AccordionDetails>
+                    </Accordion>
+                    <Accordion defaultExpanded={true} disableGutters>
+                        <AccordionSummary
+                            sx={{
+                                backgroundColor: theme => theme.palette.secondary.main,
+                            }}
+                            expandIcon={<ExpandMoreIcon />}
+                        >
+                            <Typography component="span">{t('features.selection')}</Typography>
+                        </AccordionSummary>
+                        <AccordionDetails >
+                            <FormGroup title={t('features.selection')}>
                                 {features.map(({id, name}) => (
                                     <FormControlLabel
                                         key={`state-label-${id}`}
@@ -168,10 +164,9 @@ function MapFilter({
                                     />
                                 ))}
                             </FormGroup>
-                        </Accordion>
-                    </Box>
-                </Box>
-            )}
+                        </AccordionDetails>
+                    </Accordion>
+                </Box>)}
         </>
     );
 }
