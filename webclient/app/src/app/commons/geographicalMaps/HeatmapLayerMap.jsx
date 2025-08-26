@@ -30,7 +30,7 @@ function HeatmapLayerMap(props) {
     }, []);
 
     useEffect(() => {
-        setSelectedFeatures(Object.keys(features))
+        setSelectedFeatures(Object.keys(features));
     }, [features]);
 
     const filteredFeatures = useMemo(() => {
