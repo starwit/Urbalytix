@@ -22,8 +22,6 @@ function Home() {
         reloadDetectionCounts();
         reloadFeatures();
         reloadObjectClasses();
-        //const interval = setInterval(reloadDetectionCounts, 5000); // Update every five seconds
-        return () => clearInterval(interval);
     }, []);
 
     const selectedTimeRange = useMemo(() => {

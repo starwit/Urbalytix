@@ -1,4 +1,6 @@
 import LogoutIcon from '@mui/icons-material/Logout';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import AutoDeleteIcon from '@mui/icons-material/AutoDelete';
 import {
     AppBar,
     Container,
@@ -44,8 +46,14 @@ function CustomAppBar() {
                             sx={{justifyContent: "right", flex: 1}}
 
                         >
+                            <IconButton href="#/status" size="large">
+                                <AutoDeleteIcon />
+                            </IconButton>
+                            <IconButton href="#/vehicles" size="large">
+                                <LocalShippingIcon />
+                            </IconButton>
                             <Divider orientation="vertical" variant="middle" flexItem />
-                            <IconButton href="./logout" size="large">
+                            <IconButton href="#/logout" size="large">
                                 <LogoutIcon />
                             </IconButton>
                         </Stack>
