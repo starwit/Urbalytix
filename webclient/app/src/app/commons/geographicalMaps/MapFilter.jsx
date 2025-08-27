@@ -7,6 +7,7 @@ import {
     AccordionSummary,
     Box,
     Checkbox,
+    Divider,
     FormControl,
     FormControlLabel,
     FormGroup,
@@ -43,6 +44,7 @@ function MapFilter({
 
     const {t} = useTranslation();
     const [showFilter, setShowFilter] = useState(true);
+    const [selectAllFeatures, setSelectAllFeatures] = useState(true);
 
     const features = availableFeatures.map((item, index) => ({
         id: index + 1,   // or you could use item itself if you prefer
@@ -140,9 +142,29 @@ function MapFilter({
                             expandIcon={<ExpandMoreIcon />}
                         >
                             <Typography component="span">{t('features.selection')}</Typography>
+
                         </AccordionSummary>
                         <AccordionDetails >
-                            <FormGroup title={t('features.selection')}>
+                            <FormGroup aria-label={t('features.selection')}>
+                                <FormControlLabel
+                                    key={`state-label-all`}
+                                    control={
+                                        <Checkbox
+                                            checked={selectAllFeatures}
+                                            size="small"
+                                            onChange={(e) => {
+                                                if (e.target.checked) {
+                                                    onSelectedFeatureChange(availableFeatures);
+                                                } else {
+                                                    onSelectedFeatureChange([]);
+                                                }
+                                                setSelectAllFeatures(!selectAllFeatures);
+                                            }}
+                                        />}
+                                    label={t('features.selection.all')}
+
+                                />
+                                <Divider />
                                 {features.map(({id, name}) => (
                                     <FormControlLabel
                                         key={`state-label-${id}`}

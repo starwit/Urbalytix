@@ -61,6 +61,7 @@ const translationEnEN = {
     "map.normal": "Normal mode",
     "map.heatmap": "Heatmap mode",
     "wastedata.selection": "Collected data",
+    "features.selection.all": "All data",
     "features.selection": "Additional Data",
     "feature.papierkorb": "Papierkorb",
     "feature.bigbelly": "BigBelly",
