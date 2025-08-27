@@ -1,7 +1,6 @@
-
-import {useEffect, useState} from "react";
-import {Button, Paper, Stack, Typography} from "@mui/material";
-import {DataGrid, GridActionsCellItem} from "@mui/x-data-grid";
+import {useEffect, useState, useMemo} from "react";
+import {Paper, Typography} from "@mui/material";
+import {DataGrid} from "@mui/x-data-grid";
 import {useTranslation} from "react-i18next";
 import {deDE, enUS} from '@mui/x-data-grid/locales';
 
@@ -10,6 +9,7 @@ import VehicleDataRest from '../../services/VehicleDataRest';
 function Vehicles() {
     const {t, i18n} = useTranslation();
     const locale = i18n.language == "de" ? deDE : enUS
+    const vehicleDataRest = useMemo(() => new VehicleDataRest(), []);
     const [vehicleData, setVehicleData] = useState([]);
 
     const columns = [
@@ -57,7 +57,6 @@ function Vehicles() {
     }, []);
 
     function loadVehicleData() {
-        const vehicleDataRest = new VehicleDataRest();
         vehicleDataRest.findAll().then(response => {
             if (response.data == null) {
                 return;

@@ -3,6 +3,7 @@ import React, {useEffect, useMemo, useState} from "react";
 import HeatmapLayerMap from '../../commons/geographicalMaps/HeatmapLayerMap';
 import DetectionCountRest from "../../services/DetectionCountRest";
 import FeatureCollectorRest from '../../services/FeatureCollectorRest';
+import VehicleDataRest from '../../services/VehicleDataRest';
 
 const VIEW_STATE = {
     longitude: 10.716988775029739, // Initial longitude
@@ -16,12 +17,14 @@ function Home() {
     const featureCollectorRest = useMemo(() => new FeatureCollectorRest(), []);
     const [objectClasses, setObjectClasses] = useState([]);
     const [selectedTimeFilter, setSelectedTimeFilter] = useState(24);
-
+    const vehicleDataRest = useMemo(() => new VehicleDataRest(), []);
+    const [vehicleData, setVehicleData] = useState([]);
 
     useEffect(() => {
         reloadDetectionCounts();
         reloadFeatures();
         reloadObjectClasses();
+        loadVehicleData();
     }, []);
 
     const selectedTimeRange = useMemo(() => {
@@ -73,6 +76,15 @@ function Home() {
         setFeatures(groupedFeatures);
     }
 
+    function loadVehicleData() {
+        vehicleDataRest.findAll().then(response => {
+            if (response.data == null) {
+                return;
+            }
+            setVehicleData(response.data);
+        });
+    }
+
     return (
         <>
             <HeatmapLayerMap
@@ -83,6 +95,7 @@ function Home() {
                 data={data}
                 features={features}
                 objectClasses={objectClasses}
+                vehicleData={vehicleData}
             />
             <Typography
                 variant="h1"

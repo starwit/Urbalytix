@@ -4,7 +4,7 @@ CREATE TABLE "vehicledata"
 (
     "id" BIGINT NOT NULL DEFAULT nextval('vehicle_id_seq'),
     "name" VARCHAR(255) NOT NULL,
-    "streamkey" VARCHAR(255) NOT NULL,
+    "streamkey" VARCHAR(255) UNIQUE NOT NULL,
     "description" Text,
     "latitude" DECIMAL(22,19),
     "longitude" DECIMAL(22,19),

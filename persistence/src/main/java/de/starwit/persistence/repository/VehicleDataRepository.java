@@ -8,4 +8,5 @@ import de.starwit.persistence.entity.VehicleDataEntity;
 @Repository
 public interface VehicleDataRepository extends JpaRepository<VehicleDataEntity, Long> {
 
+    VehicleDataEntity findByStreamKey(String streamKey);
 }

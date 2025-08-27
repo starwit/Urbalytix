@@ -26,6 +26,11 @@ const TIME_FILTERS = [
     {value: 72, label: 'time.range.last72Hours'},
 ];
 
+const VEHICLE_FILTERS = [
+    {value: 0, label: 'selection.currentPosition'}
+    //{value: 0, label: 'vehicle.selection.routes'}
+];
+
 function MapFilter({
     objectClasses,
     selectedObjectClasses = [],
@@ -39,6 +44,8 @@ function MapFilter({
     onStartDateChange = () => { },
     endDate = '',
     onEndDateChange = () => { },
+    selectedVehicleData = [],
+    onSelectedVehicleData = () => { },
 }) {
 
     const {t} = useTranslation();
@@ -145,7 +152,7 @@ function MapFilter({
                             <FormGroup title={t('features.selection')}>
                                 {features.map(({id, name}) => (
                                     <FormControlLabel
-                                        key={`state-label-${id}`}
+                                        key={`feature-label-${id}`}
                                         control={
                                             <Checkbox
                                                 key={`state-checkbox-${id}`}
@@ -161,6 +168,40 @@ function MapFilter({
                                             />
                                         }
                                         label={t(`feature.${name.toLowerCase()}`)}
+                                    />
+                                ))}
+                            </FormGroup>
+                        </AccordionDetails>
+                    </Accordion>
+                    <Accordion defaultExpanded={true} disableGutters>
+                        <AccordionSummary
+                            sx={{
+                                backgroundColor: theme => theme.palette.secondary.main,
+                            }}
+                            expandIcon={<ExpandMoreIcon />}
+                        >
+                            <Typography component="span">{t('vehicle.selection')}</Typography>
+                        </AccordionSummary>
+                        <AccordionDetails >
+                            <FormGroup title={t('features.selection')}>
+                                {VEHICLE_FILTERS.map(({value, label}) => (
+                                    <FormControlLabel
+                                        key={`vehicledata-label-${value}`}
+                                        control={
+                                            <Checkbox
+                                                key={`state-checkbox-${value}`}
+                                                checked={selectedVehicleData.includes(label)}
+                                                onChange={(e) => {
+                                                    if (e.target.checked) {
+                                                        onSelectedVehicleData([...selectedVehicleData, label]);
+                                                    } else {
+                                                        onSelectedVehicleData(selectedVehicleData.filter(s => s !== label));
+                                                    }
+                                                }}
+                                                size="small"
+                                            />
+                                        }
+                                        label={t(`vehicle.${label.toLowerCase()}`)}
                                     />
                                 ))}
                             </FormGroup>
