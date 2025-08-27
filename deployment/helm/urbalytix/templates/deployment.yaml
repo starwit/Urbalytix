@@ -94,6 +94,12 @@ spec:
               value: {{ .Values.app.spring_data.redis_host | quote}}
             - name: SPRING_DATA_REDIS_PORT
               value: {{ .Values.app.spring_data.redis_port | quote}}
+            - name: SPRING_DATA_STREAM_AGGREGATOR
+              value: {{ .Values.app.spring_data.aggregator_stream_prefix | quote}}
+            - name: SPRING_DATA_STREAM_POSITIONSOURCE
+              value: {{ .Values.app.spring_data.positionsource_stream_prefix | quote}}
+            - name: SPRING_DATA_STREAM_DETECTION
+              value: {{ .Values.app.spring_data.detection_stream_prefix | quote}}
             {{- end }}
             {{- with .Values.extraEnv }}
             {{- tpl . $ | nindent 12 }}
