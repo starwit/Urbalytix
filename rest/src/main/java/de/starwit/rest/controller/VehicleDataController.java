@@ -29,7 +29,7 @@ import jakarta.validation.Valid;
 @RequestMapping(path = "${rest.base-path}/vehicle")
 public class VehicleDataController {
 
-    private static final Logger LOG = LoggerFactory.getLogger(VehicleDataController.class);
+    private Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private VehicleDataService vehicleDataService;
@@ -66,7 +66,7 @@ public class VehicleDataController {
 
     @ExceptionHandler(value = { EntityNotFoundException.class })
     public ResponseEntity<Object> handleException(EntityNotFoundException ex) {
-        LOG.info("Action not found. {}", ex.getMessage());
+        log.info("Action not found. {}", ex.getMessage());
         NotificationDto output = new NotificationDto("error.action.notfound", "Action not found.");
         return new ResponseEntity<>(output, HttpStatus.NOT_FOUND);
     }
