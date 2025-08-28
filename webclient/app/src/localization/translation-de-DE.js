@@ -68,6 +68,8 @@ const translationDeDE = {
     "feature.hundekotsammler": "Hundekotsammler",
     "feature.containerstandplatz": "Containerstandplatz",
     "vehicle.selection": "Fahrzeugdaten",
+    "vehicle.status.online": "online",
+    "vehicle.status.offline": "offline",
     "vehicledata.name": "Name",
     "vehicledata.streamkey": "Fahrzeug ID",
     "vehicledata.description": "Beschreibung",

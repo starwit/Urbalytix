@@ -25,6 +25,8 @@ function Home() {
         reloadFeatures();
         reloadObjectClasses();
         loadVehicleData();
+        const interval = setInterval(loadVehicleData, 2000);
+        return () => clearInterval(interval);
     }, []);
 
     const selectedTimeRange = useMemo(() => {
@@ -77,6 +79,7 @@ function Home() {
     }
 
     function loadVehicleData() {
+        console.log("load vehicle data");
         vehicleDataRest.findAll().then(response => {
             if (response.data == null) {
                 return;

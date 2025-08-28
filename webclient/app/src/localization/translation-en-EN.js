@@ -68,6 +68,8 @@ const translationEnEN = {
     "feature.hundekotsammler": "Hundekotsammler",
     "feature.containerstandplatz": "Containerstandplatz",
     "vehicle.selection": "Vehicle Data",
+    "vehicle.status.online": "online",
+    "vehicle.status.offline": "offline",
     "vehicledata.name": "Name",
     "vehicledata.streamkey": "Vehicle ID",
     "vehicledata.description": "Description",
