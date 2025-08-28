@@ -6,7 +6,24 @@ import recyclingImage from "../../assets/icons/recycling.png"
 import vehicleImage from "../../assets/icons/vehicle.png"
 import MapFilter from "./MapFilter";
 
-const ICON_MAPPING_URL = 'https://raw.githubusercontent.com/visgl/deck.gl-data/master/website/icon-atlas.json';
+const ICON_MAPPING = {
+    "marker": {
+        "x": 0,
+        "y": 0,
+        "width": 128,
+        "height": 128,
+        "anchorY": 128,
+        "mask": true
+    },
+    "marker-warning": {
+        "x": 128,
+        "y": 0,
+        "width": 128,
+        "height": 128,
+        "anchorY": 128,
+        "mask": false
+    }
+}
 
 function HeatmapLayerMap(props) {
     const {latitude, longitude, data: heatMapData, features, objectClasses, selectedTimeFilter, onTimeFilterChange, vehicleData} = props;
@@ -22,14 +39,6 @@ function HeatmapLayerMap(props) {
         pitch: 0,
         bearing: 0
     };
-    const [iconMapping, setIconMapping] = useState(null);
-
-    useEffect(() => {
-        fetch(ICON_MAPPING_URL)
-            .then(res => res.json())
-            .then(data => setIconMapping(data))
-            .catch(err => console.error('Failed to load icon mapping', err));
-    }, []);
 
     useEffect(() => {
         setSelectedFeatures(Object.keys(features));
@@ -78,11 +87,11 @@ function HeatmapLayerMap(props) {
                 id: 'HeatmapLayer',
             }),
             ...Object.entries(selectedLayers).map(([objectType, featureList], index) =>
-                MapLayerFactory.createIconLayer(featureList, objectType, index, iconMapping, recyclingImage)
+                MapLayerFactory.createIconLayer(featureList, objectType, index, ICON_MAPPING, recyclingImage)
             )
         ];
         if (selectedVehicleData.includes("selection.currentPosition")) {
-            result.push(MapLayerFactory.createVehiclePositionLayer(vehicleData, iconMapping, vehicleImage));
+            result.push(MapLayerFactory.createVehiclePositionLayer(vehicleData, ICON_MAPPING, vehicleImage));
         }
 
         return result;

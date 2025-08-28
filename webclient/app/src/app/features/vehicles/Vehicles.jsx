@@ -1,8 +1,9 @@
 import {useEffect, useState, useMemo} from "react";
-import {Paper, Typography} from "@mui/material";
+import {Paper, Tooltip, Typography} from "@mui/material";
 import {DataGrid} from "@mui/x-data-grid";
 import {useTranslation} from "react-i18next";
 import {deDE, enUS} from '@mui/x-data-grid/locales';
+import VehicleIcon from '@mui/icons-material/LocalShipping';
 
 import VehicleDataRest from '../../services/VehicleDataRest';
 
@@ -49,17 +50,38 @@ function Vehicles() {
             headerName: t("vehicledata.lastupdate"),
             flex: 0.5,
             editable: false
+        },
+        {
+            field: "status",
+            headerName: t("vehicledata.status"),
+            flex: 0.4,
+            editable: false,
+            renderCell: vehicle => {
+                return (
+                    <Tooltip title={t(`vehicle.status.${vehicle.row.status}`)}>
+                        <VehicleIcon color={vehicle.row.status == "online" ? "success" : "error"} />
+                    </Tooltip >
+                );
+            }
         }
     ];
 
     useEffect(() => {
         loadVehicleData();
+        const interval = setInterval(loadVehicleData, 2000);
+        return () => clearInterval(interval);
     }, []);
 
     function loadVehicleData() {
         vehicleDataRest.findAll().then(response => {
             if (response.data == null) {
                 return;
+            }
+            for (const vehicle of response.data) {
+                vehicle.lastUpdate = new Date(vehicle.lastUpdate).toLocaleString();
+                const now = new Date();
+                const diffInSeconds = ((now - new Date(vehicle.lastUpdate)) / 1000);
+                vehicle.status = diffInSeconds <= 30 ? "online" : "offline";
             }
             setVehicleData(response.data);
         });
