@@ -61,6 +61,7 @@ const translationDeDE = {
     "map.normal": "Normalmodus",
     "map.heatmap": "Heatmap-Modus",
     "wastedata.selection": "Messdaten",
+    "features.selection.all": "Alle Daten",
     "features.selection": "Weitere Daten",
     "feature.papierkorb": "Papierkorb",
     "feature.bigbelly": "BigBelly",
