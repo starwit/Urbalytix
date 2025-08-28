@@ -23,6 +23,8 @@ import org.springframework.data.redis.stream.StreamMessageListenerContainer;
 import org.springframework.data.redis.stream.Subscription;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
+import de.starwit.service.messagelistener.DetectionCountMessageListener;
+import de.starwit.service.messagelistener.PositionMessageListener;
 import io.lettuce.core.ClientOptions;
 import io.lettuce.core.ClientOptions.DisconnectedBehavior;
 
@@ -37,20 +39,8 @@ public class ServiceConfiguration {
     @Value("${spring.data.redis.port:6379}")
     private int redisPort;
 
-    @Value("${spring.data.redis.stream.ids:stream1}")
-    private String[] streamIds;
-
-    @Value("${spring.data.stream.prefix:aggregator}")
-    private String redisStreamPrefix;
-
     @Value("${spring.data.redis.active:false}")
     private Boolean activateRedis;
-
-    @Bean
-    @ConditionalOnProperty(value = "spring.data.redis.active", havingValue = "true", matchIfMissing = false)
-    StreamMessageListenerContainer<String, MapRecord<String, String, String>> streamMessageListenerContainer() {
-        return StreamMessageListenerContainer.create(lettuceConnectionFactory());
-    }
 
     @Bean
     @ConditionalOnProperty(value = "spring.data.redis.active", havingValue = "true", matchIfMissing = false)
@@ -68,6 +58,12 @@ public class ServiceConfiguration {
 
     @Bean
     @ConditionalOnProperty(value = "spring.data.redis.active", havingValue = "true", matchIfMissing = false)
+    StreamMessageListenerContainer<String, MapRecord<String, String, String>> streamMessageListenerContainer() {
+        return StreamMessageListenerContainer.create(lettuceConnectionFactory());
+    }
+
+    @Bean
+    @ConditionalOnProperty(value = "spring.data.redis.active", havingValue = "true", matchIfMissing = false)
     public RedisTemplate<String, String> redisTemplate(RedisConnectionFactory connectionFactory) {
         RedisTemplate<String, String> template = new RedisTemplate<>();
         template.setConnectionFactory(connectionFactory);
@@ -78,23 +74,13 @@ public class ServiceConfiguration {
 
     @Bean
     @ConditionalOnProperty(value = "spring.data.redis.active", havingValue = "true", matchIfMissing = false)
-    MessageListener messageListener() {
-        return new MessageListener();
+    DetectionCountMessageListener detectionCountMessageListener() {
+        return new DetectionCountMessageListener();
     }
 
     @Bean
     @ConditionalOnProperty(value = "spring.data.redis.active", havingValue = "true", matchIfMissing = false)
-    public List<Subscription> subscription(RedisConnectionFactory redisConnectionFactory) throws UnknownHostException {
-        List<Subscription> subscriptions = new ArrayList<>();
-        for (String stream : streamIds) {
-            StreamOffset<String> streamOffset = StreamOffset.create(redisStreamPrefix + ":" + stream,
-                    ReadOffset.lastConsumed());
-            Subscription subscription = streamMessageListenerContainer().receive(streamOffset,
-                    messageListener());
-            subscriptions.add(subscription);
-        }
-        streamMessageListenerContainer().start();
-        return subscriptions;
+    PositionMessageListener positionMessageListener() {
+        return new PositionMessageListener();
     }
-
 }

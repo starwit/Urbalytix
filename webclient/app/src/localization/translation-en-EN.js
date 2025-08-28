@@ -66,5 +66,13 @@ const translationEnEN = {
     "feature.bigbelly": "BigBelly",
     "feature.hundekotsammler": "Hundekotsammler",
     "feature.containerstandplatz": "Containerstandplatz",
+    "vehicle.selection": "Vehicle Data",
+    "vehicledata.name": "Name",
+    "vehicledata.streamkey": "Vehicle ID",
+    "vehicledata.description": "Description",
+    "vehicledata.latitude": "Latitude",
+    "vehicledata.longitude": "Longitude",
+    "vehicledata.lastupdate": "Last Update",
+    "vehicle.selection.currentposition": "Vehicle Position"
 };
 export default translationEnEN;

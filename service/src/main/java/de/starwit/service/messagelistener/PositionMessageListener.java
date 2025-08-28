@@ -1,7 +1,6 @@
-package de.starwit.service;
+package de.starwit.service.messagelistener;
 
 import java.util.Base64;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,38 +11,34 @@ import org.springframework.stereotype.Service;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
-import de.starwit.service.impl.DetectionCountService;
-import de.starwit.visionapi.Analytics.DetectionCountMessage;
+import de.starwit.service.impl.VehicleDataService;
+import de.starwit.visionapi.Sae.PositionMessage;
 
 @Service
-public class MessageListener implements StreamListener<String, MapRecord<String, String, String>> {
+public class PositionMessageListener implements StreamListener<String, MapRecord<String, String, String>> {
 
     private Logger log = LoggerFactory.getLogger(this.getClass());
-    private AtomicInteger counter = new AtomicInteger();
 
     @Autowired
-    private DetectionCountService service;
+    private VehicleDataService service;
 
     @Override
     public void onMessage(MapRecord<String, String, String> message) {
-        log.info("Decision message received.");
         log.debug(String.format("execute thread: %s %s",
                 Thread.currentThread().getName(), Thread.currentThread().threadId()));
 
+        PositionMessage positionMessage;
+
+        log.debug("Received position message from " + message.getStream());
+
         String b64Proto = message.getValue().get("proto_data_b64");
-        DetectionCountMessage detectionCountMessage;
 
         try {
-            detectionCountMessage = DetectionCountMessage.parseFrom(Base64.getDecoder().decode(b64Proto));
-            service.createDetectionCountFromRedis(detectionCountMessage);
+            positionMessage = PositionMessage.parseFrom(Base64.getDecoder().decode(b64Proto));
+            service.insertOrUpdatePosition(message.getStream(), positionMessage);
         } catch (InvalidProtocolBufferException e) {
             log.warn("Received invalid proto");
             return;
         }
     }
-
-    public int getCount() {
-        return counter.get();
-    }
-
 }

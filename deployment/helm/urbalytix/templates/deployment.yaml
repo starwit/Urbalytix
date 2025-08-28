@@ -90,14 +90,16 @@ spec:
             {{- if .Values.app.spring_data.redis_active }}
             - name: SPRING_DATA_REDIS_ACTIVE
               value: "true"
-            - name: SPRING_DATA_STREAM_PREFIX
-              value: {{ .Values.app.spring_data.stream_prefix | quote}}
             - name: SPRING_DATA_REDIS_HOST
               value: {{ .Values.app.spring_data.redis_host | quote}}
             - name: SPRING_DATA_REDIS_PORT
               value: {{ .Values.app.spring_data.redis_port | quote}}
-            - name: SPRING_DATA_REDIS_STREAM_IDS
-              value: {{ .Values.app.spring_data.redis_stream_ids | quote}}
+            - name: SPRING_DATA_STREAM_AGGREGATOR
+              value: {{ .Values.app.spring_data.aggregator_stream_prefix | quote}}
+            - name: SPRING_DATA_STREAM_POSITIONSOURCE
+              value: {{ .Values.app.spring_data.positionsource_stream_prefix | quote}}
+            - name: SPRING_DATA_STREAM_DETECTION
+              value: {{ .Values.app.spring_data.detection_stream_prefix | quote}}
             {{- end }}
             {{- with .Values.extraEnv }}
             {{- tpl . $ | nindent 12 }}

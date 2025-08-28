@@ -57,4 +57,18 @@ export class MapLayerFactory {
             pickable: true
         });
     }
+
+    static createVehiclePositionLayer(vehicleData, iconMapping, icon) {
+        return new IconLayer({
+            id: `IconLayer-vehicle-positions`,
+            data: vehicleData,
+            getColor: d => [109, 122, 31],
+            getIcon: d => 'marker',
+            getPosition: d => [d.longitude, d.latitude],
+            getSize: 40,
+            iconAtlas: icon,
+            iconMapping: iconMapping,
+            pickable: true
+        });
+    }
 }

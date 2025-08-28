@@ -66,5 +66,13 @@ const translationDeDE = {
     "feature.bigbelly": "BigBelly",
     "feature.hundekotsammler": "Hundekotsammler",
     "feature.containerstandplatz": "Containerstandplatz",
+    "vehicle.selection": "Fahrzeugdaten",
+    "vehicledata.name": "Name",
+    "vehicledata.streamkey": "Fahrzeug ID",
+    "vehicledata.description": "Beschreibung",
+    "vehicledata.latitude": "Breitengrad",
+    "vehicledata.longitude": "Längengrad",
+    "vehicledata.lastupdate": "Letzte Aktualisierung",
+    "vehicle.selection.currentposition": "Aktuelle Position"
 };
 export default translationDeDE;

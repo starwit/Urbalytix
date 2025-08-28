@@ -19,11 +19,12 @@ app:
     secret: supersecret
 
   spring_data: # Configuration to connect to Redis/ValKey
-    redis_active: false # if true connection config is used
-    stream_prefix: aggregator
+    redis_active: false # only if true connection config is used
     redis_host: localhost
     redis_port: 6379
-    redis_stream_ids: stream1
+    aggregator_stream_prefix: aggregator # if aggregation messages are published under a different name
+    positionsource_stream_prefix: positionsource # if position messages are published under a different name
+    detection_stream_prefix: objectdetector # if detection messages are published under a different name
 
 service:
   port: 8081
