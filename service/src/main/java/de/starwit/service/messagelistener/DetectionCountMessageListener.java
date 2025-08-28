@@ -24,7 +24,7 @@ public class DetectionCountMessageListener implements StreamListener<String, Map
 
     @Override
     public void onMessage(MapRecord<String, String, String> message) {
-        log.info("Decision message received.");
+        log.info("DetectionCount message received.");
         log.debug(String.format("execute thread: %s %s",
                 Thread.currentThread().getName(), Thread.currentThread().threadId()));
 
