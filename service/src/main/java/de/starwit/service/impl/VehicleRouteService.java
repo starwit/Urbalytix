@@ -1,5 +1,6 @@
 package de.starwit.service.impl;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,16 @@ public class VehicleRouteService implements ServiceInterface<VehicleRouteEntity,
         VehicleDataEntity vehicle = vehicleRepository.findByStreamKey(name);
         if (vehicle != null) {
             return repository.findAllByVehicleData(vehicle);
+        } else {
+            return null;
+        }
+    }
+
+    public List<VehicleRouteEntity> findAllByVehicleAndTimeFrame(String name, ZonedDateTime startTime,
+            ZonedDateTime endTime) {
+        VehicleDataEntity vehicle = vehicleRepository.findByStreamKey(name);
+        if (vehicle != null) {
+            return repository.findAllByVehicleDataAndUpdateTimestampBetween(vehicle, startTime, endTime);
         } else {
             return null;
         }

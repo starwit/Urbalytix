@@ -48,7 +48,7 @@ const translationEnEN = {
     "time.range": "Time Range",
     "time.range.custom": "User defined",
     "time.range.allTime": "All time",
-    "time.range.last12Hours": "Letzte 12 Stunden",
+    "time.range.last12Hours": "Last 12 hours",
     "time.range.last24Hours": "Last 24 hours",
     "time.range.last48Hours": "Last 2 days",
     "time.range.last72Hours": "Last 3 days",
@@ -77,6 +77,10 @@ const translationEnEN = {
     "vehicledata.longitude": "Longitude",
     "vehicledata.lastupdate": "Last Update",
     "vehicle.selection.currentposition": "Vehicle Position",
-    "vehicledata.heading": "Vehicle Data"
+    "vehicledata.heading": "Vehicle Data",
+    "vehicledata.status": "Status",
+    "vehicledata.views.routes": "Routes",
+    "vehicledata.views.table": "Overview",
+    "vehicledata.selectvehicle": "Available Vehicles"
 };
 export default translationEnEN;

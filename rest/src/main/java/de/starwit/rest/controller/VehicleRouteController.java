@@ -1,5 +1,8 @@
 package de.starwit.rest.controller;
 
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -33,6 +36,18 @@ public class VehicleRouteController {
     @GetMapping(value = "/vehicle/{name}")
     public List<VehicleRouteEntity> findAllPerVehicle(@PathVariable String name) {
         return this.vehicleRouteService.findAllByVehicle(name);
+    }
+
+    @Operation(summary = "Get routes per vehicle per time frame")
+    @GetMapping(value = "/timeframe/{name}/{start}/{end}")
+    public List<VehicleRouteEntity> findAllPerVehicleAndTimeframe(@PathVariable String name,
+            @PathVariable("start") String startTimestamp,
+            @PathVariable("end") String endTimestamp) {
+        ZonedDateTime startTime = Instant.ofEpochSecond(Long.parseLong(startTimestamp.split("\\.")[0]))
+                .atZone(ZoneId.systemDefault());
+        ZonedDateTime endTime = Instant.ofEpochSecond(Long.parseLong(endTimestamp.split("\\.")[0]))
+                .atZone(ZoneId.systemDefault());
+        return this.vehicleRouteService.findAllByVehicleAndTimeFrame(name, startTime, endTime);
     }
 
 }
