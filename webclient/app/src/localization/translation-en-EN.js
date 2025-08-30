@@ -81,6 +81,7 @@ const translationEnEN = {
     "vehicledata.status": "Status",
     "vehicledata.views.routes": "Routes",
     "vehicledata.views.table": "Overview",
-    "vehicledata.selectvehicle": "Available Vehicles"
+    "vehicledata.selectvehicle": "Available Vehicles",
+    "vehicledata.selectweek": "Select Week"
 };
 export default translationEnEN;

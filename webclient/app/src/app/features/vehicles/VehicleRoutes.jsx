@@ -6,6 +6,7 @@ import VehicleDataRest from '../../services/VehicleDataRest';
 import VehicleRoutesRest from '../../services/VehicleRoutesRest';
 import {MapLayerFactory} from "../../commons/geographicalMaps/MapLayerFactory";
 import VehicleFilter from "../../commons/geographicalMaps/VehicleFilter";
+import {TimeFunctions} from "../../commons/geographicalMaps/TimeFunctions";
 import {MAP_VIEW} from '../../commons/geographicalMaps/BaseMapConfig';
 import DeckGL from "@deck.gl/react";
 
@@ -25,7 +26,8 @@ function VehicleRoutes() {
     const vehicleRoutesRest = useMemo(() => new VehicleRoutesRest(), []);
     const [vehicleData, setVehicleData] = useState([]);
     const [selectedVehicleData, setSelectedVehicleData] = useState([]);
-    const [selectedTimeFilter, setSelectedTimeFilter] = useState(12);
+    const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
+    const [selectedWeek, setSelectedWeek] = useState(TimeFunctions.getWeekNumber(new Date())[1]);
     const [routes, setRoutes] = useState([]);
 
     useEffect(() => {
@@ -59,13 +61,9 @@ function VehicleRoutes() {
             setRoutes({});
             return;
         }
-        // load only last 12 hours
-        const timeFilter = selectedTimeFilter;
-        const end = new Date();
-        const start = new Date((new Date()).getTime() - timeFilter * 60 * 60 * 1000).getTime();
 
         const promises = selectedVehicleData.map(vehicle =>
-            vehicleRoutesRest.findAllByVehicleAndTimeframe(vehicle, Math.floor(start / 1000), Math.floor(end / 1000))
+            vehicleRoutesRest.findAllByVehicleAndWeek(vehicle, selectedYear, selectedWeek)
                 .then(response => ({vehicle, data: response.data || []}))
         );
 
@@ -89,14 +87,26 @@ function VehicleRoutes() {
         return result;
     }, [routes]);
 
+    function updateWeek(week) {
+        setSelectedWeek(week);
+        reloadRouteData(selectedVehicles);
+    }
+
+    function updateYear(year) {
+        setSelectedYear(year);
+        reloadRouteData(selectedVehicles);
+    }
+
     return (
         <>
             <VehicleFilter
                 vehicleData={vehicleData}
                 selectedVehicleData={selectedVehicles}
                 onSelectedVehicleDataChange={setSelectedVehicleData}
-                timeFilter={selectedTimeFilter}
-                onTimeFilterChange={setSelectedTimeFilter}
+                year={selectedYear}
+                onYearChange={updateYear}
+                week={selectedWeek}
+                onWeekChange={updateWeek}
             />
             <DeckGL
                 layers={layers}

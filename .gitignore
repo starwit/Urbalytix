@@ -26,3 +26,6 @@ replay_pid*
 docker-compose.yml
 application.properties
 values.yaml
+
+# Ignore database import files
+*.sql

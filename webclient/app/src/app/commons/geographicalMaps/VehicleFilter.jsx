@@ -1,5 +1,5 @@
 import {useState, useEffect} from 'react';
-import {Box, Checkbox, Divider, FormControl, FormControlLabel, FormGroup, IconButton, MenuItem, Select, Typography} from '@mui/material';
+import {Box, Checkbox, Divider, FormControl, FormControlLabel, FormGroup, IconButton, MenuItem, Select, Stack, Typography} from '@mui/material';
 import {useTranslation} from 'react-i18next';
 
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
@@ -13,16 +13,27 @@ const TIME_FILTERS = [
     {value: 72, label: 'time.range.last72Hours'},
 ];
 
+const YEAR_FILTER = [
+    {value: 2025, label: '2025'}
+];
+
+const WEEK_FILTER = [
+    {value: 31, label: '31'},
+    {value: 32, label: '32'},
+    {value: 33, label: '33'},
+    {value: 34, label: '34'},
+    {value: 35, label: '35'},
+    {value: 36, label: '36'}
+];
+
 function VehicleFilter(props) {
     const {vehicleData,
         selectedVehicleData = [],
         onSelectedVehicleDataChange = () => { },
-        timeFilter = 0,
-        onTimeFilterChange = () => { },
-        startDate = '',
-        onStartDateChange = () => { },
-        endDate = '',
-        onEndDateChange = () => { },
+        year = 2025,
+        onYearChange = () => { },
+        week = 31,
+        onWeekChange = () => { },
     } = props;
 
     const {t} = useTranslation();
@@ -56,26 +67,6 @@ function VehicleFilter(props) {
                     maxHeight: '80vh',
                     overflowY: 'auto'
                 }}>
-                    <FormControl fullWidth size="small">
-                        <Select
-                            key={`time-range-${timeFilter}`}
-                            value={timeFilter}
-                            onChange={(e) => {
-                                onTimeFilterChange(e.target.value);
-                                // Clear date range if not custom filter
-                                if (e.target.value !== -1) {
-                                    onStartDateChange('');
-                                    onEndDateChange('');
-                                }
-                            }}
-                        >
-                            {TIME_FILTERS.map((filter) => (
-                                <MenuItem key={filter.value} value={filter.value}>
-                                    {t(filter.label)}
-                                </MenuItem>
-                            ))}
-                        </Select>
-                    </FormControl>
                     <Typography component="span">{t('vehicledata.selectvehicle')}</Typography>
                     <FormGroup aria-label={t('vehicledata.selection')}>
                         <Divider />
@@ -100,6 +91,41 @@ function VehicleFilter(props) {
                             />
                         ))}
                     </FormGroup>
+                    <Divider />
+                    <Typography component="span">{t('vehicledata.selectweek')}</Typography>
+                    <Stack direction="row" spacing={1} alignItems="center" mt={1}>
+                        <FormControl fullWidth size="small">
+                            <Select
+                                key={`year-${year}`}
+                                value={year}
+                                onChange={(e) => {
+                                    onYearChange(e.target.value);
+                                }}
+                            >
+                                {YEAR_FILTER.map((filter) => (
+                                    <MenuItem key={filter.value} value={filter.value}>
+                                        {t(filter.label)}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+
+                        </FormControl>
+                        <FormControl fullWidth size="small" sx={{mt: 2}}>
+                            <Select
+                                key={`week-${week}`}
+                                value={week}
+                                onChange={(e) => {
+                                    onWeekChange(e.target.value);
+                                }}
+                            >
+                                {WEEK_FILTER.map((filter) => (
+                                    <MenuItem key={filter.value} value={filter.value}>
+                                        {t(filter.label)}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </Stack>
                 </Box>
             )}
         </>

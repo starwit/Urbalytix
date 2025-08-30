@@ -81,6 +81,7 @@ const translationDeDE = {
     "vehicledata.status": "Status",
     "vehicledata.views.routes": "Routen",
     "vehicledata.views.table": "Überblick",
-    "vehicledata.selectvehicle": "Fahrzeuge"
+    "vehicledata.selectvehicle": "Fahrzeuge",
+    "vehicledata.selectweek": "Select Week"
 };
 export default translationDeDE;

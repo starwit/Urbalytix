@@ -73,12 +73,13 @@ export class MapLayerFactory {
     }
 
     static createRouteLayer(routeData, layerID) {
+        //console.log(routeData);
         return new ScatterplotLayer({
             id: `ScatterplotLayer-route-points-${layerID}`,
             data: routeData,
             getPosition: d => [d.longitude, d.latitude],
-            getRadius: 2,
-            getFillColor: [100, 155, 100],
+            getRadius: 3,
+            getFillColor: [150, 100, 100],
             pickable: true
         });
     }
