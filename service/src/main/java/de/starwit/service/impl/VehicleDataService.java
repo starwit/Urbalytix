@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import de.starwit.persistence.entity.VehicleDataEntity;
+import de.starwit.persistence.entity.VehicleRouteEntity;
 import de.starwit.persistence.repository.VehicleDataRepository;
+import de.starwit.persistence.repository.VehicleRoutesRepository;
 import de.starwit.visionapi.Sae.PositionMessage;
 
 @Service
@@ -23,6 +25,9 @@ public class VehicleDataService implements ServiceInterface<VehicleDataEntity, V
 
     @Autowired
     private VehicleDataRepository repository;
+
+    @Autowired
+    private VehicleRoutesRepository routesRepository;
 
     @Override
     public VehicleDataRepository getRepository() {
@@ -51,6 +56,13 @@ public class VehicleDataService implements ServiceInterface<VehicleDataEntity, V
         Instant instant = Instant.ofEpochSecond(positionMessage.getTimestampUtcMs() / 1000);
         ZonedDateTime z = ZonedDateTime.ofInstant(instant, timeZone);
         vehicle.setLastUpdate(z);
-        repository.save(vehicle);
+        vehicle = repository.save(vehicle);
+
+        VehicleRouteEntity route = new VehicleRouteEntity();
+        route.setVehicleData(vehicle);
+        route.setLatitude(new BigDecimal(positionMessage.getGeoCoordinate().getLatitude()));
+        route.setLongitude(new BigDecimal(positionMessage.getGeoCoordinate().getLongitude()));
+        route.setUpdateTimestamp(z);
+        routesRepository.save(route);
     }
 }

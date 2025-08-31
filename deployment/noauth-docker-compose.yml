@@ -15,6 +15,7 @@ services:
       retries: 30
     volumes:
       - db:/var/lib/postgresql/data
+      - ./sample_data/urbalytix.sql:/docker-entrypoint-initdb.d/urbalytix.sql
     ports:
       - "5432:5432"
   

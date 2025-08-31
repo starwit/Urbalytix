@@ -1,7 +1,7 @@
 import {TileLayer} from "@deck.gl/geo-layers";
 import {TILE_LAYER_CONFIG} from './BaseMapConfig';
 import {HeatmapLayer} from "@deck.gl/aggregation-layers";
-import {BitmapLayer} from "@deck.gl/layers";
+import {BitmapLayer, PathLayer, ScatterplotLayer} from "@deck.gl/layers";
 import {IconLayer} from '@deck.gl/layers';
 
 export class MapLayerFactory {
@@ -68,6 +68,18 @@ export class MapLayerFactory {
             getSize: 40,
             iconAtlas: icon,
             iconMapping: iconMapping,
+            pickable: true
+        });
+    }
+
+    static createRouteLayer(routeData, layerID) {
+        //console.log(routeData);
+        return new ScatterplotLayer({
+            id: `ScatterplotLayer-route-points-${layerID}`,
+            data: routeData,
+            getPosition: d => [d.longitude, d.latitude],
+            getRadius: 3,
+            getFillColor: [150, 100, 100],
             pickable: true
         });
     }

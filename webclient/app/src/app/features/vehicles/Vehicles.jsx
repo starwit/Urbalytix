@@ -1,118 +1,56 @@
-import {useEffect, useState, useMemo} from "react";
-import {Paper, Tooltip, Typography} from "@mui/material";
-import {DataGrid} from "@mui/x-data-grid";
+import {useState} from "react";
+import {Tooltip, Typography, AppBar, Tabs, Tab, Box} from "@mui/material";
+
 import {useTranslation} from "react-i18next";
 import {deDE, enUS} from '@mui/x-data-grid/locales';
-import VehicleIcon from '@mui/icons-material/LocalShipping';
 
-import VehicleDataRest from '../../services/VehicleDataRest';
+import FormatListBulletedIcon from '@mui/icons-material/FormatListBulleted';
+import TimelineIcon from '@mui/icons-material/Timeline';
+
+import VehicleTable from "./VehicleTable";
+import VehicleRoutes from "./VehicleRoutes";
 
 function Vehicles() {
     const {t, i18n} = useTranslation();
-    const locale = i18n.language == "de" ? deDE : enUS
-    const vehicleDataRest = useMemo(() => new VehicleDataRest(), []);
-    const [vehicleData, setVehicleData] = useState([]);
+    const locale = i18n.language == "de" ? deDE : enUS;
+    const [selectedTab, setSelectedTab] = useState(0);
 
-    const columns = [
-        {field: "id", headerName: "ID", width: 90},
-        {
-            field: "name",
-            headerName: t("vehicledata.name"),
-            flex: 0.5,
-            editable: false
-        },
-        {
-            field: "streamKey",
-            headerName: t("vehicledata.streamkey"),
-            flex: 0.4,
-            editable: false
-        },
-        {
-            field: "description",
-            headerName: t("vehicledata.description"),
-            flex: 0.7,
-            editable: false,
-        },
-        {
-            field: "latitude",
-            headerName: t("vehicledata.latitude"),
-            flex: 0.4,
-            editable: false
-        },
-        {
-            field: "longitude",
-            headerName: t("vehicledata.longitude"),
-            flex: 0.4,
-            editable: false
-        },
-        {
-            field: "lastUpdate",
-            headerName: t("vehicledata.lastupdate"),
-            flex: 0.5,
-            editable: false
-        },
-        {
-            field: "status",
-            headerName: t("vehicledata.status"),
-            flex: 0.4,
-            editable: false,
-            renderCell: vehicle => {
-                return (
-                    <Tooltip title={t(`vehicle.status.${vehicle.row.status}`)}>
-                        <VehicleIcon color={vehicle.row.status == "online" ? "success" : "error"} />
-                    </Tooltip >
-                );
-            }
-        }
-    ];
-
-    useEffect(() => {
-        loadVehicleData();
-        const interval = setInterval(loadVehicleData, 2000);
-        return () => clearInterval(interval);
-    }, []);
-
-    function loadVehicleData() {
-        vehicleDataRest.findAll().then(response => {
-            if (response.data == null) {
-                return;
-            }
-            for (const vehicle of response.data) {
-                vehicle.lastUpdate = new Date(vehicle.lastUpdate).toLocaleString();
-                const now = new Date();
-                const diffInSeconds = ((now - new Date(vehicle.lastUpdate)) / 1000);
-                vehicle.status = diffInSeconds <= 30 ? "online" : "offline";
-            }
-            setVehicleData(response.data);
-        });
-    }
+    const handleTabChange = (event, newValue) => {
+        setSelectedTab(newValue);
+    };
 
     return (
-        <>
-            <Typography variant="h2" gutterBottom sx={{flex: 1}}>
-                {t("vehicledata.heading")}
-            </Typography>
-            <Paper sx={{padding: 2}}>
-                <DataGrid
-                    localeText={locale.components.MuiDataGrid.defaultProps.localeText}
-                    rows={vehicleData}
-                    columns={columns}
-                    resizeable={true}
-                    initialState={{
-                        pagination: {
-                            paginationModel: {
-                                pageSize: 10
-                            }
-                        },
-                        sorting: {
-                            sortModel: [{field: "id", sort: "asc"}]
+        <Box sx={{display: 'flex', position: 'absolute', left: 0, top: 55, width: '100%', height: '100%'}}>
+            <AppBar color="secondary" position="static" sx={{width: 240, height: '100vh', zIndex: 1000}}>
+                <Tabs
+                    orientation="vertical"
+                    value={selectedTab}
+                    onChange={handleTabChange}
+                    sx={{borderRight: 1, borderColor: 'divider', '& .MuiTab-root': {justifyContent: 'flex-start', minHeight: 'auto', padding: '8px 16px'}}}
+                >
+                    <Tab
+                        label={
+                            <Box sx={{display: 'flex', alignItems: 'center', gap: 1, justifyContent: 'flex-start', width: '100%'}}>
+                                <FormatListBulletedIcon />
+                                <Typography>{t("vehicledata.views.table")}</Typography>
+                            </Box>
                         }
-                    }}
-                    pageSizeOptions={[10]}
-                    disableRowSelectionOnClick
-                />
-            </Paper>
-        </>
+                    />
+                    <Tab
+                        label={
+                            <Box sx={{display: 'flex', alignItems: 'center', gap: 1, justifyContent: 'flex-start', width: '100%'}}>
+                                <TimelineIcon />
+                                <Typography>{t("vehicledata.views.routes")}</Typography>
+                            </Box>
+                        }
+                    />
+                </Tabs>
+            </AppBar>
+            <Box sx={{flexGrow: 1, p: 2, position: 'relative', zIndex: 1}}>
+                {selectedTab === 0 && <VehicleTable />}
+                {selectedTab === 1 && <VehicleRoutes />}
+            </Box>
+        </Box>
     );
 }
 
