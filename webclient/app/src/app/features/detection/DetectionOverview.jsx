@@ -1,5 +1,4 @@
-import {Typography} from '@mui/material';
-import React, {useEffect, useMemo, useState} from "react";
+import {useEffect, useMemo, useState} from "react";
 import DetectionMap from '../../commons/geographicalMaps/DetectionMap';
 import DetectionCountRest from "../../services/DetectionCountRest";
 import FeatureCollectorRest from '../../services/FeatureCollectorRest';

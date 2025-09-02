@@ -21,7 +21,7 @@ import io.swagger.v3.oas.annotations.Operation;
 @RequestMapping(path = "${rest.base-path}/vehicleroute")
 public class VehicleRouteController {
 
-    private Logger log = LoggerFactory.getLogger(this.getClass());
+    private final static Logger log = LoggerFactory.getLogger(VehicleRouteController.class);
 
     @Autowired
     private VehicleRouteService vehicleRouteService;
