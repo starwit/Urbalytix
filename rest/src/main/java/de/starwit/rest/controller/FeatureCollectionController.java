@@ -15,7 +15,7 @@ import io.swagger.v3.oas.annotations.Operation;
 @RequestMapping(path = "${rest.base-path}/feature-collector")
 public class FeatureCollectionController {
 
-    private Logger log = LoggerFactory.getLogger(this.getClass());
+    private static final Logger log = LoggerFactory.getLogger(FeatureCollectionController.class);
 
     @Autowired
     InfrastructureCollectionService collectionService;

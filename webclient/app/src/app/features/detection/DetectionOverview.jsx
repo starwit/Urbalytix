@@ -1,6 +1,6 @@
 import {Typography} from '@mui/material';
 import React, {useEffect, useMemo, useState} from "react";
-import HeatmapLayerMap from '../../commons/geographicalMaps/HeatmapLayerMap';
+import DetectionMap from '../../commons/geographicalMaps/DetectionMap';
 import DetectionCountRest from "../../services/DetectionCountRest";
 import FeatureCollectorRest from '../../services/FeatureCollectorRest';
 import VehicleDataRest from '../../services/VehicleDataRest';
@@ -10,7 +10,7 @@ const VIEW_STATE = {
     latitude: 52.41988232741599    // Initial latitude
 };
 
-function Home() {
+function DetectionOverview() {
     const [data, setData] = useState([]);
     const detectionCountRest = useMemo(() => new DetectionCountRest(), []);
     const [features, setFeatures] = useState([]);
@@ -96,7 +96,7 @@ function Home() {
 
     return (
         <>
-            <HeatmapLayerMap
+            <DetectionMap
                 latitude={VIEW_STATE.latitude}
                 longitude={VIEW_STATE.longitude}
                 selectedTimeFilter={selectedTimeRange}
@@ -106,18 +106,8 @@ function Home() {
                 objectClasses={objectClasses}
                 vehicleData={vehicleData}
             />
-            <Typography
-                variant="h1"
-                component="div"
-                noWrap
-                sx={{
-                    position: 'relative',
-                }}
-            >
-                Welcome!
-            </Typography >
         </>
     );
 };
 
-export default Home;
+export default DetectionOverview;

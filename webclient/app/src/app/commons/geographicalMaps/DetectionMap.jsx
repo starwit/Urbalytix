@@ -25,7 +25,7 @@ const ICON_MAPPING = {
     }
 }
 
-function HeatmapLayerMap(props) {
+function DetectionMap(props) {
     const {latitude, longitude, data: heatMapData, features, objectClasses, selectedTimeFilter, onTimeFilterChange, vehicleData} = props;
 
     const [selectedFeatures, setSelectedFeatures] = useState([]);
@@ -40,9 +40,9 @@ function HeatmapLayerMap(props) {
         bearing: 0
     };
 
-    useEffect(() => {
-        setSelectedFeatures(Object.keys(features));
-    }, [features]);
+    // useEffect(() => {
+    //     setSelectedFeatures(Object.keys(features));
+    // }, [features]);
 
     useEffect(() => {
         setSelectedObjectClasses(Object.keys(objectClasses))
@@ -121,4 +121,4 @@ function HeatmapLayerMap(props) {
     );
 }
 
-export default HeatmapLayerMap;
+export default DetectionMap;

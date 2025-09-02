@@ -3,7 +3,6 @@ import {TileLayer} from "@deck.gl/geo-layers";
 import {BitmapLayer, IconLayer} from "@deck.gl/layers";
 import DeckGL from "@deck.gl/react";
 import cameraicon from "./../../assets/images/camera3.png";
-import {HeatmapLayer} from "@deck.gl/aggregation-layers";
 
 const MAP_VIEW = new MapView({repeat: true});
 const ICON_MAPPING = {

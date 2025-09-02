@@ -1,5 +1,5 @@
 import {useState} from "react";
-import {Tooltip, Typography, AppBar, Tabs, Tab, Box} from "@mui/material";
+import {Typography, AppBar, Tabs, Tab, Box} from "@mui/material";
 
 import {useTranslation} from "react-i18next";
 import {deDE, enUS} from '@mui/x-data-grid/locales';

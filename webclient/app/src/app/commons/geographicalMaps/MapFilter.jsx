@@ -51,7 +51,7 @@ function MapFilter({
 
     const {t} = useTranslation();
     const [showFilter, setShowFilter] = useState(true);
-    const [selectAllFeatures, setSelectAllFeatures] = useState(true);
+    const [selectAllFeatures, setSelectAllFeatures] = useState(false);
 
     const features = availableFeatures.map((item, index) => ({
         id: index + 1,   // or you could use item itself if you prefer
