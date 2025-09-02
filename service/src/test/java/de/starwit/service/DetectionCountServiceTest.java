@@ -36,7 +36,7 @@ public class DetectionCountServiceTest {
                 detectionCount.setDetectionTime(ZonedDateTime.ofInstant(Instant.now(), ZoneId.systemDefault()));
                 detectionCount.setLatitude(new BigDecimal("48.123456"));
                 detectionCount.setLongitude(new BigDecimal("11.123456"));
-                detectionCount.setClassId(1);
+                detectionCount.setClassName("waste");
                 detectionCount.setCount(5);
 
                 // Call-Methode

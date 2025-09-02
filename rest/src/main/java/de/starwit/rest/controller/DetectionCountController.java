@@ -63,8 +63,8 @@ public class DetectionCountController {
 
     @Operation(summary = "Get all detected object classes")
     @GetMapping(value = "/classes")
-    public Map<String, Long> getAllDetectedObjectClasses() {
-        return this.detectionCountService.getAllDetectedObjectClassesWithNames();
+    public List<String> getAllDetectedObjectClasses() {
+        return this.detectionCountService.getAllDetectedObjectClasses();
     }
 
     @ExceptionHandler(value = { EntityNotFoundException.class })

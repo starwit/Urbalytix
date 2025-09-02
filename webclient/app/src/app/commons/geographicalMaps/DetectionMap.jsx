@@ -45,7 +45,7 @@ function DetectionMap(props) {
     // }, [features]);
 
     useEffect(() => {
-        setSelectedObjectClasses(Object.keys(objectClasses))
+        setSelectedObjectClasses(objectClasses)
     }, [objectClasses]);
 
     const filteredFeatures = useMemo(() => {
@@ -67,19 +67,11 @@ function DetectionMap(props) {
             }, {});
 
         var filteredHeatMapData = heatMapData.filter(d => {
-            if (selectedObjectClasses.includes(getNameForObjectClass(d.classId))) {
+            if (selectedObjectClasses.includes(d.className)) {
                 return true;
             }
             return false;
         });
-
-        function getNameForObjectClass(idOfClass) {
-            for (const [key, value] of Object.entries(objectClasses)) {
-                if (value === idOfClass) {
-                    return key;
-                }
-            }
-        }
 
         var result = [
             MapLayerFactory.createBaseMapLayer(),
