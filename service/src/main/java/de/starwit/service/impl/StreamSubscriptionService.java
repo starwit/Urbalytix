@@ -29,7 +29,7 @@ public class StreamSubscriptionService {
 
     private Logger log = LoggerFactory.getLogger(this.getClass());
 
-    @Autowired
+    @Autowired(required = false)
     private RedisTemplate<String, ?> redisTemplate;
 
     @Value("${spring.data.redis.active:false}")

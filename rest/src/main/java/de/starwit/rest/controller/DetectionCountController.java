@@ -4,7 +4,6 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -63,8 +62,8 @@ public class DetectionCountController {
 
     @Operation(summary = "Get all detected object classes")
     @GetMapping(value = "/classes")
-    public Map<String, Long> getAllDetectedObjectClasses() {
-        return this.detectionCountService.getAllDetectedObjectClassesWithNames();
+    public List<String> getAllDetectedObjectClasses() {
+        return this.detectionCountService.getAllDetectedObjectClasses();
     }
 
     @ExceptionHandler(value = { EntityNotFoundException.class })

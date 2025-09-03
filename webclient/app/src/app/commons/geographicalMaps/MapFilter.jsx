@@ -117,24 +117,24 @@ function MapFilter({
                         </AccordionSummary>
                         <AccordionDetails >
                             <FormControl>
-                                {Object.keys(objectClasses).map((key, idx, arr) => (
+                                {objectClasses.map((objectClass) => (
                                     <FormControlLabel
-                                        key={`object-checkbox-${objectClasses[key]}`}
+                                        key={`object-checkbox-${objectClass}`}
                                         control={
                                             <Checkbox
-                                                key={`object-label-${objectClasses[key]}`}
-                                                checked={selectedObjectClasses.includes(key)}
+                                                key={`object-label-${objectClass}`}
+                                                checked={selectedObjectClasses.includes(objectClass)}
                                                 onChange={(e) => {
                                                     if (e.target.checked) {
-                                                        onSelectedObjectClassesChange([...selectedObjectClasses, key]);
+                                                        onSelectedObjectClassesChange([...selectedObjectClasses, objectClass]);
                                                     } else {
-                                                        onSelectedObjectClassesChange(selectedObjectClasses.filter(s => s !== key));
+                                                        onSelectedObjectClassesChange(selectedObjectClasses.filter(s => s !== objectClass));
                                                     }
                                                 }}
                                                 size="small"
                                             />
                                         }
-                                        label={key.toLowerCase()}
+                                        label={t(`wastedata.${objectClass}`)}
                                     />
                                 ))}
                             </FormControl>

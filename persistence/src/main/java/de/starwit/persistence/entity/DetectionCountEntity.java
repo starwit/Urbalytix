@@ -29,8 +29,8 @@ public class DetectionCountEntity extends AbstractEntity<Long> {
     @Column(name = "longitude")
     private BigDecimal longitude;
 
-    @Column(name = "class_id")
-    private Integer classId = 0;
+    @Column(name = "class_name")
+    private String className;
 
     @NotNull
     @Column(name = "count", nullable = false)
@@ -61,12 +61,12 @@ public class DetectionCountEntity extends AbstractEntity<Long> {
         this.longitude = longitude;
     }
 
-    public Integer getClassId() {
-        return classId;
+    public String getClassName() {
+        return className;
     }
 
-    public void setClassId(Integer classId) {
-        this.classId = classId;
+    public void setClassName(String className) {
+        this.className = className;
     }
 
     public Integer getCount() {

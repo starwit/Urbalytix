@@ -12,8 +12,8 @@ import de.starwit.persistence.entity.DetectionCountEntity;
 @Repository
 public interface DetectionCountRepository extends JpaRepository<DetectionCountEntity, Long> {
 
-    @Query("SELECT DISTINCT d.classId FROM DetectionCountEntity d WHERE d.classId IS NOT NULL")
-    List<Long> findDistinctClassIds();
+    @Query("SELECT DISTINCT detectionCount.className FROM DetectionCountEntity detectionCount WHERE detectionCount.detectionTime > :cutoffDate")
+    List<String> findDistinctClassNames(ZonedDateTime cutoffDate);
 
     List<DetectionCountEntity> findByDetectionTimeBetween(ZonedDateTime startTimeStamp, ZonedDateTime endTimeStamp);
 

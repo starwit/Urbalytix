@@ -28,4 +28,4 @@ application.properties
 values.yaml
 
 # Ignore database import files
-*.sql
+*sample_data.sql

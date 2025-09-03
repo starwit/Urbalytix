@@ -4,9 +4,7 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -15,41 +13,25 @@ import org.springframework.stereotype.Service;
 
 import de.starwit.persistence.entity.DetectionCountEntity;
 import de.starwit.persistence.repository.DetectionCountRepository;
-import de.starwit.persistence.repository.ObjectClassRepository;
 import de.starwit.visionapi.Analytics.DetectionCount;
 import de.starwit.visionapi.Analytics.DetectionCountMessage;
 
 @Service
 public class DetectionCountService implements ServiceInterface<DetectionCountEntity, DetectionCountRepository> {
 
-    @Autowired
-    private DetectionCountRepository repository;
+    ZonedDateTime cutoffDate = ZonedDateTime.now().minusDays(14);
 
     @Autowired
-    private ObjectClassRepository objectClassRepository;
+    private DetectionCountRepository repository;
 
     @Override
     public DetectionCountRepository getRepository() {
         return repository;
     }
 
-    public List<Long> getAllDetectedObjectClasses() {
-        return repository.findDistinctClassIds();
-    }
-
-    public Map<String, Long> getAllDetectedObjectClassesWithNames() {
-        Map<String, Long> result = new HashMap<>();
-
-        var allClasses = objectClassRepository.findAll();
-        var foundClasses = repository.findDistinctClassIds();
-        for (Long classId : foundClasses) {
-            allClasses.stream().filter(c -> c.getClassId().equals(Math.toIntExact(classId))).findFirst()
-                    .ifPresent(c -> {
-                        result.put(c.getName(), classId);
-                    });
-        }
-
-        return result;
+    public List<String> getAllDetectedObjectClasses() {
+        List<String> classNames = repository.findDistinctClassNames(cutoffDate);
+        return classNames;
     }
 
     public void createDetectionCountFromRedis(DetectionCountMessage message) {
@@ -69,7 +51,7 @@ public class DetectionCountService implements ServiceInterface<DetectionCountEnt
                 entity.setLatitude(null);
                 entity.setLongitude(null);
             }
-            entity.setClassId(dto.getClassId());
+            entity.setClassName(dto.getClassName());
             entity.setCount(dto.getCount());
             repository.save(entity);
         }
