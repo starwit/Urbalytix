@@ -134,7 +134,7 @@ function MapFilter({
                                                 size="small"
                                             />
                                         }
-                                        label={objectClass.toLowerCase()}
+                                        label={t(`wastedata.${objectClass}`)}
                                     />
                                 ))}
                             </FormControl>
