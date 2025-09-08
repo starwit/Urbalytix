@@ -20,8 +20,8 @@ function Vehicles() {
     };
 
     return (
-        <Box sx={{display: 'flex', position: 'absolute', left: 0, top: 55, width: '100%', height: '100%'}}>
-            <AppBar color="secondary" position="static" sx={{width: 240, height: '100vh', zIndex: 1000}}>
+        <Box sx={{display: 'flex', position: 'absolute', left: 0, top: 50, overflow: 'hidden', width: '100vw', height: 'calc(100vh - 50px)'}}>
+            <AppBar color="secondary" position="static" sx={{width: 240, paddingTop: '16px', zIndex: 1000}}>
                 <Tabs
                     orientation="vertical"
                     value={selectedTab}
@@ -46,11 +46,13 @@ function Vehicles() {
                     />
                 </Tabs>
             </AppBar>
-            <Box sx={{flexGrow: 1, p: 2, position: 'relative', zIndex: 1}}>
+
+            <Box sx={{flexGrow: 1, padding: 2, width: `calc(100vw - 240px)`, zIndex: 1}}>
                 {selectedTab === 0 && <VehicleTable />}
                 {selectedTab === 1 && <VehicleRoutes />}
             </Box>
-        </Box>
+        </Box >
+
     );
 }
 
