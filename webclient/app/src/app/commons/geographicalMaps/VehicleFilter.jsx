@@ -17,14 +17,10 @@ const YEAR_FILTER = [
     {value: 2025, label: '2025'}
 ];
 
-const WEEK_FILTER = [
-    {value: 31, label: '31'},
-    {value: 32, label: '32'},
-    {value: 33, label: '33'},
-    {value: 34, label: '34'},
-    {value: 35, label: '35'},
-    {value: 36, label: '36'}
-];
+const WEEK_FILTER = Array.from({length: 52}, (_, i) => ({
+    value: i + 1,
+    label: `${i + 1}`
+}));
 
 function VehicleFilter(props) {
     const {vehicleData,

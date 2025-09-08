@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +22,7 @@ import io.swagger.v3.oas.annotations.Operation;
 @RequestMapping(path = "${rest.base-path}/vehicleroute")
 public class VehicleRouteController {
 
-    private final static Logger log = LoggerFactory.getLogger(VehicleRouteController.class);
+    private Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     private VehicleRouteService vehicleRouteService;
@@ -57,6 +58,12 @@ public class VehicleRouteController {
             @PathVariable("week") int week) {
 
         return this.vehicleRouteService.findByVehicleAndCalendarWeek(name, year, week);
+    }
+
+    @Operation(summary = "Get years/weeks with data available")
+    @GetMapping(value = "/timeframes")
+    public Map<Integer, List<Integer>> getAvailableTimeFrames() {
+        return vehicleRouteService.getAvailableTimeFrames();
     }
 
 }

@@ -7,18 +7,26 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.temporal.IsoFields;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import de.starwit.persistence.entity.VehicleDataEntity;
 import de.starwit.persistence.entity.VehicleRouteEntity;
+import de.starwit.persistence.entity.WeekYearAvailability;
 import de.starwit.persistence.repository.VehicleDataRepository;
 import de.starwit.persistence.repository.VehicleRoutesRepository;
 
 @Service
 public class VehicleRouteService implements ServiceInterface<VehicleRouteEntity, VehicleRoutesRepository> {
+
+    private Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
     VehicleRoutesRepository repository;
@@ -68,6 +76,24 @@ public class VehicleRouteService implements ServiceInterface<VehicleRouteEntity,
         VehicleDataEntity vehicle = vehicleRepository.findByStreamKey(name);
 
         return repository.findAllByVehicleDataAndUpdateTimestampBetween(vehicle, startZdt, endZdt);
+    }
+
+    public Map<Integer, List<Integer>> getAvailableTimeFrames() {
+        HashMap<Integer, List<Integer>> result = new HashMap<>();
+        List<WeekYearAvailability> timeFrames = repository.findAvailableWeeksAndYears();
+        for (var timeFrame : timeFrames) {
+            if (!result.containsKey(timeFrame.year())) {
+                result.put(timeFrame.year(), new LinkedList<>());
+                result.get(timeFrame.year()).add(timeFrame.week());
+            } else {
+                if (result.get(timeFrame.year()) == null) {
+                    result.put(timeFrame.year(), new LinkedList<>());
+                }
+                result.get(timeFrame.year()).add(timeFrame.week());
+            }
+        }
+
+        return result;
     }
 
 }
