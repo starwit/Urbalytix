@@ -11,7 +11,7 @@
 
     <groupId>de.starwit</groupId>
     <artifactId>urbalytix</artifactId>
-    <version>0.1.2-SNAPSHOT</version>
+    <version>0.2.0-SNAPSHOT</version>
     <description>Starwit's implementation of urbalytix</description>
     <licenses>
         <license>
