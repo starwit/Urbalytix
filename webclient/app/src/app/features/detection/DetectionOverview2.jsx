@@ -1,9 +1,10 @@
-import {use, useEffect, useMemo, useState} from "react";
-import DetectionMap from '../../commons/geographicalMaps/DetectionMap2';
-import DetectionCountRest from "../../services/DetectionCountRest";
-import FeatureCollectorRest from '../../services/FeatureCollectorRest';
-import VehicleDataRest from '../../services/VehicleDataRest';
+import {useEffect, useMemo, useState} from "react";
 import DateFilter from "../../commons/geographicalMaps/DateFilter";
+import DetectionMap from '../../commons/geographicalMaps/DetectionMap2';
+import FeatureCollectorRest from '../../services/FeatureCollectorRest';
+import {useVehicleData} from "./hooks/useVehicleData";
+import {useDetectionCount} from "./hooks/useDetectionCount";
+import FilterLayout from "../../commons/filter/FilterLayout";
 
 const VIEW_STATE = {
     longitude: 10.800000000000000,
@@ -14,39 +15,14 @@ const VIEW_STATE = {
 };
 
 function DetectionOverview() {
-    const [detectionCount, setDetectionCount] = useState(1000);
-    const [detectionData, setDetectionData] = useState([]);
-    const detectionCountRest = useMemo(() => new DetectionCountRest(), []);
+    const [detectionData, detectionCount, setDetectionCount] = useDetectionCount(1000);
+    const vehicleData = useVehicleData(2000);
     const [features, setFeatures] = useState([]);
     const featureCollectorRest = useMemo(() => new FeatureCollectorRest(), []);
-    const vehicleDataRest = useMemo(() => new VehicleDataRest(), []);
-    const [vehicleData, setVehicleData] = useState([]);
-
-
 
     useEffect(() => {
-        reloadDetectionCounts();
         reloadFeatures();
-        loadVehicleData();
-        const interval = setInterval(loadVehicleData, 2000);
-        return () => clearInterval(interval);
     }, []);
-
-    useEffect(() => {
-        reloadDetectionCounts();
-    }, [detectionCount]);
-
-    function reloadDetectionCounts() {
-        detectionCountRest.findAllLimited(detectionCount).then(response => handleLoadDecisions(response));
-    }
-
-
-    function handleLoadDecisions(response) {
-        if (response.data == null) {
-            return;
-        }
-        setDetectionData(response.data)
-    }
 
     function reloadFeatures() {
         featureCollectorRest.findAll().then(response => handleLoadFeatures(response));
@@ -70,21 +46,14 @@ function DetectionOverview() {
         setFeatures(groupedFeatures);
     }
 
-    function loadVehicleData() {
-        vehicleDataRest.findAllFormatted().then(response => {
-            if (response.data == null) {
-                return;
-            }
-            setVehicleData(response.data);
-        });
-    }
-
     return (
         <>
-            <DateFilter
-                timeFilter={detectionCount}
-                onTimeFilterChange={setDetectionCount}
-            />
+            <FilterLayout leftPosition={10}>
+                <DateFilter
+                    timeFilter={detectionCount}
+                    onTimeFilterChange={setDetectionCount}
+                />
+            </FilterLayout>
             <DetectionMap
                 viewState={VIEW_STATE}
                 detectionData={detectionData}
