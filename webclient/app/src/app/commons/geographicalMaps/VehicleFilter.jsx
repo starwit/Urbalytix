@@ -1,43 +1,88 @@
-import {useState, useEffect} from 'react';
-import {Box, Checkbox, Divider, FormControl, FormControlLabel, FormGroup, IconButton, MenuItem, Select, Stack, Typography} from '@mui/material';
+import {useState} from 'react';
+import {Box, Checkbox, Divider, FormControlLabel, FormGroup, IconButton, Typography} from '@mui/material';
+import {DatePicker} from '@mui/x-date-pickers/DatePicker';
+import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
+import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
+import dayjs from 'dayjs';
+import isBetweenPlugin from 'dayjs/plugin/isBetween';
+import {PickersDay} from '@mui/x-date-pickers/PickersDay';
+import {styled} from '@mui/material/styles';
+
 import {useTranslation} from 'react-i18next';
 
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 
-const TIME_FILTERS = [
-    {value: 0, label: 'time.range.allTime'},
-    {value: 12, label: 'time.range.last12Hours'},
-    {value: 24, label: 'time.range.last24Hours'},
-    {value: 48, label: 'time.range.last48Hours'},
-    {value: 72, label: 'time.range.last72Hours'},
-];
-
-const YEAR_FILTER = [
-    {value: 2025, label: '2025'}
-];
-
-const WEEK_FILTER = [
-    {value: 31, label: '31'},
-    {value: 32, label: '32'},
-    {value: 33, label: '33'},
-    {value: 34, label: '34'},
-    {value: 35, label: '35'},
-    {value: 36, label: '36'}
-];
-
 function VehicleFilter(props) {
     const {vehicleData,
         selectedVehicleData = [],
         onSelectedVehicleDataChange = () => { },
-        year = 2025,
-        onYearChange = () => { },
-        week = 31,
-        onWeekChange = () => { },
+        selectedDate = dayjs(new Date()),
+        onTimeChange = () => { }
     } = props;
 
     const {t} = useTranslation();
     const [showFilter, setShowFilter] = useState(true);
+    const [hoveredDay, setHoveredDay] = useState(null);
+
+    dayjs.extend(isBetweenPlugin);
+
+    const CustomPickersDay = styled(PickersDay, {
+        shouldForwardProp: (prop) => prop !== 'isSelected' && prop !== 'isHovered',
+    })(({theme, isSelected, isHovered, day}) => ({
+        borderRadius: 0,
+        ...(isSelected && {
+            backgroundColor: theme.palette.primary.main,
+            color: theme.palette.primary.contrastText,
+            '&:hover, &:focus': {
+                backgroundColor: theme.palette.primary.main,
+            },
+        }),
+        ...(isHovered && {
+            backgroundColor: theme.palette.primary.light,
+            '&:hover, &:focus': {
+                backgroundColor: theme.palette.primary.light,
+            },
+            ...theme.applyStyles('dark', {
+                backgroundColor: theme.palette.primary.dark,
+                '&:hover, &:focus': {
+                    backgroundColor: theme.palette.primary.dark,
+                },
+            }),
+        }),
+        ...(day.day() === 0 && {
+            borderTopLeftRadius: '50%',
+            borderBottomLeftRadius: '50%',
+        }),
+        ...(day.day() === 6 && {
+            borderTopRightRadius: '50%',
+            borderBottomRightRadius: '50%',
+        }),
+    }));
+
+    const isInSameWeek = (dayA, dayB) => {
+        if (dayB == null) {
+            return false;
+        }
+
+        return dayA.isSame(dayB, 'week');
+    };
+
+    function Day(props) {
+        const {day, selectedDay, hoveredDay, ...other} = props;
+
+        return (
+            <CustomPickersDay
+                {...other}
+                day={day}
+                sx={{px: 2.5}}
+                disableMargin
+                selected={false}
+                isSelected={isInSameWeek(day, selectedDay)}
+                isHovered={isInSameWeek(day, hoveredDay)}
+            />
+        );
+    }
 
     return (
         <>
@@ -93,39 +138,24 @@ function VehicleFilter(props) {
                     </FormGroup>
                     <Divider />
                     <Typography component="span">{t('vehicledata.selectweek')}</Typography>
-                    <Stack direction="row" spacing={1} alignItems="center" mt={1}>
-                        <FormControl fullWidth size="small">
-                            <Select
-                                key={`year-${year}`}
-                                value={year}
-                                onChange={(e) => {
-                                    onYearChange(e.target.value);
-                                }}
-                            >
-                                {YEAR_FILTER.map((filter) => (
-                                    <MenuItem key={filter.value} value={filter.value}>
-                                        {t(filter.label)}
-                                    </MenuItem>
-                                ))}
-                            </Select>
 
-                        </FormControl>
-                        <FormControl fullWidth size="small" sx={{mt: 2}}>
-                            <Select
-                                key={`week-${week}`}
-                                value={week}
-                                onChange={(e) => {
-                                    onWeekChange(e.target.value);
-                                }}
-                            >
-                                {WEEK_FILTER.map((filter) => (
-                                    <MenuItem key={filter.value} value={filter.value}>
-                                        {t(filter.label)}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                    </Stack>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                        <DatePicker
+                            value={selectedDate}
+                            onChange={(newValue) => onTimeChange(newValue)}
+                            showDaysOutsideCurrentMonth
+                            displayWeekNumber
+                            slots={{day: Day}}
+                            slotProps={{
+                                day: (ownerState) => ({
+                                    selectedDay: selectedDate,
+                                    hoveredDay,
+                                    onPointerEnter: () => setHoveredDay(ownerState.day),
+                                    onPointerLeave: () => setHoveredDay(null),
+                                }),
+                            }}
+                        />
+                    </LocalizationProvider>
                 </Box>
             )}
         </>

@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,6 +58,12 @@ public class VehicleRouteController {
             @PathVariable("week") int week) {
 
         return this.vehicleRouteService.findByVehicleAndCalendarWeek(name, year, week);
+    }
+
+    @Operation(summary = "Get years/weeks with data available")
+    @GetMapping(value = "/timeframes")
+    public Map<Integer, List<Integer>> getAvailableTimeFrames() {
+        return vehicleRouteService.getAvailableTimeFrames();
     }
 
 }

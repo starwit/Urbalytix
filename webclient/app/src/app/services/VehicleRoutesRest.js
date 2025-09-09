@@ -17,6 +17,10 @@ class VehicleRoutesRest extends CrudRest {
     findAllByVehicleAndWeek(name, year, week) {
         return axios.get(this.baseUrl + "/calendarweek/" + name + '/' + year + "/" + week);
     }
+
+    findAvailableTimeFrames() {
+        return axios.get(this.baseUrl + "/timeframes");
+    }
 }
 
 export default VehicleRoutesRest;

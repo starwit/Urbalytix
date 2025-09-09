@@ -1,4 +1,5 @@
 import {useState, useMemo, useEffect} from "react";
+import dayjs from 'dayjs';
 import {useTranslation} from "react-i18next";
 import {deDE, enUS} from '@mui/x-data-grid/locales';
 
@@ -26,8 +27,7 @@ function VehicleRoutes() {
     const vehicleRoutesRest = useMemo(() => new VehicleRoutesRest(), []);
     const [vehicleData, setVehicleData] = useState([]);
     const [selectedVehicleData, setSelectedVehicleData] = useState([]);
-    const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
-    const [selectedWeek, setSelectedWeek] = useState(TimeFunctions.getWeekNumber(new Date())[1]);
+    const [selectedDate, setSelectedDate] = useState(dayjs(new Date()));
     const [routes, setRoutes] = useState([]);
 
     useEffect(() => {
@@ -49,6 +49,12 @@ function VehicleRoutes() {
             const sortedData = response.data.sort((a, b) => a.name.localeCompare(b.name));
             setVehicleData(sortedData);
         });
+
+        vehicleRoutesRest.findAvailableTimeFrames().then(response => {
+            if (response.data == null) {
+                return;
+            }
+        });
     }
 
     const selectedVehicles = useMemo(() => {
@@ -56,14 +62,13 @@ function VehicleRoutes() {
         return selectedVehicleData;
     }, [selectedVehicleData]);
 
-    function reloadRouteData(selectedVehicleData) {
+    function reloadRouteData(selectedVehicleData, date) {
         if (selectedVehicleData.length == 0) {
             setRoutes({});
             return;
         }
-
         const promises = selectedVehicleData.map(vehicle =>
-            vehicleRoutesRest.findAllByVehicleAndWeek(vehicle, selectedYear, selectedWeek)
+            vehicleRoutesRest.findAllByVehicleAndWeek(vehicle, selectedDate.year(), selectedDate.week())
                 .then(response => ({vehicle, data: response.data || []}))
         );
 
@@ -87,14 +92,10 @@ function VehicleRoutes() {
         return result;
     }, [routes]);
 
-    function updateWeek(week) {
-        setSelectedWeek(week);
-        reloadRouteData(selectedVehicles);
-    }
-
-    function updateYear(year) {
-        setSelectedYear(year);
-        reloadRouteData(selectedVehicles);
+    function onTimeChange(date) {
+        setSelectedDate(date);
+        setRoutes({});
+        reloadRouteData(selectedVehicles, date);
     }
 
     return (
@@ -103,10 +104,8 @@ function VehicleRoutes() {
                 vehicleData={vehicleData}
                 selectedVehicleData={selectedVehicles}
                 onSelectedVehicleDataChange={setSelectedVehicleData}
-                year={selectedYear}
-                onYearChange={updateYear}
-                week={selectedWeek}
-                onWeekChange={updateWeek}
+                onTimeChange={onTimeChange}
+                selectedDate={selectedDate}
             />
             <DeckGL
                 layers={layers}

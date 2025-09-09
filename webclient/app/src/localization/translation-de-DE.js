@@ -62,6 +62,8 @@ const translationDeDE = {
     "map.heatmap": "Heatmap-Modus",
     "wastedata.selection": "Messdaten",
     "wastedata.waste": "Abfall",
+    "wastedata.cigarette": "Zigaretten",
+    "wastedata.": "Sonstiges",
     "features.selection.all": "Alle Daten",
     "features.selection": "Weitere Daten",
     "feature.papierkorb": "Papierkorb",
