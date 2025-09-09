@@ -62,6 +62,8 @@ const translationEnEN = {
     "map.heatmap": "Heatmap mode",
     "wastedata.selection": "Collected data",
     "wastedata.waste": "Waste",
+    "wastedata.cigarette": "Cigarettes",
+    "wastedata.": "undefined",
     "features.selection.all": "All data",
     "features.selection": "Additional Data",
     "feature.papierkorb": "Garbage Bin",

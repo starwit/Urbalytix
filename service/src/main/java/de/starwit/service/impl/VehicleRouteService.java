@@ -78,6 +78,11 @@ public class VehicleRouteService implements ServiceInterface<VehicleRouteEntity,
         return repository.findAllByVehicleDataAndUpdateTimestampBetween(vehicle, startZdt, endZdt);
     }
 
+    /**
+     * Get all available years and weeks for which data is available
+     * 
+     * @return Map with year as key and list of available weeks as value
+     */
     public Map<Integer, List<Integer>> getAvailableTimeFrames() {
         HashMap<Integer, List<Integer>> result = new HashMap<>();
         List<WeekYearAvailability> timeFrames = repository.findAvailableWeeksAndYears();
