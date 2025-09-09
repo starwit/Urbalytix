@@ -15,11 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import de.starwit.persistence.entity.DetectionCountEntity;
 import de.starwit.persistence.serializer.ZonedDateTimeDeserializer;
-import de.starwit.persistence.serializer.ZonedDateTimeSerializer;
 import de.starwit.rest.exception.NotificationDto;
 import de.starwit.service.impl.DetectionCountService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -42,7 +40,6 @@ public class DetectionCountController {
 
     @Operation(summary = "Get detection count from start/end")
 
-    @JsonSerialize(using = ZonedDateTimeSerializer.class)
     @JsonDeserialize(using = ZonedDateTimeDeserializer.class)
     @GetMapping(value = "/timeframe/{start}/{end}")
     public List<DetectionCountEntity> findAllFromTimeFrame(@PathVariable("start") ZonedDateTime startTime,

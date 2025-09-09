@@ -67,7 +67,7 @@ function DetectionMap(props) {
 
         var result = [
             MapLayerFactory.createBaseMapLayer(),
-            MapLayerFactory.createHeatmapLayer(filteredHeatMapData, HEATMAP_COLOR_RANGES.redScale, {
+            MapLayerFactory.createHeatmapDetectionLayer(filteredHeatMapData, HEATMAP_COLOR_RANGES.redScale, {
                 id: 'HeatmapLayer',
             }),
             ...Object.entries(selectedLayers).map(([objectType, featureList], index) =>
@@ -75,7 +75,7 @@ function DetectionMap(props) {
             )
         ];
         if (selectedVehicleData.includes("selection.currentPosition")) {
-            result.push(MapLayerFactory.createVehiclePositionLayer(vehicleData, ICON_MAPPING, vehicleImage));
+            result.push(MapLayerFactory.createPositionLayer(vehicleData, ICON_MAPPING, vehicleImage));
         }
 
         return result;

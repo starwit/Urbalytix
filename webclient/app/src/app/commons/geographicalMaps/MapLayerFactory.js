@@ -22,10 +22,10 @@ export class MapLayerFactory {
         });
     }
 
-    static createHeatmapLayer(data, colorRange, options = {}) {
+    static createHeatmapDetectionLayer(detectionData, colorRange, options = {}) {
         return new HeatmapLayer({
             id: options.id || 'heatmap-layer',
-            data,
+            data: detectionData,
             getPosition: d => [d.longitude, d.latitude],
             getWeight: d => d.count || 1,
             aggregation: 'SUM',
@@ -35,7 +35,7 @@ export class MapLayerFactory {
         });
     }
 
-    static createIconLayer(featureList, objectType, colorIndex, iconMapping, iconAtlas) {
+    static createIconLayer(iconData, objectType, colorIndex, iconMapping, iconAtlas) {
         const colors = [
             [155, 50, 50],    // Redish
             [100, 155, 100],  // Green
@@ -47,7 +47,7 @@ export class MapLayerFactory {
 
         return new IconLayer({
             id: `IconLayer-${objectType}`,
-            data: featureList,
+            data: iconData,
             getColor: d => colors[colorIndex % colors.length],
             getIcon: d => 'marker',
             getPosition: d => d.geometry.coordinates,
@@ -58,10 +58,10 @@ export class MapLayerFactory {
         });
     }
 
-    static createVehiclePositionLayer(vehicleData, iconMapping, icon) {
+    static createPositionLayer(positionData, iconMapping, icon) {
         return new IconLayer({
             id: `IconLayer-vehicle-positions`,
-            data: vehicleData,
+            data: positionData,
             getColor: d => d.status === 'online' ? [100, 155, 100] : [155, 50, 50],
             getIcon: d => 'marker',
             getPosition: d => [d.longitude, d.latitude],

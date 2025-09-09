@@ -1,7 +1,7 @@
 import {Route, Routes} from "react-router-dom";
 import Layout from "./commons/Layout";
 import Vehicles from "./features/vehicle/Vehicles";
-import DetectionOverview from "./features/detection/DetectionOverview";
+import DetectionOverview from "./features/detection/DetectionOverview2";
 
 function MainContentRouter() {
     return (
