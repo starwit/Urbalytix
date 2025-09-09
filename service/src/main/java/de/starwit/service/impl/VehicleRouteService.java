@@ -26,7 +26,7 @@ import de.starwit.persistence.repository.VehicleRoutesRepository;
 @Service
 public class VehicleRouteService implements ServiceInterface<VehicleRouteEntity, VehicleRoutesRepository> {
 
-    private Logger log = LoggerFactory.getLogger(this.getClass());
+    private final static Logger log = LoggerFactory.getLogger(VehicleRouteService.class);
 
     @Autowired
     VehicleRoutesRepository repository;
