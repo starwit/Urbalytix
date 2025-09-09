@@ -26,19 +26,11 @@ const ICON_MAPPING = {
 }
 
 function DetectionMap(props) {
-    const {latitude, longitude, data: heatMapData, features, objectClasses, selectedTimeFilter, onTimeFilterChange, vehicleData} = props;
+    const {viewState, data: heatMapData, features, objectClasses, selectedTimeFilter, onTimeFilterChange, vehicleData} = props;
 
     const [selectedFeatures, setSelectedFeatures] = useState([]);
     const [selectedObjectClasses, setSelectedObjectClasses] = useState([]);
     const [selectedVehicleData, setSelectedVehicleData] = useState([]);
-
-    const INITIAL_VIEW_STATE = {
-        longitude,
-        latitude,
-        zoom: 19,
-        pitch: 0,
-        bearing: 0
-    };
 
     // useEffect(() => {
     //     setSelectedFeatures(Object.keys(features));
@@ -106,7 +98,7 @@ function DetectionMap(props) {
             <DeckGL
                 layers={layers}
                 views={MAP_VIEW}
-                initialViewState={INITIAL_VIEW_STATE}
+                initialViewState={viewState}
                 controller={{dragRotate: false}}
             />
         </>

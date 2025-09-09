@@ -5,8 +5,11 @@ import FeatureCollectorRest from '../../services/FeatureCollectorRest';
 import VehicleDataRest from '../../services/VehicleDataRest';
 
 const VIEW_STATE = {
-    longitude: 10.716988775029739, // Initial longitude
-    latitude: 52.41988232741599    // Initial latitude
+    longitude: 10.800000000000000,
+    latitude: 52.41988232741599,
+    zoom: 13,
+    pitch: 0,
+    bearing: 0
 };
 
 function DetectionOverview() {
@@ -96,8 +99,7 @@ function DetectionOverview() {
     return (
         <>
             <DetectionMap
-                latitude={VIEW_STATE.latitude}
-                longitude={VIEW_STATE.longitude}
+                viewState={VIEW_STATE}
                 selectedTimeFilter={selectedTimeRange}
                 onTimeFilterChange={setSelectedTimeFilter}
                 data={data}
