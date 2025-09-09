@@ -1,8 +1,9 @@
-import {useEffect, useMemo, useState} from "react";
+import {use, useEffect, useMemo, useState} from "react";
 import DetectionMap from '../../commons/geographicalMaps/DetectionMap2';
 import DetectionCountRest from "../../services/DetectionCountRest";
 import FeatureCollectorRest from '../../services/FeatureCollectorRest';
 import VehicleDataRest from '../../services/VehicleDataRest';
+import DateFilter from "../../commons/geographicalMaps/DateFilter";
 
 const VIEW_STATE = {
     longitude: 10.800000000000000,
@@ -12,8 +13,8 @@ const VIEW_STATE = {
     bearing: 0
 };
 
-function DetectionOverview(props) {
-    const {detectionCount = 1000} = props;
+function DetectionOverview() {
+    const [detectionCount, setDetectionCount] = useState(1000);
     const [detectionData, setDetectionData] = useState([]);
     const detectionCountRest = useMemo(() => new DetectionCountRest(), []);
     const [features, setFeatures] = useState([]);
@@ -31,6 +32,9 @@ function DetectionOverview(props) {
         return () => clearInterval(interval);
     }, []);
 
+    useEffect(() => {
+        reloadDetectionCounts();
+    }, [detectionCount]);
 
     function reloadDetectionCounts() {
         detectionCountRest.findAllLimited(detectionCount).then(response => handleLoadDecisions(response));
@@ -77,6 +81,10 @@ function DetectionOverview(props) {
 
     return (
         <>
+            <DateFilter
+                timeFilter={detectionCount}
+                onTimeFilterChange={setDetectionCount}
+            />
             <DetectionMap
                 viewState={VIEW_STATE}
                 detectionData={detectionData}
