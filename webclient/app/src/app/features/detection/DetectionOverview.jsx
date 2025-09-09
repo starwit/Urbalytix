@@ -81,7 +81,6 @@ function DetectionOverview() {
     }
 
     function loadVehicleData() {
-        console.log("load vehicle data");
         vehicleDataRest.findAll().then(response => {
             if (response.data == null) {
                 return;
