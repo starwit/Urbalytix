@@ -67,8 +67,6 @@ function VehicleRoutes() {
             setRoutes({});
             return;
         }
-        console.log(date);
-
         const promises = selectedVehicleData.map(vehicle =>
             vehicleRoutesRest.findAllByVehicleAndWeek(vehicle, selectedDate.year(), selectedDate.week())
                 .then(response => ({vehicle, data: response.data || []}))
