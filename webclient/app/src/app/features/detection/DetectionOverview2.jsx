@@ -1,7 +1,7 @@
-import {useEffect, useMemo, useState} from "react";
+import {useEffect, useState} from "react";
 import DateFilter from "../../commons/filter/DateFilter";
 import DetectionMap from '../../commons/geographicalMaps/DetectionMap2';
-import FeatureCollectorRest from '../../services/FeatureCollectorRest';
+import {useFeatures} from "./hooks/useFeatures";
 import {useVehicleData} from "./hooks/useVehicleData";
 import {useDetectionCount} from "./hooks/useDetectionCount";
 import FilterLayout from "../../commons/filter/FilterLayout";
@@ -15,46 +15,16 @@ const VIEW_STATE = {
     bearing: 0
 };
 
+
 function DetectionOverview() {
     const [detectionData, detectionCount, setDetectionCount] = useDetectionCount(1000);
     const vehicleData = useVehicleData(2000);
-    const [features, setFeatures] = useState([]);
-    const [selectedFeatureKeys, setSelectedFeatureKeys] = useState([]);
-    const [selectedFeatures, setSelectedFeatures] = useState([]);
-    const featureCollectorRest = useMemo(() => new FeatureCollectorRest(), []);
-
-    useEffect(() => {
-        reloadFeatures();
-    }, []);
-
-    useEffect(() => {
-        setSelectedFeatures(selectedFeatureKeys.reduce((obj, key) => {
-            obj[key] = features[key]; return obj;
-        }, {}));
-    }, [selectedFeatureKeys, features]);
-
-    function reloadFeatures() {
-        featureCollectorRest.findAll().then(response => handleLoadFeatures(response));
-    }
-
-    function handleLoadFeatures(response) {
-        if (response.data == null) {
-            return;
-        }
-
-        var list = response.data.features;
-        const groupedFeatures = list.reduce((acc, feature) => {
-            const objectType = feature.properties.objectTypeLabel;
-            if (!acc[objectType]) {
-                acc[objectType] = [];
-            }
-            acc[objectType].push(feature);
-            return acc;
-        }, {});
-
-        setFeatures(groupedFeatures);
-    }
-
+    const {
+        features,
+        selectedFeatureKeys,
+        setSelectedFeatureKeys,
+        selectedFeatures
+    } = useFeatures();
 
     return (
         <>
@@ -77,6 +47,6 @@ function DetectionOverview() {
             />
         </>
     );
-};
+}
 
 export default DetectionOverview;
