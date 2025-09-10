@@ -2,10 +2,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import {
     Box,
-    FormControl,
-    IconButton,
-    MenuItem,
-    Select
+    IconButton
 } from '@mui/material';
 import {useState} from 'react';
 import {useTranslation} from 'react-i18next';

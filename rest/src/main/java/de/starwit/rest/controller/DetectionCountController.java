@@ -44,7 +44,8 @@ public class DetectionCountController {
     @GetMapping(value = "/timeframe/{start}/{end}")
     public List<DetectionCountEntity> findAllFromTimeFrame(@PathVariable("start") ZonedDateTime startTime,
             @PathVariable("end") ZonedDateTime endTime) {
-        return this.detectionCountService.getDataFromTimeFrame(startTime, endTime);
+        List<DetectionCountEntity> entities = this.detectionCountService.getDataFromTimeFrame(startTime, endTime);
+        return entities;
     }
 
     @Operation(summary = "Find latest data")
