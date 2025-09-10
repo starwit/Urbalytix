@@ -8,9 +8,11 @@ import dayjs from 'dayjs';
  * @returns {[Array, number, Function]} [detectionData, detectionCount, setDetectionCount]
  */
 export function useDetectionCount() {
-    const [detectionData, setDetectionData] = useState([]);
+    const [rawDetectionData, setDetectionData] = useState([]);
     const [startDate, setStartDate] = useState(dayjs().startOf('week'));
     const [endDate, setEndDate] = useState(dayjs().endOf('week'));
+    const [objectClasses, setObjectClasses] = useState([]);
+    const [selectedObjectClasses, setSelectedObjectClasses] = useState();
     const detectionCountRest = useMemo(() => new DetectionCountRest(), []);
 
     useEffect(() => {
@@ -21,5 +23,30 @@ export function useDetectionCount() {
         });
     }, [detectionCountRest, startDate, endDate]);
 
-    return [detectionData, setStartDate, setEndDate];
+    useEffect(() => {
+        detectionCountRest.getObjectClasses().then(response => {
+            setObjectClasses(response.data);
+        });
+    }, [detectionCountRest]);
+
+    useEffect(() => {
+        setSelectedObjectClasses(objectClasses);
+    }, [objectClasses]);
+
+
+    var detectionData = rawDetectionData.filter(d => {
+        if (selectedObjectClasses.includes(d.className)) {
+            return true;
+        }
+        return false;
+    });
+
+    return {
+        detectionData,
+        setStartDate,
+        setEndDate,
+        objectClasses,
+        selectedObjectClasses,
+        setSelectedObjectClasses
+    };
 }

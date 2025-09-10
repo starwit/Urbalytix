@@ -29,7 +29,7 @@ function FeatureFilter({
 
     return (
 
-        <Accordion defaultExpanded={true} disableGutters>
+        <Accordion defaultExpanded={false} disableGutters>
             <AccordionSummary
                 sx={{
                     backgroundColor: theme => theme.palette.secondary.main,

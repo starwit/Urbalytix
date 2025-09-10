@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import DataFilter from "../../commons/filter/DataFilter";
 import DateTimeFilter from "../../commons/filter/DateTimeFilter";
 import FeatureFilter from "../../commons/filter/FeatureFilter";
@@ -7,6 +7,7 @@ import DetectionMap from '../../commons/geographicalMaps/DetectionMap';
 import {useDetectionCount} from "./hooks/useDetectionCount";
 import {useFeatures} from "./hooks/useFeatures";
 import {useVehicleData} from "./hooks/useVehicleData";
+import ObjectClassFilter from "../../commons/filter/ObjectClassFilter";
 
 const VIEW_STATE = {
     longitude: 10.800000000000000,
@@ -22,8 +23,16 @@ const DATA_FILTERS = [
 
 
 function DetectionOverview() {
-    const [detectionData, setStartDate, setEndDate] = useDetectionCount();
+    const {
+        detectionData,
+        setStartDate,
+        setEndDate,
+        objectClasses,
+        selectedObjectClasses,
+        setSelectedObjectClasses
+    } = useDetectionCount();
     const vehicleData = useVehicleData(2000);
+
     const [selectedFilterLabels, setSelectedFilterLabels] = useState([DATA_FILTERS[0].label]);
     const {
         features,
@@ -32,14 +41,18 @@ function DetectionOverview() {
         selectedFeatures
     } = useFeatures();
 
-
-
     return (
         <>
             <FilterLayout leftPosition={10}>
                 <DateTimeFilter
                     setStartDate={setStartDate}
                     setEndDate={setEndDate}
+                />
+                <ObjectClassFilter
+                    objectClasses={objectClasses}
+                    selectedObjectClasses={selectedObjectClasses}
+                    onSelectedObjectClassesChange={setSelectedObjectClasses}
+                    prefix='wastedata'
                 />
                 <DataFilter
                     prefix='vehicle'
