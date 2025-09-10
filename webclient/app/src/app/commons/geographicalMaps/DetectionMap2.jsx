@@ -25,7 +25,7 @@ const ICON_MAPPING = {
 }
 
 function DetectionMap(props) {
-    const {viewState, detectionData, features, featureIcon = featureImage, postionData, positionIcon = positionImage} = props;
+    const {viewState, detectionData, features, featureIcon = featureImage, positionData = [], positionIcon = positionImage, showPosition = false} = props;
 
     const layers = useMemo(() => {
 
@@ -38,8 +38,9 @@ function DetectionMap(props) {
                 MapLayerFactory.createIconLayer(featureData, objectType, index, ICON_MAPPING, featureIcon)
             )
         ];
-
-        result.push(MapLayerFactory.createPositionLayer(postionData, ICON_MAPPING, positionIcon));
+        if (showPosition) {
+            result.push(MapLayerFactory.createPositionLayer(positionData, ICON_MAPPING, positionIcon));
+        }
 
         return result;
     });

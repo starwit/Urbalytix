@@ -11,21 +11,18 @@ export function useVehicleData(intervalMs = 2000) {
     const vehicleDataRest = useMemo(() => new VehicleDataRest(), []);
 
     useEffect(() => {
-        let isMounted = true;
-        const loadVehicleData = () => {
-            vehicleDataRest.findAllFormatted().then(response => {
-                if (isMounted && response.data != null) {
-                    setVehicleData(response.data);
-                }
-            });
-        };
         loadVehicleData();
         const interval = setInterval(loadVehicleData, intervalMs);
-        return () => {
-            isMounted = false;
-            clearInterval(interval);
-        };
+        return () => clearInterval(interval);
     }, [vehicleDataRest, intervalMs]);
+
+    function loadVehicleData() {
+        vehicleDataRest.findAllFormatted().then(response => {
+            if (response.data != null) {
+                setVehicleData(response.data);
+            }
+        });
+    }
 
     return vehicleData;
 }

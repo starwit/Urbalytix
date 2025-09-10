@@ -13,7 +13,7 @@ const TIME_FILTERS = [
     {value: 5000, label: 'time.range.last72Hours'},
 ];
 
-function DateFilter({
+function DateTimeFilter({
     timeFilter = 0,
     onTimeFilterChange = () => { },
 }) {
@@ -39,4 +39,4 @@ function DateFilter({
     );
 }
 
-export default DateFilter;
+export default DateTimeFilter;
