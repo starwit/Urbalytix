@@ -67,7 +67,7 @@ function Day(props) {
 }
 
 export default function DateRangePicker(props) {
-    const {setStartDate, setEndDate, setDate} = props
+    const {setStartDate = () => { }, setEndDate = () => { }, setDate = () => { }} = props
     const [hoveredDay, setHoveredDay] = useState(null);
     const [value, setValue] = useState(dayjs());
 
