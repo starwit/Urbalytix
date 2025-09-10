@@ -34,8 +34,8 @@ function DetectionMap(props) {
             MapLayerFactory.createHeatmapDetectionLayer(detectionData, HEATMAP_COLOR_RANGES.redScale, {
                 id: 'HeatmapLayer',
             }),
-            ...Object.entries(features).map(([objectType, iconData], index) =>
-                MapLayerFactory.createIconLayer(iconData, objectType, index, ICON_MAPPING, featureIcon)
+            ...Object.entries(features).map(([objectType, featureData], index) =>
+                MapLayerFactory.createIconLayer(featureData, objectType, index, ICON_MAPPING, featureIcon)
             )
         ];
 

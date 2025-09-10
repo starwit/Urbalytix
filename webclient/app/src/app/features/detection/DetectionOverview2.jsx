@@ -1,10 +1,11 @@
 import {useEffect, useMemo, useState} from "react";
-import DateFilter from "../../commons/geographicalMaps/DateFilter";
+import DateFilter from "../../commons/filter/DateFilter";
 import DetectionMap from '../../commons/geographicalMaps/DetectionMap2';
 import FeatureCollectorRest from '../../services/FeatureCollectorRest';
 import {useVehicleData} from "./hooks/useVehicleData";
 import {useDetectionCount} from "./hooks/useDetectionCount";
 import FilterLayout from "../../commons/filter/FilterLayout";
+import FeatureFilter from "../../commons/filter/FeatureFilter";
 
 const VIEW_STATE = {
     longitude: 10.800000000000000,
@@ -18,11 +19,19 @@ function DetectionOverview() {
     const [detectionData, detectionCount, setDetectionCount] = useDetectionCount(1000);
     const vehicleData = useVehicleData(2000);
     const [features, setFeatures] = useState([]);
+    const [selectedFeatureKeys, setSelectedFeatureKeys] = useState([]);
+    const [selectedFeatures, setSelectedFeatures] = useState([]);
     const featureCollectorRest = useMemo(() => new FeatureCollectorRest(), []);
 
     useEffect(() => {
         reloadFeatures();
     }, []);
+
+    useEffect(() => {
+        setSelectedFeatures(selectedFeatureKeys.reduce((obj, key) => {
+            obj[key] = features[key]; return obj;
+        }, {}));
+    }, [selectedFeatureKeys, features]);
 
     function reloadFeatures() {
         featureCollectorRest.findAll().then(response => handleLoadFeatures(response));
@@ -46,6 +55,7 @@ function DetectionOverview() {
         setFeatures(groupedFeatures);
     }
 
+
     return (
         <>
             <FilterLayout leftPosition={10}>
@@ -53,11 +63,16 @@ function DetectionOverview() {
                     timeFilter={detectionCount}
                     onTimeFilterChange={setDetectionCount}
                 />
+                <FeatureFilter
+                    availableFeatureKeys={Object.keys(features)}
+                    selectedFeatureKeys={selectedFeatureKeys}
+                    onSelectedFeatureChange={setSelectedFeatureKeys}
+                />
             </FilterLayout>
             <DetectionMap
                 viewState={VIEW_STATE}
                 detectionData={detectionData}
-                features={features}
+                features={selectedFeatures}
                 positionData={vehicleData}
             />
         </>
