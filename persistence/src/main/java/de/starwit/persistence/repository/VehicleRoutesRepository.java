@@ -3,6 +3,7 @@ package de.starwit.persistence.repository;
 import java.time.ZonedDateTime;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -16,9 +17,20 @@ public interface VehicleRoutesRepository extends JpaRepository<VehicleRouteEntit
 
     List<VehicleRouteEntity> findAllByVehicleData(VehicleDataEntity vehicle);
 
-    List<VehicleRouteEntity> findAllByVehicleDataAndUpdateTimestampBetween(VehicleDataEntity vehicle,
+    @Query(value = """
+            select * from (
+            SELECT *, row_number() over (order by update_ts asc) as rw_number
+            FROM vehicleroutes
+            WHERE vehicle_id = :vehicleId
+              AND update_ts BETWEEN :startTime AND :endTime
+            ) sub
+            WHERE mod(rw_number, :scale) = 0
+            ORDER BY update_ts ASC
+            """, nativeQuery = true)
+    List<VehicleRouteEntity> findAllByVehicleDataAndUpdateTimestampBetween(Long vehicleId,
             ZonedDateTime startTime,
-            ZonedDateTime endTime);
+            ZonedDateTime endTime,
+            int scale);
 
     @Query(value = """
             SELECT

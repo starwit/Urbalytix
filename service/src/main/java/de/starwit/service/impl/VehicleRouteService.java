@@ -15,6 +15,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import de.starwit.persistence.entity.VehicleDataEntity;
@@ -39,6 +40,9 @@ public class VehicleRouteService implements ServiceInterface<VehicleRouteEntity,
         return repository;
     }
 
+    @Value("${spring.data.detection.scale:50}")
+    private int scale;
+
     public List<VehicleRouteEntity> findAllByVehicle(String name) {
         VehicleDataEntity vehicle = vehicleRepository.findByStreamKey(name);
         if (vehicle != null) {
@@ -52,7 +56,7 @@ public class VehicleRouteService implements ServiceInterface<VehicleRouteEntity,
             ZonedDateTime endTime) {
         VehicleDataEntity vehicle = vehicleRepository.findByStreamKey(name);
         if (vehicle != null) {
-            return repository.findAllByVehicleDataAndUpdateTimestampBetween(vehicle, startTime, endTime);
+            return repository.findAllByVehicleDataAndUpdateTimestampBetween(vehicle.getId(), startTime, endTime, scale);
         } else {
             return null;
         }
@@ -75,7 +79,7 @@ public class VehicleRouteService implements ServiceInterface<VehicleRouteEntity,
 
         VehicleDataEntity vehicle = vehicleRepository.findByStreamKey(name);
 
-        return repository.findAllByVehicleDataAndUpdateTimestampBetween(vehicle, startZdt, endZdt);
+        return repository.findAllByVehicleDataAndUpdateTimestampBetween(vehicle.getId(), startZdt, endZdt, scale);
     }
 
     /**
