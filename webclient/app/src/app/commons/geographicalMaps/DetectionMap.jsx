@@ -25,7 +25,7 @@ const ICON_MAPPING = {
 }
 
 function DetectionMap(props) {
-    const {viewState, detectionData, features, featureIcon = featureImage, positionData = [], positionIcon = positionImage, showPosition = false} = props;
+    const {viewState, detectionData = [], features = [], featureIcon = featureImage, positionData = [], positionIcon = positionImage, showPosition = false} = props;
 
     const layers = useMemo(() => {
 

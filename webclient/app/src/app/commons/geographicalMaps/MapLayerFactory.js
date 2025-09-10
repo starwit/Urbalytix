@@ -73,7 +73,6 @@ export class MapLayerFactory {
     }
 
     static createRouteLayer(routeData, layerID) {
-        //console.log(routeData);
         return new ScatterplotLayer({
             id: `ScatterplotLayer-route-points-${layerID}`,
             data: routeData,
