@@ -33,7 +33,6 @@ export function useDetectionCount() {
         setSelectedObjectClasses(objectClasses);
     }, [objectClasses]);
 
-
     var detectionData = rawDetectionData.filter(d => {
         if (selectedObjectClasses.includes(d.className)) {
             return true;
