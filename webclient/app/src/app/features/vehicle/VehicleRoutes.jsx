@@ -72,7 +72,7 @@ function VehicleRoutes() {
     }
 
     function reloadAllRouteData() {
-        if (selectedVehicleData.length == 0) {
+        if (selectedVehicleData.length === 0) {
             setRoutes({});
             return;
         }
