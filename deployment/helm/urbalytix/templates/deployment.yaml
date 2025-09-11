@@ -53,6 +53,8 @@ spec:
                   name: {{ include "postgresql.secretname" . }}
                   key: password
             {{- if .Values.auth.enabled }}
+            - name: SPRING_DATA_DETECTION_SCALE
+              value: {{ .Values.app.spring_data.detection_scale | quote }}
             - name: SPRING_PROFILES_ACTIVE
               value: auth
             - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER-URI

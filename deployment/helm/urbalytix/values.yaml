@@ -25,6 +25,7 @@ app:
     aggregator_stream_prefix: aggregator # if aggregation messages are published under a different name
     positionsource_stream_prefix: positionsource # if position messages are published under a different name
     detection_stream_prefix: objectdetector # if detection messages are published under a different name
+    detection_scale: 20 # scale factor of vehicle route density
 
 service:
   port: 8081
