@@ -55,7 +55,7 @@ function VehicleRoutes() {
     }
 
     function reloadPartialVehicleRouteData() {
-        if (selectedVehicleData.length == 0) {
+        if (selectedVehicleData.length === 0) {
             setRoutes({});
             return;
         }
