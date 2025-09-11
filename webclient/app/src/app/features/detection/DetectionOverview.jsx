@@ -1,8 +1,13 @@
-import {useEffect, useMemo, useState} from "react";
+import {useEffect, useState} from "react";
+import DataFilter from "../../commons/filter/DataFilter";
+import DateTimeFilter from "../../commons/filter/DateTimeFilter";
+import FeatureFilter from "../../commons/filter/FeatureFilter";
+import FilterLayout from "../../commons/filter/FilterLayout";
 import DetectionMap from '../../commons/geographicalMaps/DetectionMap';
-import DetectionCountRest from "../../services/DetectionCountRest";
-import FeatureCollectorRest from '../../services/FeatureCollectorRest';
-import VehicleDataRest from '../../services/VehicleDataRest';
+import {useDetectionCount} from "./hooks/useDetectionCount";
+import {useFeatures} from "./hooks/useFeatures";
+import {useVehicleData} from "./hooks/useVehicleData";
+import ObjectClassFilter from "../../commons/filter/ObjectClassFilter";
 
 const VIEW_STATE = {
     longitude: 10.800000000000000,
@@ -12,103 +17,64 @@ const VIEW_STATE = {
     bearing: 0
 };
 
+const DATA_FILTERS = [
+    {value: 0, label: 'selection.currentPosition'},
+]
+
+
 function DetectionOverview() {
-    const [data, setData] = useState([]);
-    const detectionCountRest = useMemo(() => new DetectionCountRest(), []);
-    const [features, setFeatures] = useState([]);
-    const featureCollectorRest = useMemo(() => new FeatureCollectorRest(), []);
-    const [objectClasses, setObjectClasses] = useState([]);
-    const [selectedTimeFilter, setSelectedTimeFilter] = useState(24);
-    const vehicleDataRest = useMemo(() => new VehicleDataRest(), []);
-    const [vehicleData, setVehicleData] = useState([]);
+    const {
+        detectionData,
+        setStartDate,
+        setEndDate,
+        objectClasses,
+        selectedObjectClasses,
+        setSelectedObjectClasses
+    } = useDetectionCount();
+    const vehicleData = useVehicleData(2000);
 
-    useEffect(() => {
-        reloadDetectionCounts();
-        reloadFeatures();
-        reloadObjectClasses();
-        loadVehicleData();
-        const interval = setInterval(loadVehicleData, 2000);
-        return () => clearInterval(interval);
-    }, []);
-
-    const selectedTimeRange = useMemo(() => {
-        reloadDetectionCounts(selectedTimeFilter);
-        return selectedTimeFilter;
-    }, [selectedTimeFilter]);
-
-    function reloadDetectionCounts(timeFilter) {
-        if (timeFilter === undefined) {
-            timeFilter = 24;
-        }
-        const end = Date.now();
-        const start = new Date((new Date()).getTime() - timeFilter * 60 * 60 * 1000).getTime();
-        detectionCountRest.findByTimeFrame(Math.floor(start / 1000), Math.floor(end / 1000)).then(response => handleLoadDecisions(response));
-    }
-
-    function reloadObjectClasses() {
-        detectionCountRest.getObjectClasses().then(response => {
-            setObjectClasses(response.data);
-        });
-    }
-
-    function handleLoadDecisions(response) {
-        if (response.data == null) {
-            return;
-        }
-        setData(response.data)
-    }
-
-    function reloadFeatures() {
-        featureCollectorRest.findAll().then(response => handleLoadFeatures(response));
-    }
-
-    function handleLoadFeatures(response) {
-        if (response.data == null) {
-            return;
-        }
-
-        var list = response.data.features;
-        const groupedFeatures = list.reduce((acc, feature) => {
-            const objectType = feature.properties.objectTypeLabel;
-            if (!acc[objectType]) {
-                acc[objectType] = [];
-            }
-            acc[objectType].push(feature);
-            return acc;
-        }, {});
-
-        setFeatures(groupedFeatures);
-    }
-
-    function loadVehicleData() {
-        console.log("load vehicle data");
-        vehicleDataRest.findAll().then(response => {
-            if (response.data == null) {
-                return;
-            }
-            for (const vehicle of response.data) {
-                vehicle.lastUpdate = new Date(vehicle.lastUpdate).toLocaleString();
-                const now = new Date();
-                const diffInSeconds = ((now - new Date(vehicle.lastUpdate)) / 1000);
-                vehicle.status = diffInSeconds <= 30 ? "online" : "offline";
-            }
-            setVehicleData(response.data);
-        });
-    }
+    const [selectedFilterLabels, setSelectedFilterLabels] = useState([DATA_FILTERS[0].label]);
+    const {
+        features,
+        selectedFeatureKeys,
+        setSelectedFeatureKeys,
+        selectedFeatures
+    } = useFeatures();
 
     return (
         <>
+            <FilterLayout leftPosition={10}>
+                <DateTimeFilter
+                    setStartDate={setStartDate}
+                    setEndDate={setEndDate}
+                />
+                <ObjectClassFilter
+                    objectClasses={objectClasses}
+                    selectedObjectClasses={selectedObjectClasses}
+                    onSelectedObjectClassesChange={setSelectedObjectClasses}
+                    prefix='wastedata'
+                />
+                <DataFilter
+                    prefix='vehicle'
+                    filters={DATA_FILTERS}
+                    selectedFilterLabels={selectedFilterLabels}
+                    onSelectedFilterLabels={setSelectedFilterLabels}
+                />
+                <FeatureFilter
+                    availableFeatureKeys={Object.keys(features)}
+                    selectedFeatureKeys={selectedFeatureKeys}
+                    onSelectedFeatureChange={setSelectedFeatureKeys}
+                />
+            </FilterLayout>
             <DetectionMap
                 viewState={VIEW_STATE}
-                selectedTimeFilter={selectedTimeRange}
-                onTimeFilterChange={setSelectedTimeFilter}
-                data={data}
-                features={features}
-                objectClasses={objectClasses}
-                vehicleData={vehicleData}
+                detectionData={detectionData}
+                features={selectedFeatures}
+                positionData={vehicleData}
+                showPosition={selectedFilterLabels.includes("selection.currentPosition")}
             />
         </>
     );
-};
+}
 
 export default DetectionOverview;

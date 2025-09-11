@@ -63,6 +63,7 @@ public class DetectionCountService implements ServiceInterface<DetectionCountEnt
     }
 
     public List<DetectionCountEntity> getDataFromTimeFrame(ZonedDateTime startTime, ZonedDateTime endTime) {
-        return repository.findByDetectionTimeBetween(startTime, endTime);
+        List<DetectionCountEntity> entities = repository.findByDetectionTimeBetween(startTime, endTime);
+        return entities;
     }
 }

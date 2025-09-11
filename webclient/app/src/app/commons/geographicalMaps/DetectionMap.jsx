@@ -1,10 +1,9 @@
 import DeckGL from "@deck.gl/react";
-import {useEffect, useState, useMemo} from "react";
+import {useMemo} from "react";
+import featureImage from "../../assets/icons/recycling.png";
+import positionImage from "../../assets/icons/vehicle.png";
+import {HEATMAP_COLOR_RANGES, MAP_VIEW} from './BaseMapConfig';
 import {MapLayerFactory} from './MapLayerFactory';
-import {MAP_VIEW, HEATMAP_COLOR_RANGES} from './BaseMapConfig';
-import recyclingImage from "../../assets/icons/recycling.png"
-import vehicleImage from "../../assets/icons/vehicle.png"
-import MapFilter from "./MapFilter";
 
 const ICON_MAPPING = {
     "marker": {
@@ -26,56 +25,21 @@ const ICON_MAPPING = {
 }
 
 function DetectionMap(props) {
-    const {viewState, data: heatMapData, features, objectClasses, selectedTimeFilter, onTimeFilterChange, vehicleData} = props;
-
-    const [selectedFeatures, setSelectedFeatures] = useState([]);
-    const [selectedObjectClasses, setSelectedObjectClasses] = useState([]);
-    const [selectedVehicleData, setSelectedVehicleData] = useState([]);
-
-    // useEffect(() => {
-    //     setSelectedFeatures(Object.keys(features));
-    // }, [features]);
-
-    useEffect(() => {
-        setSelectedObjectClasses(objectClasses)
-    }, [objectClasses]);
-
-    const filteredFeatures = useMemo(() => {
-        var availableFeatures = Object.keys(features);
-        return availableFeatures.filter(f => {
-            if (!selectedFeatures.includes(f)) {
-                return false;
-            }
-            return true;
-        });
-    }, [selectedFeatures]);
+    const {viewState, detectionData = [], features = [], featureIcon = featureImage, positionData = [], positionIcon = positionImage, showPosition = false} = props;
 
     const layers = useMemo(() => {
 
-        var selectedLayers = Object.keys(features)
-            .filter(key => selectedFeatures.includes(key))
-            .reduce((obj, key) => {
-                obj[key] = features[key]; return obj;
-            }, {});
-
-        var filteredHeatMapData = heatMapData.filter(d => {
-            if (selectedObjectClasses.includes(d.className)) {
-                return true;
-            }
-            return false;
-        });
-
         var result = [
             MapLayerFactory.createBaseMapLayer(),
-            MapLayerFactory.createHeatmapLayer(filteredHeatMapData, HEATMAP_COLOR_RANGES.redScale, {
+            MapLayerFactory.createHeatmapDetectionLayer(detectionData, HEATMAP_COLOR_RANGES.redScale, {
                 id: 'HeatmapLayer',
             }),
-            ...Object.entries(selectedLayers).map(([objectType, featureList], index) =>
-                MapLayerFactory.createIconLayer(featureList, objectType, index, ICON_MAPPING, recyclingImage)
+            ...Object.entries(features).map(([objectType, featureData], index) =>
+                MapLayerFactory.createIconLayer(featureData, objectType, index, ICON_MAPPING, featureIcon)
             )
         ];
-        if (selectedVehicleData.includes("selection.currentPosition")) {
-            result.push(MapLayerFactory.createVehiclePositionLayer(vehicleData, ICON_MAPPING, vehicleImage));
+        if (showPosition) {
+            result.push(MapLayerFactory.createPositionLayer(positionData, ICON_MAPPING, positionIcon));
         }
 
         return result;
@@ -83,18 +47,6 @@ function DetectionMap(props) {
 
     return (
         <>
-            <MapFilter
-                objectClasses={objectClasses}
-                selectedObjectClasses={selectedObjectClasses}
-                onSelectedObjectClassesChange={setSelectedObjectClasses}
-                availableFeatures={Object.keys(features)}
-                selectedFeatures={filteredFeatures}
-                onSelectedFeatureChange={setSelectedFeatures}
-                timeFilter={selectedTimeFilter}
-                onTimeFilterChange={onTimeFilterChange}
-                selectedVehicleData={selectedVehicleData}
-                onSelectedVehicleData={setSelectedVehicleData}
-            />
             <DeckGL
                 layers={layers}
                 views={MAP_VIEW}
