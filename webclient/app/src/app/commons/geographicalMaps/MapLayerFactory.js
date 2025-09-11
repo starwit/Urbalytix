@@ -77,8 +77,8 @@ export class MapLayerFactory {
             id: `ScatterplotLayer-route-points-${layerID}`,
             data: routeData,
             getPosition: d => [d.longitude, d.latitude],
-            getRadius: 3,
-            getFillColor: [150, 100, 100],
+            getRadius: 8,
+            getFillColor: [50, 100, 200, 150],
             pickable: true
         });
     }

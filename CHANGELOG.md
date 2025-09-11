@@ -2,6 +2,12 @@
 
 Changelog of Urbalytix.
 
+## Current Version ()
+
+### Features
+
+-  Feature/ab#1712 adjust detection filter (#40) ([dab67](https://github.com/starwit/Urbalytix/commit/dab67b5c3874379) Anett Hübner)  
+
 ## refs/tags/0.0.2 (2025-07-23)
 
 ### Features
