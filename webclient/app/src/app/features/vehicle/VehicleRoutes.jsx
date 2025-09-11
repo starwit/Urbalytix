@@ -82,7 +82,7 @@ function VehicleRoutes() {
 
 
     function updateRoutes(addedVehicles, tmpRoutes) {
-        if (addedVehicles.length == 0) {
+        if (addedVehicles.length === 0) {
             setRoutes(tmpRoutes);
             return;
         }
