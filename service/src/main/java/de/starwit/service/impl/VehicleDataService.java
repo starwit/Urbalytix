@@ -42,6 +42,11 @@ public class VehicleDataService implements ServiceInterface<VehicleDataEntity, V
             return;
         }
 
+        if (!isReasonablePositionData(positionMessage)) {
+            log.warn("Received invalid position data");
+            return;
+        }
+
         String streamName = keyParts[1];
 
         var vehicle = repository.findByStreamKey(streamName);
@@ -64,5 +69,23 @@ public class VehicleDataService implements ServiceInterface<VehicleDataEntity, V
         route.setLongitude(new BigDecimal(positionMessage.getGeoCoordinate().getLongitude()));
         route.setUpdateTimestamp(z);
         routesRepository.save(route);
+    }
+
+    private boolean isReasonablePositionData(PositionMessage message) {
+        // prevent zero coordinates
+        if (message.getGeoCoordinate().getLatitude() == 0 && message.getGeoCoordinate().getLongitude() == 0) {
+            return false;
+        }
+
+        // prevent too old timestamps
+        Instant instant = Instant.ofEpochSecond(message.getTimestampUtcMs() / 1000);
+        ZonedDateTime z = ZonedDateTime.ofInstant(instant, timeZone);
+        ZonedDateTime now = ZonedDateTime.now(timeZone);
+
+        if (z.getYear() < now.getYear()) {
+            return false;
+        }
+
+        return true;
     }
 }
