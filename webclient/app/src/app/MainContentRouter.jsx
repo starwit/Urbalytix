@@ -1,6 +1,7 @@
 import {Route, Routes} from "react-router-dom";
 import Layout from "./commons/Layout";
 import Vehicles from "./features/vehicle/Vehicles";
+import LandingPage from "./features/landing/LandingPage";
 import DetectionOverview from "./features/detection/DetectionOverview";
 
 function MainContentRouter() {
@@ -9,6 +10,7 @@ function MainContentRouter() {
             <Route path="/" element={<Layout disabled={true}><DetectionOverview /></Layout>} />
             <Route path="/status" element={<Layout disabled={true}><DetectionOverview /></Layout>} />
             <Route path="/vehicles" element={<Layout disabled={true}><Vehicles /></Layout>} />
+            <Route path="/landing" element={<Layout disabled={true}><LandingPage /></Layout>} />
             <Route path="/logout" component={() => {
                 window.location.href = window.location.pathname + "api/user/logout";
                 return null;
