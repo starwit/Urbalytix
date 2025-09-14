@@ -88,10 +88,10 @@ const translationEnEN = {
     "vehicledata.selectweek": "Select Week",
     /******************** to be extracted ************************* */
     "landing.wastemanagement": " Waste Management",
-    "landing.traffic.live": " Traffic Live",
-    "landing.traffic.analysis": " Traffic Analysis",
+    "landing.trafficlive": " Traffic Live",
+    "landing.trafficanalysis": " Traffic Analysis",
     "landing.assetmanagement": " Asset Management",
-    "landing.safety": " Traffic Safety",
-    "landing.parkingspace": " Parking Management"
+    "landing.publicsafety": " Traffic Safety",
+    "landing.parking": " Parking Management"
 };
 export default translationEnEN;

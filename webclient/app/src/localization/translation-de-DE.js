@@ -87,11 +87,11 @@ const translationDeDE = {
     "vehicledata.selectvehicle": "Fahrzeuge",
     "vehicledata.selectweek": "Select Week",
     /******************** to be extracted ************************* */
-    "landing.wastemanagement": " Abfallmanagement",
-    "landing.traffic.live": " Verkehr Live",
-    "landing.traffic.analysis": " Verkehrsanalysen",
-    "landing.assetmanagement": " Inventarmanagement",
-    "landing.safety": " Verkehrssicherheit",
-    "landing.parkingspace": " Parkflächennutzung"
+    "landing.wastemanagement": "Abfallmanagement",
+    "landing.trafficlive": "Verkehr Live",
+    "landing.trafficanalysis": "Verkehrsanalysen",
+    "landing.assetmanagement": "Inventarmanagement",
+    "landing.publicsafety": "Verkehrssicherheit",
+    "landing.parking": "Parkflächennutzung"
 };
 export default translationDeDE;
