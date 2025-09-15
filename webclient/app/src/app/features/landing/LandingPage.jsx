@@ -18,9 +18,6 @@ export default function StartPage() {
             if (response.data == null) {
                 return;
             }
-            Object.keys(response.data).map((entry, index) => {
-                console.log(response.data[entry]);
-            });
             setLandingPageData(response.data);
         });
     }
@@ -33,7 +30,7 @@ export default function StartPage() {
                         <CardActionArea onClick={() => window.open(landingPageData[entry].endpoint, '_blank')}>
                             <CardMedia
                                 component="img"
-                                height="250"
+                                height="350"
                                 image={'landing/' + landingPageData[entry].image}
                                 alt={t(landingPageData[entry].name)}
                             />
