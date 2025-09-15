@@ -24,8 +24,6 @@ hs_err_pid*
 replay_pid*
 
 docker-compose.yml
-./application.properties
-./application.yml
 values.yaml
 
 # Ignore database import files
