@@ -25,22 +25,63 @@ const ICON_MAPPING = {
 }
 
 function DetectionMap(props) {
-    const {viewState, detectionData = [], features = [], featureIcon = featureImage, positionData = [], positionIcon = positionImage, showPosition = false} = props;
+    const {viewState, detectionData = [], features = [], featureIcon = featureImage, positionData = [], positionIcon = positionImage, showPosition = false, showHeatmap = false, showHexagons = true} = props;
+
+    function getTooltip({object}) {
+        if (!object) {
+            return null;
+        }
+        let lat = 0;
+        let lng = 0;
+        if (object.position) {
+            lat = object.position[0];
+            lng = object.position[1];
+        }
+        console.log(object);
+        const count = object.elevationValue;
+        let detectionTimes = 0;
+        detectionTimes = object.points ? [...new Set(object.points.map(d => d.detectionTime))] : [];
+
+        return {
+            html: `
+                <div>
+                    <strong>Latitude:</strong> ${lat}<br />
+                    <strong>Longitude:</strong> ${lng}<br />
+                    <strong>Maximum detected Objects:</strong> ${count}<br />
+                    <strong>Detections:</strong> ${detectionTimes.length} <br />
+                    <strong>Time:</strong> <br /> ${detectionTimes.join('<br/>')}
+                </div>
+                `
+        };
+    }
 
     const layers = useMemo(() => {
 
         var result = [
             MapLayerFactory.createBaseMapLayer(),
-            MapLayerFactory.createHeatmapDetectionLayer(detectionData, HEATMAP_COLOR_RANGES.redScale, {
-                id: 'HeatmapLayer',
-            }),
             ...Object.entries(features).map(([objectType, featureData], index) =>
-                MapLayerFactory.createIconLayer(featureData, objectType, index, ICON_MAPPING, featureIcon)
-            )
+                MapLayerFactory.createIconLayer(featureData, objectType, index, ICON_MAPPING, featureIcon))
         ];
+        if (showHexagons) {
+            result.push(MapLayerFactory.createHexagonLayer(detectionData, {
+                id: 'HexagonLayer',
+            }));
+        }
+        if (showHeatmap) {
+            result.push(MapLayerFactory.createHeatmapDetectionLayer(detectionData, HEATMAP_COLOR_RANGES.redScale, {
+                id: 'HeatmapLayer',
+            }));
+        }
+
+        result.push(MapLayerFactory.createScatterplotLayer(detectionData, 'className', {
+            id: 'ScatterplotLayer',
+        }));
+
         if (showPosition) {
             result.push(MapLayerFactory.createPositionLayer(positionData, ICON_MAPPING, positionIcon));
         }
+
+
 
         return result;
     });
@@ -51,7 +92,8 @@ function DetectionMap(props) {
                 layers={layers}
                 views={MAP_VIEW}
                 initialViewState={viewState}
-                controller={{dragRotate: false}}
+                controller={true}
+                getTooltip={getTooltip}
             />
         </>
     );
