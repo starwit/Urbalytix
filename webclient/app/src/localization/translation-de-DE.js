@@ -95,7 +95,6 @@ const translationDeDE = {
     "map.layers": "Ebenen",
     "map.hexagon": "3D-Hexagon-Modus",
     "map.scatterplot": "Punktwolke",
-    "vehicledata.selectweek": "Select Week",
     /******************** to be extracted ************************* */
     "landing.wastemanagement": "Abfallmanagement",
     "landing.trafficlive": "Verkehr Live",
