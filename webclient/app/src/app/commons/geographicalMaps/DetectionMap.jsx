@@ -79,6 +79,18 @@ function DetectionMap(props) {
                         </div>
                     `
                 };
+
+            default:
+                if (layer.id.startsWith('IconLayer')) {
+                    return {
+                        html: `
+                            <div>
+                                ${object.name}, ${t(object.status)}<br />
+                                ${object.description}<br />
+                            </div>
+                    `
+                    };
+                }
         }
     }
 
