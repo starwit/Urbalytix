@@ -25,7 +25,7 @@ const ICON_MAPPING = {
 }
 
 function DetectionMap(props) {
-    const {viewState, detectionData = [], features = [], featureIcon = featureImage, positionData = [], positionIcon = positionImage, showPosition = false, showHeatmap = false, showHexagons = true} = props;
+    const {viewState, detectionData = [], features = [], featureIcon = featureImage, positionData = [], positionIcon = positionImage, showPosition = false, showScatterplot = false, showHeatmap = false, showHexagons = false} = props;
 
     function getTooltip({object}) {
         if (!object) {
@@ -33,14 +33,24 @@ function DetectionMap(props) {
         }
         let lat = 0;
         let lng = 0;
+        let count = 0;
+        let detectionTimes = [];
         if (object.position) {
             lat = object.position[0];
             lng = object.position[1];
+        } else if (object.latitude) {
+            lat = object.latitude;
+            lng = object.longitude;
+
         }
-        console.log(object);
-        const count = object.elevationValue;
-        let detectionTimes = 0;
-        detectionTimes = object.points ? [...new Set(object.points.map(d => d.detectionTime))] : [];
+
+        if (object.elevationValue) {
+            count = object.elevationValue;
+            detectionTimes = object.points ? [...new Set(object.points.map(d => d.detectionTime))] : [];
+        } else if (object.count) {
+            count = object.count;
+            detectionTimes.push(object.detectionTime);
+        }
 
         return {
             html: `
@@ -72,10 +82,11 @@ function DetectionMap(props) {
                 id: 'HeatmapLayer',
             }));
         }
-
-        result.push(MapLayerFactory.createScatterplotLayer(detectionData, 'className', {
-            id: 'ScatterplotLayer',
-        }));
+        if (showScatterplot) {
+            result.push(MapLayerFactory.createScatterplotLayer(detectionData, 'className', {
+                id: 'ScatterplotLayer',
+            }));
+        }
 
         if (showPosition) {
             result.push(MapLayerFactory.createPositionLayer(positionData, ICON_MAPPING, positionIcon));

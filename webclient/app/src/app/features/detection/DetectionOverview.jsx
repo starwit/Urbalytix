@@ -8,6 +8,7 @@ import {useDetectionCount} from "./hooks/useDetectionCount";
 import {useFeatures} from "./hooks/useFeatures";
 import {useVehicleData} from "./hooks/useVehicleData";
 import ObjectClassFilter from "../../commons/filter/ObjectClassFilter";
+import MapFilter from "../../commons/filter/MapFilter";
 
 const VIEW_STATE = {
     longitude: 10.800000000000000,
@@ -40,6 +41,13 @@ function DetectionOverview() {
         setSelectedFeatureKeys,
         selectedFeatures
     } = useFeatures();
+    const [types, setTypes] = useState(['scatterplot']);
+
+    function handleTypes(event, newTypes) {
+        if (newTypes.length) {
+            setTypes(newTypes);
+        }
+    }
 
     return (
         <>
@@ -47,6 +55,10 @@ function DetectionOverview() {
                 <DateTimeFilter
                     setStartDate={setStartDate}
                     setEndDate={setEndDate}
+                />
+                <MapFilter
+                    types={types}
+                    handleTypes={handleTypes}
                 />
                 <ObjectClassFilter
                     objectClasses={objectClasses}
@@ -72,6 +84,9 @@ function DetectionOverview() {
                 features={selectedFeatures}
                 positionData={vehicleData}
                 showPosition={selectedFilterLabels.includes("selection.currentPosition")}
+                showHeatmap={types.includes("heatmap")}
+                showHexagons={types.includes("hexagon")}
+                showScatterplot={types.includes("scatterplot")}
             />
         </>
     );

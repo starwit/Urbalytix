@@ -64,7 +64,7 @@ export class MapLayerFactory {
             getColor: d => d.status === 'online' ? [100, 155, 100] : [155, 50, 50],
             getIcon: d => 'marker',
             getPosition: d => [d.longitude, d.latitude],
-            getSize: 60,
+            getSize: 40,
             iconAtlas: icon,
             iconMapping: iconMapping,
             pickable: true
@@ -76,11 +76,11 @@ export class MapLayerFactory {
             id: `ScatterplotLayer-route-points-${layerID}`,
             data: data,
             getPosition: d => [d.longitude, d.latitude],
-            getRadius: 3,
+            getRadius: 10,
             getFillColor: d => MapLayerFactory.stringToColor(d[colorProp], d.count),
             pickable: true,
             radiusMinPixels: 3,
-            radiusMaxPixels: 5,
+            radiusMaxPixels: 10,
             ...options
         });
     }
