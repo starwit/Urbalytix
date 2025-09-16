@@ -1,7 +1,7 @@
-import FormatAlignCenterIcon from '@mui/icons-material/FormatAlignCenter';
-import FormatAlignLeftIcon from '@mui/icons-material/FormatAlignLeft';
-import FormatAlignRightIcon from '@mui/icons-material/FormatAlignRight';
-import {ToggleButton, ToggleButtonGroup} from "@mui/material";
+import HexagonIcon from '@mui/icons-material/Hexagon';
+import BlurOnIcon from '@mui/icons-material/BlurOn';
+import ScatterPlotIcon from '@mui/icons-material/ScatterPlot';
+import {Box, Container, ToggleButton, ToggleButtonGroup, Tooltip, Typography} from "@mui/material";
 import {useTranslation} from "react-i18next";
 
 function MapFilter(props) {
@@ -10,23 +10,35 @@ function MapFilter(props) {
     const {t} = useTranslation();
 
     return (
+        <>
 
-        <ToggleButtonGroup size="small"
-            value={types}
-            onChange={handleTypes}
-            aria-label="text alignment"
-        >
-            <ToggleButton value="heatmap" aria-label="heatmap" >
-                <FormatAlignLeftIcon />
-            </ToggleButton>
-            <ToggleButton value="scatterplot" aria-label="scatterplot">
-                <FormatAlignRightIcon />
-            </ToggleButton>
-            <ToggleButton value="hexagon" aria-label="hexagon">
-                <FormatAlignCenterIcon />
-            </ToggleButton>
+            <Box display="flex" justifyContent="flex-end" sx={{alignItems: 'center'}}>
+                <Container>
+                    <Typography >{t('map.layers')}:</Typography>
+                </Container>
+                <ToggleButtonGroup size="small"
+                    value={types}
+                    onChange={handleTypes}
+                >
+                    <Tooltip title={t('map.heatmap')}>
+                        <ToggleButton value="heatmap" aria-label="heatmap" >
+                            <BlurOnIcon />
+                        </ToggleButton>
+                    </Tooltip>
+                    <Tooltip title={t('map.scatterplot')}>
+                        <ToggleButton value="scatterplot" aria-label="scatterplot">
+                            <ScatterPlotIcon />
+                        </ToggleButton>
+                    </Tooltip>
+                    <Tooltip title={t('map.hexagon')}>
+                        <ToggleButton value="hexagon" aria-label="hexagon">
+                            <HexagonIcon />
+                        </ToggleButton>
+                    </Tooltip>
 
-        </ToggleButtonGroup>
+                </ToggleButtonGroup >
+            </Box>
+        </>
     );
 }
 

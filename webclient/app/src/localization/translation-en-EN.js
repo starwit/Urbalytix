@@ -91,6 +91,9 @@ const translationEnEN = {
     "map.detectedObjects": "Detected Objects",
     "map.maxDetectedObjects": "Maximum detected objects",
     "map.detections": "Detections",
-    "map.time": "Timestamp"
+    "map.time": "Timestamp",
+    "map.layers": "Layers",
+    "map.hexagon": "3D-Hexagon",
+    "map.scatterplot": "Scatter Plot"
 };
 export default translationEnEN;

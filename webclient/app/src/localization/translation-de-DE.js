@@ -90,7 +90,10 @@ const translationDeDE = {
     "map.longitude": "Längengrad",
     "map.detectedObjects": "Erkannte Objekte",
     "map.maxDetectedObjects": "Maximal erkannte Objekte",
-    "map.detections": "Erkennungen",
-    "map.time": "Zeitstempel"
+    "map.detections": "Detektionen",
+    "map.time": "Zeitstempel",
+    "map.layers": "Ebenen",
+    "map.hexagon": "3D-Hexagon-Modus",
+    "map.scatterplot": "Punktwolke"
 };
 export default translationDeDE;
