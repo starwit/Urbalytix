@@ -85,6 +85,13 @@ const translationDeDE = {
     "vehicledata.views.routes": "Routen",
     "vehicledata.views.table": "Überblick",
     "vehicledata.selectvehicle": "Fahrzeuge",
-    "vehicledata.selectweek": "Select Week"
+    "vehicledata.selectweek": "Select Week",
+    /******************** to be extracted ************************* */
+    "landing.wastemanagement": "Abfallmanagement",
+    "landing.trafficlive": "Verkehr Live",
+    "landing.trafficanalysis": "Verkehrsanalysen",
+    "landing.assetmanagement": "Inventarmanagement",
+    "landing.publicsafety": "Verkehrssicherheit",
+    "landing.parking": "Parkflächennutzung"
 };
 export default translationDeDE;

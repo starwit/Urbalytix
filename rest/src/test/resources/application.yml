@@ -1,0 +1,61 @@
+# is only required for direct test executing.
+rest:
+  base-path: /api
+
+# actuator
+management:
+  endpoints:
+    web:
+      base-path: /monitoring
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: always
+  info:
+    git:
+      mode: full
+
+# h2
+spring:
+  datasource:
+    url: jdbc:h2:mem:urbalytix;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=PostgreSQL
+    driverClassName: org.h2.Driver
+    username: urbalytix
+    password: urbalytix
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: true
+  flyway:
+    user: ${spring.datasource.username}
+    password: ${spring.datasource.password}
+    url: ${spring.datasource.url}
+    baseline-on-migrate: true
+    locations: classpath:db/migration
+    encoding: UTF-8
+    placeholder-replacement: false
+
+infra:
+  trash:
+    endpoint: https://hostname
+    secret: secret
+
+landing:
+  wastemanagement:
+    endpoint: "#/status"
+    image: "waste-management.jpg"
+  parking:
+    endpoint: "https://dashboard.staging.data-wolfsburg.de/d/beaxyf615u29sa/ueberblick-meckauer-weg?orgId=1&refresh=5s"
+    image: "parking.jpg"
+  trafficlive:
+    endpoint: "https://visualizer.staging.data-wolfsburg.de/"
+    image: "traffic.jpg"
+  trafficanalysis:
+    endpoint: "https://dashboard.staging.data-wolfsburg.de/d/be4py7rmywow0c/historie-meckauer-weg?orgId=1"
+    image: "traffic-analysis.jpg"
+  assetmanagement:
+    endpoint: "https://assetmanagement.staging.data-wolfsburg.de/"
+    image: "asset-management.jpg"
+  publicsafety:
+    endpoint: "https://cockpit.aic.starwit-infra.de/?continue#/decision/3"
+    image: "public-safety.jpg"

@@ -85,6 +85,13 @@ const translationEnEN = {
     "vehicledata.views.routes": "Routes",
     "vehicledata.views.table": "Overview",
     "vehicledata.selectvehicle": "Available Vehicles",
-    "vehicledata.selectweek": "Select Week"
+    "vehicledata.selectweek": "Select Week",
+    /******************** to be extracted ************************* */
+    "landing.wastemanagement": " Waste Management",
+    "landing.trafficlive": " Traffic Live",
+    "landing.trafficanalysis": " Traffic Analysis",
+    "landing.assetmanagement": " Asset Management",
+    "landing.publicsafety": " Traffic Safety",
+    "landing.parking": " Parking Management"
 };
 export default translationEnEN;
