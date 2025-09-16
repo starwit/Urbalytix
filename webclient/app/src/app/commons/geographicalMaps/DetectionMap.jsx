@@ -120,9 +120,6 @@ function DetectionMap(props) {
         if (showPosition) {
             result.push(MapLayerFactory.createPositionLayer(positionData, ICON_MAPPING, positionIcon));
         }
-
-
-
         return result;
     });
 
