@@ -85,6 +85,12 @@ const translationEnEN = {
     "vehicledata.views.routes": "Routes",
     "vehicledata.views.table": "Overview",
     "vehicledata.selectvehicle": "Available Vehicles",
-    "vehicledata.selectweek": "Select Week"
+    "vehicledata.selectweek": "Select Week",
+    "map.latitude": "Latitude",
+    "map.longitude": "Longitude",
+    "map.detectedObjects": "Detected Objects",
+    "map.maxDetectedObjects": "Maximum detected objects",
+    "map.detections": "Detections",
+    "map.time": "Timestamp"
 };
 export default translationEnEN;

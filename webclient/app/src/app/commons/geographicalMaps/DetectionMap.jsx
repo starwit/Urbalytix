@@ -4,6 +4,7 @@ import featureImage from "../../assets/icons/recycling.png";
 import positionImage from "../../assets/icons/vehicle.png";
 import {HEATMAP_COLOR_RANGES, MAP_VIEW} from './BaseMapConfig';
 import {MapLayerFactory} from './MapLayerFactory';
+import {useTranslation} from "react-i18next";
 
 const ICON_MAPPING = {
     "marker": {
@@ -26,8 +27,9 @@ const ICON_MAPPING = {
 
 function DetectionMap(props) {
     const {viewState, detectionData = [], features = [], featureIcon = featureImage, positionData = [], positionIcon = positionImage, showPosition = false, showScatterplot = false, showHeatmap = false, showHexagons = false} = props;
+    const {t} = useTranslation();
 
-    function getTooltip({object}) {
+    function getTooltip({object, layer}) {
         if (!object) {
             return null;
         }
@@ -35,34 +37,49 @@ function DetectionMap(props) {
         let lng = 0;
         let count = 0;
         let detectionTimes = [];
-        if (object.position) {
-            lat = object.position[0];
-            lng = object.position[1];
-        } else if (object.latitude) {
-            lat = object.latitude;
-            lng = object.longitude;
 
+        switch (layer.id) {
+            case 'HexagonLayer':
+                if (object.position) {
+                    lat = object.position[0];
+                    lng = object.position[1];
+                }
+                if (object.elevationValue) {
+                    count = object.elevationValue;
+                    detectionTimes = object.points ? [...new Set(object.points.map(d => d.detectionTime))] : [];
+                }
+                return {
+                    html: `
+                        <div>
+                            <strong>${t('map.latitude')}:</strong> ${lat}<br />
+                            <strong>${t('map.longitude')}:</strong> ${lng}<br />
+                            <strong>${t('map.maxDetectedObjects')}:</strong> ${count}<br />
+                            <strong>${t('map.detections')}:</strong> ${detectionTimes.length} <br />
+                            <strong>${t('map.time')}:</strong> <br /> ${detectionTimes.join('<br/>')}
+                        </div>
+                        `
+                };
+
+            case 'ScatterplotLayer':
+                if (object.latitude) {
+                    lat = object.latitude;
+                    lng = object.longitude;
+                }
+                if (object.count) {
+                    count = object.count;
+                    detectionTimes.push(object.detectionTime);
+                }
+                return {
+                    html: `
+                        <div>
+                            <strong>${t('map.latitude')}:</strong> ${lat}<br />
+                            <strong>${t('map.longitude')}:</strong> ${lng}<br />
+                            <strong>${t('map.detectedObjects')}:</strong> ${count}<br />
+                            <strong>${t('map.time')}:</strong> ${detectionTimes.join('<br/>')}
+                        </div>
+                    `
+                };
         }
-
-        if (object.elevationValue) {
-            count = object.elevationValue;
-            detectionTimes = object.points ? [...new Set(object.points.map(d => d.detectionTime))] : [];
-        } else if (object.count) {
-            count = object.count;
-            detectionTimes.push(object.detectionTime);
-        }
-
-        return {
-            html: `
-                <div>
-                    <strong>Latitude:</strong> ${lat}<br />
-                    <strong>Longitude:</strong> ${lng}<br />
-                    <strong>Maximum detected Objects:</strong> ${count}<br />
-                    <strong>Detections:</strong> ${detectionTimes.length} <br />
-                    <strong>Time:</strong> <br /> ${detectionTimes.join('<br/>')}
-                </div>
-                `
-        };
     }
 
     const layers = useMemo(() => {
@@ -104,7 +121,7 @@ function DetectionMap(props) {
                 views={MAP_VIEW}
                 initialViewState={viewState}
                 controller={true}
-                getTooltip={getTooltip}
+                getTooltip={({object, layer}) => getTooltip({object, layer})}
             />
         </>
     );

@@ -23,7 +23,6 @@ export class MapLayerFactory {
 
     static createHeatmapDetectionLayer(detectionData, colorRange, options = {}) {
         return new HeatmapLayer({
-            id: options.id || 'heatmap-layer',
             data: detectionData,
             getPosition: d => [d.longitude, d.latitude],
             getWeight: d => d.count || 1,
@@ -73,7 +72,6 @@ export class MapLayerFactory {
 
     static createScatterplotLayer(data, colorProp = 'undefined', layerID, options = {}) {
         return new ScatterplotLayer({
-            id: `ScatterplotLayer-route-points-${layerID}`,
             data: data,
             getPosition: d => [d.longitude, d.latitude],
             getRadius: 10,

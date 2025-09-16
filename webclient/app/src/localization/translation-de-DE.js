@@ -85,6 +85,12 @@ const translationDeDE = {
     "vehicledata.views.routes": "Routen",
     "vehicledata.views.table": "Überblick",
     "vehicledata.selectvehicle": "Fahrzeuge",
-    "vehicledata.selectweek": "Select Week"
+    "vehicledata.selectweek": "Woche auswählen",
+    "map.latitude": "Breitengrad",
+    "map.longitude": "Längengrad",
+    "map.detectedObjects": "Erkannte Objekte",
+    "map.maxDetectedObjects": "Maximal erkannte Objekte",
+    "map.detections": "Erkennungen",
+    "map.time": "Zeitstempel"
 };
 export default translationDeDE;
