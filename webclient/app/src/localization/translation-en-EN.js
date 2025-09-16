@@ -94,6 +94,13 @@ const translationEnEN = {
     "map.time": "Timestamp",
     "map.layers": "Layers",
     "map.hexagon": "3D-Hexagon",
-    "map.scatterplot": "Scatter Plot"
+    "map.scatterplot": "Scatter Plot",
+    /******************** to be extracted ************************* */
+    "landing.wastemanagement": " Waste Management",
+    "landing.trafficlive": " Traffic Live",
+    "landing.trafficanalysis": " Traffic Analysis",
+    "landing.assetmanagement": " Asset Management",
+    "landing.publicsafety": " Traffic Safety",
+    "landing.parking": " Parking Management"
 };
 export default translationEnEN;

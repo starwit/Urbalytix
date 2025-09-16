@@ -94,6 +94,14 @@ const translationDeDE = {
     "map.time": "Zeitstempel",
     "map.layers": "Ebenen",
     "map.hexagon": "3D-Hexagon-Modus",
-    "map.scatterplot": "Punktwolke"
+    "map.scatterplot": "Punktwolke",
+    "vehicledata.selectweek": "Select Week",
+    /******************** to be extracted ************************* */
+    "landing.wastemanagement": "Abfallmanagement",
+    "landing.trafficlive": "Verkehr Live",
+    "landing.trafficanalysis": "Verkehrsanalysen",
+    "landing.assetmanagement": "Inventarmanagement",
+    "landing.publicsafety": "Verkehrssicherheit",
+    "landing.parking": "Parkflächennutzung"
 };
 export default translationDeDE;
