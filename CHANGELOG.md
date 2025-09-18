@@ -2,6 +2,12 @@
 
 Changelog of Urbalytix.
 
+## Current Version ()
+
+### Features
+
+-  pull request #47 from starwit/feature/ab#1806-hexagon-visualization ([0d5f2](https://github.com/starwit/Urbalytix/commit/0d5f252ed3c0adf) Anett Hübner)  
+
 ## refs/tags/0.2.1 (2025-09-11)
 
 ### Features
