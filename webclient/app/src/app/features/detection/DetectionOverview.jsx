@@ -11,9 +11,9 @@ import ObjectClassFilter from "../../commons/filter/ObjectClassFilter";
 import MapFilter from "../../commons/filter/MapFilter";
 
 const VIEW_STATE = {
-    longitude: 10.775000000000000,
-    latitude: 52.41588232741599,
-    zoom: 14,
+    longitude: 10.785000000000000,
+    latitude: 52.41788232741599,
+    zoom: 15,
     pitch: 50,
     bearing: 0
 };

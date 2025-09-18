@@ -26,9 +26,9 @@ export class MapLayerFactory {
             data: detectionData,
             getPosition: d => [d.longitude, d.latitude],
             getWeight: d => d.count || 1,
-            aggregation: 'SUM',
+            aggregation: 'MAX',
             colorRange,
-            radiusPixels: options.radiusPixels || 25,
+            radiusPixels: options.radiusPixels || 40,
             ...options
         });
     }
