@@ -1,7 +1,7 @@
 name: urbalytix
 
 services:
-  postgres:
+  db-urbalytix:
     image: postgres:latest
     environment:
       POSTGRES_DB: urbalytix
@@ -14,7 +14,7 @@ services:
       timeout: 60s
       retries: 30
     volumes:
-      - db:/var/lib/postgresql/data
+      - db-urbalytix:/var/lib/postgresql/data
       - ./sample_data/urbalytix.sql:/docker-entrypoint-initdb.d/urbalytix.sql
     ports:
       - "5432:5432"
@@ -32,5 +32,5 @@ services:
       - "5050:80"
 
 volumes:
-  db:
+  db-urbalytix:
   pgadmin:
