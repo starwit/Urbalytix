@@ -1,8 +1,7 @@
+import {HeatmapLayer, HexagonLayer} from "@deck.gl/aggregation-layers";
 import {TileLayer} from "@deck.gl/geo-layers";
+import {BitmapLayer, GridCellLayer, IconLayer, ScatterplotLayer} from "@deck.gl/layers";
 import {TILE_LAYER_CONFIG} from './BaseMapConfig';
-import {HeatmapLayer} from "@deck.gl/aggregation-layers";
-import {BitmapLayer, PathLayer, ScatterplotLayer} from "@deck.gl/layers";
-import {IconLayer} from '@deck.gl/layers';
 
 export class MapLayerFactory {
     static createBaseMapLayer() {
@@ -24,7 +23,6 @@ export class MapLayerFactory {
 
     static createHeatmapDetectionLayer(detectionData, colorRange, options = {}) {
         return new HeatmapLayer({
-            id: options.id || 'heatmap-layer',
             data: detectionData,
             getPosition: d => [d.longitude, d.latitude],
             getWeight: d => d.count || 1,
@@ -72,14 +70,83 @@ export class MapLayerFactory {
         });
     }
 
+    static createScatterplotLayer(data, colorProp = 'undefined', layerID, options = {}) {
+        return new ScatterplotLayer({
+            data: data,
+            getPosition: d => [d.longitude, d.latitude],
+            getRadius: 10,
+            getFillColor: d => MapLayerFactory.stringToColor(d[colorProp], d.count),
+            pickable: true,
+            radiusMinPixels: 3,
+            radiusMaxPixels: 10,
+            ...options
+        });
+    }
+
+    static createGridCellLayer(data, options = {}) {
+
+        return new GridCellLayer({
+            id: 'GridCellLayer',
+            data: data,
+
+            cellSize: 1,
+            extruded: false,
+            elevationScale: 6,
+            getElevation: d => d.count,
+            getFillColor: d => [48, 128, d.count * 255, 255],
+            getPosition: d => [d.longitude, d.latitude],
+            pickable: true,
+            ...options
+        });
+    }
+
+    static createHexagonLayer(data, options = {}) {
+        return new HexagonLayer({
+            id: 'hexagon-layer',
+            data: data,
+            radius: 3,
+            elevationScale: 0.1,
+            opacity: 0.4,
+            extruded: true,
+            pickable: true,
+            getTooltip: true,
+            gpuAggregation: false, //needed to get data for tooltip!!!
+            colorAggregation: 'MAX',
+            elevationAggregation: 'MAX',
+            getColorWeight: d => d.count,
+            getElevationWeight: d => d.count,
+            upperPercentile: 99.9,
+            elevationDomain: [0, 20],
+            getPosition: d => [d.longitude, d.latitude],
+            ...options
+        });
+    }
+
     static createRouteLayer(routeData, layerID) {
         return new ScatterplotLayer({
             id: `ScatterplotLayer-route-points-${layerID}`,
             data: routeData,
             getPosition: d => [d.longitude, d.latitude],
-            getRadius: 8,
+            radiusMinPixels: 2,
+            getRadius: 5,
             getFillColor: [50, 100, 200, 150],
             pickable: true
         });
+    }
+
+    static stringToColor(text, count) {
+        if (!text) {
+            text = "undefined";
+        }
+        let hash = 0;
+        for (let i = 0; i < text.length; i++) {
+            hash = text.charCodeAt(i) + ((hash << 5) - hash);
+        }
+        const color = [];
+        for (let i = 0; i < 3; i++) {
+            const value = (hash >> (i * 8)) & 0xFF;
+            color.push(value - 30);
+        }
+        return [...color, count * 25.5 || 50];
     }
 }
