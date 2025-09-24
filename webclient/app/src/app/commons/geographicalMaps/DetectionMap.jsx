@@ -41,8 +41,10 @@ function DetectionMap(props) {
         switch (layer.id) {
             case 'HexagonLayer':
                 if (object.position) {
-                    lat = object.position[0];
-                    lng = object.position[1];
+                    if (object.points && object.points.length > 0) {
+                        lat = object.points[0].latitude;
+                        lng = object.points[0].longitude;
+                    }
                 }
                 if (object.elevationValue) {
                     count = object.elevationValue;
