@@ -1,7 +1,5 @@
 package de.starwit.rest.controller;
 
-import java.time.Instant;
-import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
@@ -40,15 +38,11 @@ public class VehicleRouteController {
     }
 
     @Operation(summary = "Get routes per vehicle per time frame")
-    @GetMapping(value = "/timeframe/{name}/{start}/{end}")
-    public List<VehicleRouteEntity> findAllPerVehicleAndTimeframe(@PathVariable String name,
-            @PathVariable("start") String startTimestamp,
-            @PathVariable("end") String endTimestamp) {
-        ZonedDateTime startTime = Instant.ofEpochSecond(Long.parseLong(startTimestamp.split("\\.")[0]))
-                .atZone(ZoneId.systemDefault());
-        ZonedDateTime endTime = Instant.ofEpochSecond(Long.parseLong(endTimestamp.split("\\.")[0]))
-                .atZone(ZoneId.systemDefault());
-        return this.vehicleRouteService.findAllByVehicleAndTimeFrame(name, startTime, endTime);
+    @GetMapping(value = "/timeframe/{streamKey}/{start}/{end}")
+    public List<VehicleRouteEntity> findAllPerVehicleAndTimeframe(@PathVariable String streamKey,
+            @PathVariable("start") ZonedDateTime startTime,
+            @PathVariable("end") ZonedDateTime endTime) {
+        return this.vehicleRouteService.findAllByVehicleAndTimeFrame(streamKey, startTime, endTime);
     }
 
     @Operation(summary = "Get routes per vehicle and calendar week")

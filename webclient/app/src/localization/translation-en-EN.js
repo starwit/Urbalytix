@@ -95,6 +95,7 @@ const translationEnEN = {
     "map.layers": "Layers",
     "map.hexagon": "3D-Hexagon",
     "map.scatterplot": "Scatter Plot",
+    "map.coverage": "Data Coverage",
     /******************** to be extracted ************************* */
     "landing.wastemanagement": " Waste Management",
     "landing.trafficlive": " Traffic Live",

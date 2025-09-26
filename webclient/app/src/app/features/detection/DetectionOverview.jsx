@@ -1,14 +1,16 @@
-import {useEffect, useState} from "react";
+import dayjs from 'dayjs';
+import {useState} from "react";
 import DataFilter from "../../commons/filter/DataFilter";
 import DateTimeFilter from "../../commons/filter/DateTimeFilter";
 import FeatureFilter from "../../commons/filter/FeatureFilter";
 import FilterLayout from "../../commons/filter/FilterLayout";
+import MapFilter from "../../commons/filter/MapFilter";
+import ObjectClassFilter from "../../commons/filter/ObjectClassFilter";
 import DetectionMap from '../../commons/geographicalMaps/DetectionMap';
 import {useDetectionCount} from "./hooks/useDetectionCount";
 import {useFeatures} from "./hooks/useFeatures";
 import {useVehicleData} from "./hooks/useVehicleData";
-import ObjectClassFilter from "../../commons/filter/ObjectClassFilter";
-import MapFilter from "../../commons/filter/MapFilter";
+import {useVehicleRoutes} from "./hooks/useVehicleRoutes";
 
 const VIEW_STATE = {
     longitude: 10.785000000000000,
@@ -24,14 +26,16 @@ const DATA_FILTERS = [
 
 
 function DetectionOverview() {
+    const [startDate, setStartDate] = useState(dayjs().startOf('week'));
+    const [endDate, setEndDate] = useState(dayjs().endOf('week'));
+
     const {
         detectionData,
-        setStartDate,
-        setEndDate,
         objectClasses,
         selectedObjectClasses,
         setSelectedObjectClasses
-    } = useDetectionCount();
+    } = useDetectionCount(startDate, endDate);
+
     const vehicleData = useVehicleData(2000);
 
     const [selectedFilterLabels, setSelectedFilterLabels] = useState([DATA_FILTERS[0].label]);
@@ -42,6 +46,8 @@ function DetectionOverview() {
         selectedFeatures
     } = useFeatures();
     const [types, setTypes] = useState(['heatmap', 'hexagon']);
+
+    const vehicleRoutes = useVehicleRoutes(startDate.toJSON(), endDate.toJSON());
 
     function handleTypes(event, newTypes) {
         if (newTypes.length) {
@@ -81,12 +87,14 @@ function DetectionOverview() {
             <DetectionMap
                 viewState={VIEW_STATE}
                 detectionData={detectionData}
+                vehicleRoutes={vehicleRoutes}
                 features={selectedFeatures}
                 positionData={vehicleData}
                 showPosition={selectedFilterLabels.includes("selection.currentPosition")}
                 showHeatmap={types.includes("heatmap")}
                 showHexagons={types.includes("hexagon")}
                 showScatterplot={types.includes("scatterplot")}
+                showCoverage={types.includes("coverage")}
             />
         </>
     );

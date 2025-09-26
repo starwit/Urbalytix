@@ -26,7 +26,20 @@ const ICON_MAPPING = {
 }
 
 function DetectionMap(props) {
-    const {viewState, detectionData = [], features = [], featureIcon = featureImage, positionData = [], positionIcon = positionImage, showPosition = false, showScatterplot = false, showHeatmap = false, showHexagons = false} = props;
+    const {
+        viewState,
+        detectionData = [],
+        vehicleRoutes = [],
+        features = [],
+        featureIcon = featureImage,
+        positionData = [],
+        positionIcon = positionImage,
+        showPosition = false,
+        showScatterplot = false,
+        showHeatmap = false,
+        showHexagons = false,
+        showCoverage = false,
+    } = props;
     const {t} = useTranslation();
 
     function getTooltip({object, layer}) {
@@ -96,34 +109,32 @@ function DetectionMap(props) {
         }
     }
 
-    const layers = useMemo(() => {
-
-        var result = [
+    const layers = [
             MapLayerFactory.createBaseMapLayer(),
             ...Object.entries(features).map(([objectType, featureData], index) =>
                 MapLayerFactory.createIconLayer(featureData, objectType, index, ICON_MAPPING, featureIcon))
-        ];
-        if (showHexagons) {
-            result.push(MapLayerFactory.createHexagonLayer(detectionData, {
-                id: 'HexagonLayer',
-            }));
-        }
-        if (showHeatmap) {
-            result.push(MapLayerFactory.createHeatmapDetectionLayer(detectionData, HEATMAP_COLOR_RANGES.redScale, {
-                id: 'HeatmapLayer',
-            }));
-        }
-        if (showScatterplot) {
-            result.push(MapLayerFactory.createScatterplotLayer(detectionData, 'className', {
-                id: 'ScatterplotLayer',
-            }));
-        }
-
-        if (showPosition) {
-            result.push(MapLayerFactory.createPositionLayer(positionData, ICON_MAPPING, positionIcon));
-        }
-        return result;
-    });
+    ];
+    if (showHexagons) {
+        layers.push(MapLayerFactory.createHexagonLayer(detectionData, {
+            id: 'HexagonLayer',
+        }));
+    }
+    if (showHeatmap) {
+        layers.push(MapLayerFactory.createHeatmapDetectionLayer(detectionData, HEATMAP_COLOR_RANGES.redScale, {
+            id: 'HeatmapLayer',
+        }));
+    }
+    if (showScatterplot) {
+        layers.push(MapLayerFactory.createScatterplotLayer(detectionData, 'className', {
+            id: 'ScatterplotLayer',
+        }));
+    }
+    if (showPosition) {
+        layers.push(MapLayerFactory.createPositionLayer(positionData, ICON_MAPPING, positionIcon));
+    }
+    if (showCoverage) {
+        layers.push(...MapLayerFactory.createMaskingLayers(vehicleRoutes));
+    }
 
     return (
         <>
