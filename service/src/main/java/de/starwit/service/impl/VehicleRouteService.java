@@ -52,9 +52,9 @@ public class VehicleRouteService implements ServiceInterface<VehicleRouteEntity,
         }
     }
 
-    public List<VehicleRouteEntity> findAllByVehicleAndTimeFrame(String name, ZonedDateTime startTime,
+    public List<VehicleRouteEntity> findAllByVehicleAndTimeFrame(String streamKey, ZonedDateTime startTime,
             ZonedDateTime endTime) {
-        VehicleDataEntity vehicle = vehicleRepository.findByStreamKey(name);
+        VehicleDataEntity vehicle = vehicleRepository.findByStreamKey(streamKey);
         if (vehicle != null) {
             return repository.findAllByVehicleDataAndUpdateTimestampBetween(vehicle.getId(), startTime, endTime, scale);
         } else {

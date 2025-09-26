@@ -24,13 +24,11 @@ export class MapLayerFactory {
 
     static createMaskingLayers(data) {
         return [
-            new HeatmapLayer({
+            new ScatterplotLayer({
                 id: 'coverage-mask',
-                radiusPixels: 10,
+                getRadius: 20,
                 data: data,
                 getPosition: d => [d.longitude, d.latitude],
-                cellSize: 10,
-                extruded: false,
                 operation: 'mask',
             }),
             new PolygonLayer({
@@ -50,6 +48,7 @@ export class MapLayerFactory {
                 maskId: 'coverage-mask',
                 maskByInstance: false,
                 maskInverted: true,
+                parameters: {depthTest: false},
                 extensions: [new MaskExtension()],
             }),
         ];
