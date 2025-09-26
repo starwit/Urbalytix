@@ -100,6 +100,7 @@ function DetectionMap(props) {
 
         var result = [
             MapLayerFactory.createBaseMapLayer(),
+            ...MapLayerFactory.createMaskingLayers(detectionData),
             ...Object.entries(features).map(([objectType, featureData], index) =>
                 MapLayerFactory.createIconLayer(featureData, objectType, index, ICON_MAPPING, featureIcon))
         ];

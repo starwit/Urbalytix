@@ -1,6 +1,7 @@
-import {HeatmapLayer, HexagonLayer} from "@deck.gl/aggregation-layers";
+import {GridLayer, HeatmapLayer, HexagonLayer} from "@deck.gl/aggregation-layers";
+import {MaskExtension} from "@deck.gl/extensions";
 import {TileLayer} from "@deck.gl/geo-layers";
-import {BitmapLayer, GridCellLayer, IconLayer, ScatterplotLayer} from "@deck.gl/layers";
+import {BitmapLayer, GridCellLayer, IconLayer, PolygonLayer, ScatterplotLayer} from "@deck.gl/layers";
 import {TILE_LAYER_CONFIG} from './BaseMapConfig';
 
 export class MapLayerFactory {
@@ -19,6 +20,39 @@ export class MapLayerFactory {
                 });
             }
         });
+    }
+
+    static createMaskingLayers(data) {
+        return [
+            new HeatmapLayer({
+                id: 'coverage-mask',
+                radiusPixels: 10,
+                data: data,
+                getPosition: d => [d.longitude, d.latitude],
+                cellSize: 10,
+                extruded: false,
+                operation: 'mask',
+            }),
+            new PolygonLayer({
+                id: 'coverage-layer',
+                data: [{
+                    polygon: [
+                        [0, 60], 
+                        [20, 60], 
+                        [20, 40], 
+                        [0, 40],
+                    ]
+                }],
+                getFillColor: [0, 0, 0, 128],
+                extruded: false,
+                stroked: false,
+                filled: true,
+                maskId: 'coverage-mask',
+                maskByInstance: false,
+                maskInverted: true,
+                extensions: [new MaskExtension()],
+            }),
+        ];
     }
 
     static createHeatmapDetectionLayer(detectionData, colorRange, options = {}) {
