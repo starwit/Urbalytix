@@ -7,10 +7,8 @@ import dayjs from 'dayjs';
  * @param {number} initialCount - Initial detection count limit.
  * @returns {[Array, number, Function]} [detectionData, detectionCount, setDetectionCount]
  */
-export function useDetectionCount() {
+export function useDetectionCount(startDate, endDate) {
     const [rawDetectionData, setDetectionData] = useState([]);
-    const [startDate, setStartDate] = useState(dayjs().startOf('week'));
-    const [endDate, setEndDate] = useState(dayjs().endOf('week'));
     const [objectClasses, setObjectClasses] = useState([]);
     const [selectedObjectClasses, setSelectedObjectClasses] = useState();
     const detectionCountRest = useMemo(() => new DetectionCountRest(), []);
@@ -42,8 +40,6 @@ export function useDetectionCount() {
 
     return {
         detectionData,
-        setStartDate,
-        setEndDate,
         objectClasses,
         selectedObjectClasses,
         setSelectedObjectClasses
