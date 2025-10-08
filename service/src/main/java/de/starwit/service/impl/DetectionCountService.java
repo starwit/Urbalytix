@@ -19,8 +19,6 @@ import de.starwit.visionapi.Analytics.DetectionCountMessage;
 @Service
 public class DetectionCountService implements ServiceInterface<DetectionCountEntity, DetectionCountRepository> {
 
-    ZonedDateTime cutoffDate = ZonedDateTime.now().minusDays(14);
-
     @Autowired
     private DetectionCountRepository repository;
 
@@ -29,8 +27,8 @@ public class DetectionCountService implements ServiceInterface<DetectionCountEnt
         return repository;
     }
 
-    public List<String> getAllDetectedObjectClasses() {
-        List<String> classNames = repository.findDistinctClassNames(cutoffDate);
+    public List<String> getAllDetectedObjectClasses(ZonedDateTime startTime, ZonedDateTime endTime) {
+        List<String> classNames = repository.findDistinctClassNames(startTime, endTime);
         return classNames;
     }
 

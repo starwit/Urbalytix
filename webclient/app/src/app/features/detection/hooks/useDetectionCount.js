@@ -22,10 +22,10 @@ export function useDetectionCount(startDate, endDate) {
     }, [detectionCountRest, startDate, endDate]);
 
     useEffect(() => {
-        detectionCountRest.getObjectClasses().then(response => {
+        detectionCountRest.getObjectClasses(startDate.toJSON(), endDate.toJSON()).then(response => {
             setObjectClasses(response.data);
         });
-    }, [detectionCountRest]);
+    }, [detectionCountRest, startDate, endDate]);
 
     useEffect(() => {
         setSelectedObjectClasses(objectClasses);
