@@ -67,9 +67,9 @@ function DetectionComparision() {
                 zIndex: 1,
                 padding: 1
             }}>
-                <Typography variant='subtitle2'>{t('map.agenda')}</Typography>
-                <Box sx={{paddingTop: 1, display: 'flex', alignItems: 'center'}}><HexagonIcon color="info" /><Typography variant='caption'>{t('agenda.selected')}</Typography></Box>
-                <Box sx={{paddingBottom: 1, display: 'flex', alignItems: 'center'}}><HexagonIcon color="disabled" /><Typography variant='caption'>{t('agenda.before')}</Typography></Box>
+                <Typography variant='subtitle2'>{t('map.legend')}</Typography>
+                <Box sx={{paddingTop: 1, display: 'flex', alignItems: 'center'}}><HexagonIcon color="info" /><Typography variant='caption'>{t('legend.selected')}</Typography></Box>
+                <Box sx={{paddingBottom: 1, display: 'flex', alignItems: 'center'}}><HexagonIcon color="disabled" /><Typography variant='caption'>{t('legend.before')}</Typography></Box>
             </Paper>
             <DetectionCompareMap
                 viewState={VIEW_STATE}

@@ -96,9 +96,9 @@ const translationDeDE = {
     "map.hexagon": "3D-Hexagon-Modus",
     "map.scatterplot": "Punktwolke",
     "map.coverage": "Datenabdeckung",
-    "map.agenda": "Agenda",
-    "agenda.selected": "ausgewählte Woche",
-    "agenda.before": "vorherige Woche",
+    "map.legend": "Legende",
+    "legend.selected": "ausgewählte Woche",
+    "legend.before": "vorherige Woche",
     /******************** to be extracted ************************* */
     "landing.wastemanagement": "Abfallmanagement",
     "landing.trafficlive": "Verkehr Live",
