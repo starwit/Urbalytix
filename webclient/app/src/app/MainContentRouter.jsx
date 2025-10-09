@@ -4,6 +4,7 @@ import LandingLayout from "./commons/LandingLayout";
 import Vehicles from "./features/vehicle/Vehicles";
 import LandingPage from "./features/landing/LandingPage";
 import DetectionOverview from "./features/detection/DetectionOverview";
+import DetectionComparison from "./features/detection/DetectionComparision";
 
 function MainContentRouter() {
     return (
@@ -11,6 +12,7 @@ function MainContentRouter() {
             <Route path="/" element={<LandingLayout disabled={true}><LandingPage /></LandingLayout>} />
             <Route path="/landing" element={<LandingLayout disabled={true}><LandingPage /></LandingLayout>} />
             <Route path="/status" element={<Layout disabled={true}><DetectionOverview /></Layout>} />
+            <Route path="/diff" element={<Layout disabled={true}><DetectionComparison /></Layout>} />
             <Route path="/vehicles" element={<Layout disabled={true}><Vehicles /></Layout>} />
             <Route path="/logout" component={() => {
                 window.location.href = window.location.pathname + "api/user/logout";

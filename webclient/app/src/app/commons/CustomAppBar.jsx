@@ -1,6 +1,7 @@
 import LogoutIcon from '@mui/icons-material/Logout';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import AutoDeleteIcon from '@mui/icons-material/AutoDelete';
+import DifferenceIcon from '@mui/icons-material/Difference';
 import {
     AppBar,
     Container,
@@ -10,7 +11,6 @@ import {
     Toolbar,
     Typography
 } from "@mui/material";
-import React from "react";
 import general from "../assets/images/logo_color.png";
 
 
@@ -48,6 +48,9 @@ function CustomAppBar() {
                         >
                             <IconButton href="#/status" size="large">
                                 <AutoDeleteIcon />
+                            </IconButton>
+                            <IconButton href="#/diff" size="large">
+                                <DifferenceIcon />
                             </IconButton>
                             <IconButton href="#/vehicles" size="large">
                                 <LocalShippingIcon />

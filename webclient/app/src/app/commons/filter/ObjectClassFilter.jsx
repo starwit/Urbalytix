@@ -28,7 +28,7 @@ function ObjectClassFilter(props) {
                 }}
                 expandIcon={<ExpandMoreIcon />}
             >
-                <Typography component="span">{t(prefix + '.selection')}</Typography>
+                <Typography component="span">{t(prefix + '.selection')}</Typography><ExpandMoreIcon />
             </AccordionSummary>
             <AccordionDetails>
                 <FormControl>
