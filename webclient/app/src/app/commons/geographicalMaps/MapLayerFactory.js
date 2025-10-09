@@ -35,9 +35,9 @@ export class MapLayerFactory {
                 id: 'coverage-layer',
                 data: [{
                     polygon: [
-                        [0, 60], 
-                        [20, 60], 
-                        [20, 40], 
+                        [0, 60],
+                        [20, 60],
+                        [20, 40],
                         [0, 40],
                     ]
                 }],
@@ -153,6 +153,62 @@ export class MapLayerFactory {
             getPosition: d => [d.longitude, d.latitude],
             ...options
         });
+    }
+
+    static createDiffLayer(data) {
+        return new HexagonLayer({
+            id: 'hex-diff',
+            data: data,
+            getPosition: d => [d.longitude, d.latitude],
+            getColorValue: points => {
+                const a = points.filter(d => d.className === 'waste').length;
+                const b = points.filter(d => d.className === 'cigarette').length;
+                return a - b;
+            },
+            colorRange: [[0, 0, 255], [255, 255, 255], [255, 0, 0]],
+            colorDomain: [-10, 10],
+            extruded: true,
+            radius: 3,
+            coverage: 1,
+        })
+    }
+
+    static createComparisionLayers(data, comparitionData) {
+
+        const common = {
+            radius: 3,
+            coverage: 1,
+            extruded: true,
+            elevationScale: 0.1,
+            extruded: true,
+            pickable: true,
+            getTooltip: true,
+            gpuAggregation: false, //needed to get data for tooltip!!!
+            colorAggregation: 'MAX',
+            elevationAggregation: 'MAX',
+            getColorWeight: d => d.count,
+            getElevationWeight: d => d.count,
+            upperPercentile: 99.9,
+            elevationDomain: [0, 20],
+            getPosition: d => [d.longitude, d.latitude],
+        };
+
+        return [
+            new HexagonLayer({
+                id: 'hex-A',
+                opacity: 0.5,
+                data: data,
+                colorRange: [[0, 150, 255]], // red
+                ...common
+            }),
+            new HexagonLayer({
+                id: 'hex-B',
+                opacity: 0.3,
+                data: comparitionData,
+                colorRange: [[255, 255, 255]], // blue
+                ...common
+            })
+        ];
     }
 
     static createRouteLayer(routeData, layerID) {

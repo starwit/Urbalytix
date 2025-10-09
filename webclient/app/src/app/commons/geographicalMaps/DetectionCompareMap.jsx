@@ -1,33 +1,13 @@
 import DeckGL from "@deck.gl/react";
 import {useTranslation} from "react-i18next";
-import featureImage from "../../assets/icons/recycling.png";
-import positionImage from "../../assets/icons/vehicle.png";
 import {MAP_VIEW} from './BaseMapConfig';
 import {MapLayerFactory} from './MapLayerFactory';
-
-const ICON_MAPPING = {
-    "marker": {
-        "x": 0,
-        "y": 0,
-        "width": 128,
-        "height": 128,
-        "anchorY": 128,
-        "mask": true
-    },
-    "marker-warning": {
-        "x": 128,
-        "y": 0,
-        "width": 128,
-        "height": 128,
-        "anchorY": 128,
-        "mask": false
-    }
-}
 
 function DetectionCompareMap(props) {
     const {
         viewState,
         detectionData = [],
+        detectionComparitionData = [],
         showHexagons = false,
     } = props;
     const {t} = useTranslation();
@@ -41,20 +21,19 @@ function DetectionCompareMap(props) {
         let count = 0;
         let detectionTimes = [];
 
-        switch (layer.id) {
-            case 'HexagonLayer':
-                if (object.position) {
-                    if (object.points && object.points.length > 0) {
-                        lat = object.points[0].latitude;
-                        lng = object.points[0].longitude;
-                    }
+        if (layer.id.startsWith('hex')) {
+            if (object.position) {
+                if (object.points && object.points.length > 0) {
+                    lat = object.points[0].latitude;
+                    lng = object.points[0].longitude;
                 }
-                if (object.elevationValue) {
-                    count = object.elevationValue;
-                    detectionTimes = object.points ? [...new Set(object.points.map(d => d.detectionTime))] : [];
-                }
-                return {
-                    html: `
+            }
+            if (object.elevationValue) {
+                count = object.elevationValue;
+                detectionTimes = object.points ? [...new Set(object.points.map(d => d.detectionTime))] : [];
+            }
+            return {
+                html: `
                         <div>
                             <strong>${t('map.latitude')}:</strong> ${lat}<br />
                             <strong>${t('map.longitude')}:</strong> ${lng}<br />
@@ -63,19 +42,7 @@ function DetectionCompareMap(props) {
                             <strong>${t('map.time')}:</strong> <br /> ${detectionTimes.join('<br/>')}
                         </div>
                         `
-                };
-
-            default:
-                if (layer.id.startsWith('IconLayer')) {
-                    return {
-                        html: `
-                            <div>
-                                ${object.name}, ${t(object.status)}<br />
-                                ${object.description}<br />
-                            </div>
-                    `
-                    };
-                }
+            };
         }
     }
 
@@ -83,10 +50,10 @@ function DetectionCompareMap(props) {
         MapLayerFactory.createBaseMapLayer()
     ];
     if (showHexagons) {
-        layers.push(MapLayerFactory.createHexagonLayer(detectionData, {
-            id: 'HexagonLayer',
-        }));
+        layers.push(MapLayerFactory.createComparisionLayers(detectionData, detectionComparitionData));
     }
+
+
 
     return (
         <>

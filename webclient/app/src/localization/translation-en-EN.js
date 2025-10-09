@@ -96,6 +96,9 @@ const translationEnEN = {
     "map.hexagon": "3D-Hexagon",
     "map.scatterplot": "Scatter Plot",
     "map.coverage": "Data Coverage",
+    "map.agenda": "Agenda",
+    "agenda.selected": "selected week",
+    "agenda.before": "week before",
     /******************** to be extracted ************************* */
     "landing.wastemanagement": " Waste Management",
     "landing.trafficlive": " Traffic Live",
