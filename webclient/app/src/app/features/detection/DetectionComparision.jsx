@@ -6,9 +6,11 @@ import ObjectClassFilter from "../../commons/filter/ObjectClassFilter";
 import DetectionCompareMap from '../../commons/geographicalMaps/DetectionCompareMap';
 import {useDetectionCount} from "./hooks/useDetectionCount";
 import {useDetectionCountDiff} from "./hooks/useDetectionCountDiff";
-import {Typography, Box, Paper, Stack, FormControl} from '@mui/material';
+import {Typography, Box, Paper} from '@mui/material';
 import HexagonIcon from '@mui/icons-material/Hexagon';
 import {useTranslation} from 'react-i18next';
+import {useVehicleRoutes} from './hooks/useVehicleRoutes';
+import CompareMapFilter from '../../commons/filter/CompareMapFilter';
 
 const VIEW_STATE = {
     longitude: 10.785000000000000,
@@ -33,8 +35,9 @@ function DetectionComparision() {
         setSelectedObjectClasses
     } = useDetectionCount(startDate, endDate);
 
-
+    const [types, setTypes] = useState(['coverage', 'hexcompare']);
     const {detectionComparitionData} = useDetectionCountDiff(startCompDate, endCompDate, selectedObjectClasses);
+    const vehicleRoutes = useVehicleRoutes(startDate.toJSON(), endDate.toJSON());
 
     function handleStartDateChange(date) {
         setStartDate(date);
@@ -46,12 +49,22 @@ function DetectionComparision() {
         setEndCompDate(date.subtract(1, 'week').endOf('week'));
     }
 
+    function handleTypes(event, newTypes) {
+        if (newTypes.length) {
+            setTypes(newTypes);
+        }
+    }
+
     return (
         <>
             <FilterLayout leftPosition={10}>
                 <DateTimeFilter
                     setStartDate={handleStartDateChange}
                     setEndDate={handleEndDateChange}
+                />
+                <CompareMapFilter
+                    types={types}
+                    handleTypes={handleTypes}
                 />
                 <ObjectClassFilter
                     objectClasses={objectClasses}
@@ -68,14 +81,20 @@ function DetectionComparision() {
                 padding: 1
             }}>
                 <Typography variant='subtitle2'>{t('map.legend')}</Typography>
-                <Box sx={{paddingTop: 1, display: 'flex', alignItems: 'center'}}><HexagonIcon color="info" /><Typography variant='caption'>{t('legend.selected')}</Typography></Box>
-                <Box sx={{paddingBottom: 1, display: 'flex', alignItems: 'center'}}><HexagonIcon color="disabled" /><Typography variant='caption'>{t('legend.before')}</Typography></Box>
+                <Box sx={{paddingTop: 1, display: 'flex', alignItems: 'center'}}>
+                    <HexagonIcon color="info" /><Typography variant='caption'>{t('legend.selected')}</Typography>
+                </Box>
+                <Box sx={{paddingBottom: 1, display: 'flex', alignItems: 'center'}}>
+                    <HexagonIcon color="disabled" /><Typography variant='caption'>{t('legend.before')}</Typography>
+                </Box>
             </Paper>
             <DetectionCompareMap
                 viewState={VIEW_STATE}
                 detectionData={detectionData}
                 detectionComparitionData={detectionComparitionData}
-                showHexagons={true}
+                vehicleRoutes={vehicleRoutes}
+                showHexagons={types.includes("hexcompare")}
+                showCoverage={types.includes("coverage")}
             />
         </>
     );

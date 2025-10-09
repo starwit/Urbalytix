@@ -8,6 +8,8 @@ function DetectionCompareMap(props) {
         viewState,
         detectionData = [],
         detectionComparitionData = [],
+        vehicleRoutes = [],
+        showCoverage = false,
         showHexagons = false,
     } = props;
     const {t} = useTranslation();
@@ -49,6 +51,9 @@ function DetectionCompareMap(props) {
     const layers = [
         MapLayerFactory.createBaseMapLayer()
     ];
+    if (showCoverage) {
+        layers.push(MapLayerFactory.createCoverageLayer(vehicleRoutes));
+    }
     if (showHexagons) {
         layers.push(MapLayerFactory.createComparisionLayers(detectionData, detectionComparitionData));
     }

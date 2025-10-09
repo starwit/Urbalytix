@@ -96,6 +96,8 @@ const translationDeDE = {
     "map.hexagon": "3D-Hexagon-Modus",
     "map.scatterplot": "Punktwolke",
     "map.coverage": "Datenabdeckung",
+    "map.hexcompare": "Wochenvergleich",
+    "map.coverageweek": "Abdeckung ausgewählte Woche",
     "map.legend": "Legende",
     "legend.selected": "ausgewählte Woche",
     "legend.before": "vorherige Woche",

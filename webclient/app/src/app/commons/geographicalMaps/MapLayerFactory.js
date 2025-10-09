@@ -1,4 +1,4 @@
-import {HeatmapLayer, HexagonLayer} from "@deck.gl/aggregation-layers";
+import {HeatmapLayer, HexagonLayer, ScreenGridLayer} from "@deck.gl/aggregation-layers";
 import {MaskExtension} from "@deck.gl/extensions";
 import {TileLayer} from "@deck.gl/geo-layers";
 import {BitmapLayer, GridCellLayer, IconLayer, PolygonLayer, ScatterplotLayer} from "@deck.gl/layers";
@@ -103,7 +103,7 @@ export class MapLayerFactory {
         });
     }
 
-    static createScatterplotLayer(data, colorProp = 'undefined', layerID, options = {}) {
+    static createScatterplotLayer(data, colorProp = 'undefined', options = {}) {
         return new ScatterplotLayer({
             data: data,
             getPosition: d => [d.longitude, d.latitude],
@@ -209,6 +209,27 @@ export class MapLayerFactory {
                 ...common
             })
         ];
+    }
+
+    static createCoverageLayer(coverageData) {
+        return new ScreenGridLayer({
+            id: 'ScreenGridLayer',
+            data: coverageData,
+
+            gpuAggregation: true,
+            cellSizePixels: 50,
+            colorRange: [
+                [0, 25, 0, 25],
+                [0, 85, 0, 85],
+                [0, 127, 0, 127],
+                [0, 170, 0, 170],
+                [0, 190, 0, 190],
+                [0, 255, 0, 255]
+            ],
+            getPosition: d => [d.longitude, d.latitude],
+            getWeight: d => 1,
+            opacity: 0.8
+        });
     }
 
     static createRouteLayer(routeData, layerID) {

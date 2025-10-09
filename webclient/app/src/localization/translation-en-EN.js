@@ -96,6 +96,8 @@ const translationEnEN = {
     "map.hexagon": "3D-Hexagon",
     "map.scatterplot": "Scatter Plot",
     "map.coverage": "Data Coverage",
+    "map.hexcompare": "Detection Comparison",
+    "map.coverageweek": "Coverage selected Week",
     "map.legend": "Legend",
     "legend.selected": "selected week",
     "legend.before": "week before",
