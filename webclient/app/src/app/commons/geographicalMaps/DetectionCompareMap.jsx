@@ -46,6 +46,18 @@ function DetectionCompareMap(props) {
                         `
             };
         }
+        if (layer.id === 'CoverageLayer') {
+            if (object.count) {
+                count = object.count;
+            }
+            return {
+                html: `
+                        <div>
+                            <strong>${t('map.detectioncount')}:</strong> ${count}<br />
+                        </div>
+                        `
+            };
+        }
     }
 
     const layers = [

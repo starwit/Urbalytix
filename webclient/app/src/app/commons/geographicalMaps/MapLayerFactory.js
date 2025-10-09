@@ -213,7 +213,7 @@ export class MapLayerFactory {
 
     static createCoverageLayer(coverageData) {
         return new ScreenGridLayer({
-            id: 'ScreenGridLayer',
+            id: 'CoverageLayer',
             data: coverageData,
 
             gpuAggregation: true,
@@ -227,8 +227,9 @@ export class MapLayerFactory {
                 [0, 255, 0, 255]
             ],
             getPosition: d => [d.longitude, d.latitude],
-            getWeight: d => 1,
-            opacity: 0.8
+            getWeight: 1,
+            opacity: 0.8,
+            pickable: true
         });
     }
 

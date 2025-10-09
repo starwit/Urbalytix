@@ -98,6 +98,7 @@ const translationDeDE = {
     "map.coverage": "Datenabdeckung",
     "map.hexcompare": "Wochenvergleich",
     "map.coverageweek": "Abdeckung ausgewählte Woche",
+    "map.detectioncount": "GPS-Punkte",
     "map.legend": "Legende",
     "legend.selected": "ausgewählte Woche",
     "legend.before": "vorherige Woche",

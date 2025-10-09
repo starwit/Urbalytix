@@ -98,6 +98,7 @@ const translationEnEN = {
     "map.coverage": "Data Coverage",
     "map.hexcompare": "Detection Comparison",
     "map.coverageweek": "Coverage selected Week",
+    "map.detectioncount": "GPS detections",
     "map.legend": "Legend",
     "legend.selected": "selected week",
     "legend.before": "week before",
