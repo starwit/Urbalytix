@@ -1,4 +1,4 @@
-import {GridLayer, HeatmapLayer, HexagonLayer} from "@deck.gl/aggregation-layers";
+import {HeatmapLayer, HexagonLayer} from "@deck.gl/aggregation-layers";
 import {MaskExtension} from "@deck.gl/extensions";
 import {TileLayer} from "@deck.gl/geo-layers";
 import {BitmapLayer, GridCellLayer, IconLayer, PolygonLayer, ScatterplotLayer} from "@deck.gl/layers";
