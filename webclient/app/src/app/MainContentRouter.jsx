@@ -4,7 +4,7 @@ import LandingLayout from "./commons/LandingLayout";
 import Vehicles from "./features/vehicle/Vehicles";
 import LandingPage from "./features/landing/LandingPage";
 import DetectionOverview from "./features/detection/DetectionOverview";
-import DetectionComparison from "./features/detection/DetectionComparision";
+import DetectionComparison from "./features/detection/DetectionComparison";
 
 function MainContentRouter() {
     return (

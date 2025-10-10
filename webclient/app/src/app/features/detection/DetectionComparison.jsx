@@ -21,7 +21,7 @@ const VIEW_STATE = {
 };
 
 
-function DetectionComparision() {
+function DetectionComparison() {
     const [startDate, setStartDate] = useState(dayjs().startOf('week'));
     const [endDate, setEndDate] = useState(dayjs().endOf('week'));
     const [startCompDate, setStartCompDate] = useState(dayjs().subtract(1, 'week').startOf('week'));
@@ -100,4 +100,4 @@ function DetectionComparision() {
     );
 }
 
-export default DetectionComparision;
+export default DetectionComparison;
