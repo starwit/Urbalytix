@@ -96,6 +96,12 @@ const translationDeDE = {
     "map.hexagon": "3D-Hexagon-Modus",
     "map.scatterplot": "Punktwolke",
     "map.coverage": "Datenabdeckung",
+    "map.hexcompare": "Wochenvergleich",
+    "map.coverageweek": "Abdeckung ausgewählte Woche",
+    "map.detectioncount": "GPS-Punkte",
+    "map.legend": "Legende",
+    "legend.selected": "ausgewählte Woche",
+    "legend.before": "vorherige Woche",
     /******************** to be extracted ************************* */
     "landing.wastemanagement": "Abfallmanagement",
     "landing.trafficlive": "Verkehr Live",

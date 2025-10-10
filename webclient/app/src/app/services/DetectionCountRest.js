@@ -14,8 +14,8 @@ class DetectionCountRest extends CrudRest {
         return axios.get(this.baseUrl + "/timeframe/" + start + "/" + end);
     }
 
-    getObjectClasses() {
-        return axios.get(this.baseUrl + "/classes");
+    getObjectClasses(start, end) {
+        return axios.get(this.baseUrl + "/classes/" + start + "/" + end);
     }
 }
 export default DetectionCountRest;

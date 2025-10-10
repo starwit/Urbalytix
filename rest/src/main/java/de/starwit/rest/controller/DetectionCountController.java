@@ -61,9 +61,10 @@ public class DetectionCountController {
     }
 
     @Operation(summary = "Get all detected object classes")
-    @GetMapping(value = "/classes")
-    public List<String> getAllDetectedObjectClasses() {
-        return this.detectionCountService.getAllDetectedObjectClasses();
+    @GetMapping(value = "/classes/{start}/{end}")
+    public List<String> getAllDetectedObjectClasses(@PathVariable("start") ZonedDateTime startTime,
+            @PathVariable("end") ZonedDateTime endTime) {
+        return this.detectionCountService.getAllDetectedObjectClasses(startTime, endTime);
     }
 
     @ExceptionHandler(value = { EntityNotFoundException.class })

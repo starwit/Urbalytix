@@ -1,4 +1,4 @@
-import {GridLayer, HeatmapLayer, HexagonLayer} from "@deck.gl/aggregation-layers";
+import {HeatmapLayer, HexagonLayer, ScreenGridLayer} from "@deck.gl/aggregation-layers";
 import {MaskExtension} from "@deck.gl/extensions";
 import {TileLayer} from "@deck.gl/geo-layers";
 import {BitmapLayer, GridCellLayer, IconLayer, PolygonLayer, ScatterplotLayer} from "@deck.gl/layers";
@@ -35,9 +35,9 @@ export class MapLayerFactory {
                 id: 'coverage-layer',
                 data: [{
                     polygon: [
-                        [0, 60], 
-                        [20, 60], 
-                        [20, 40], 
+                        [0, 60],
+                        [20, 60],
+                        [20, 40],
                         [0, 40],
                     ]
                 }],
@@ -103,7 +103,7 @@ export class MapLayerFactory {
         });
     }
 
-    static createScatterplotLayer(data, colorProp = 'undefined', layerID, options = {}) {
+    static createScatterplotLayer(data, colorProp = 'undefined', options = {}) {
         return new ScatterplotLayer({
             data: data,
             getPosition: d => [d.longitude, d.latitude],
@@ -152,6 +152,83 @@ export class MapLayerFactory {
             elevationDomain: [0, 20],
             getPosition: d => [d.longitude, d.latitude],
             ...options
+        });
+    }
+
+    static createDiffLayer(data) {
+        return new HexagonLayer({
+            id: 'hex-diff',
+            data: data,
+            getPosition: d => [d.longitude, d.latitude],
+            getColorValue: points => {
+                const a = points.filter(d => d.className === 'waste').length;
+                const b = points.filter(d => d.className === 'cigarette').length;
+                return a - b;
+            },
+            colorRange: [[0, 0, 255], [255, 255, 255], [255, 0, 0]],
+            colorDomain: [-10, 10],
+            extruded: true,
+            radius: 3,
+            coverage: 1,
+        })
+    }
+
+    static createcomparisonLayers(data, comparisonData) {
+
+        const common = {
+            radius: 3,
+            coverage: 1,
+            extruded: true,
+            elevationScale: 0.1,
+            pickable: true,
+            getTooltip: true,
+            gpuAggregation: false, //needed to get data for tooltip!!!
+            colorAggregation: 'MAX',
+            elevationAggregation: 'MAX',
+            getColorWeight: d => d.count,
+            getElevationWeight: d => d.count,
+            upperPercentile: 99.9,
+            elevationDomain: [0, 20],
+            getPosition: d => [d.longitude, d.latitude],
+        };
+
+        return [
+            new HexagonLayer({
+                id: 'hex-A',
+                opacity: 0.5,
+                data: data,
+                colorRange: [[0, 150, 255]], // red
+                ...common
+            }),
+            new HexagonLayer({
+                id: 'hex-B',
+                opacity: 0.3,
+                data: comparisonData,
+                colorRange: [[255, 255, 255]], // blue
+                ...common
+            })
+        ];
+    }
+
+    static createCoverageLayer(coverageData) {
+        return new ScreenGridLayer({
+            id: 'CoverageLayer',
+            data: coverageData,
+
+            gpuAggregation: true,
+            cellSizePixels: 50,
+            colorRange: [
+                [0, 25, 0, 25],
+                [0, 85, 0, 85],
+                [0, 127, 0, 127],
+                [0, 170, 0, 170],
+                [0, 190, 0, 190],
+                [0, 255, 0, 255]
+            ],
+            getPosition: d => [d.longitude, d.latitude],
+            getWeight: 1,
+            opacity: 0.8,
+            pickable: true
         });
     }
 
