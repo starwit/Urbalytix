@@ -18,12 +18,7 @@ export function useDetectionCountDiff(startDate, endDate, selectedObjectClasses)
         });
     }, [detectionCountRest, startDate, endDate]);
 
-    var detectioncomparisonData = rawDetectionData.filter(d => {
-        if (selectedObjectClasses.includes(d.className)) {
-            return true;
-        }
-        return false;
-    });
+    var detectioncomparisonData = rawDetectionData.filter(d => selectedObjectClasses.includes(d.className));
 
     return {
         detectioncomparisonData
