@@ -35,7 +35,7 @@ function DetectionComparision() {
         setSelectedObjectClasses
     } = useDetectionCount(startDate, endDate);
 
-    const [types, setTypes] = useState(['coverage', 'hexcompare']);
+    const [types, setTypes] = useState(['hexcompare']);
     const {detectionComparitionData} = useDetectionCountDiff(startCompDate, endCompDate, selectedObjectClasses);
     const vehicleRoutes = useVehicleRoutes(startDate.toJSON(), endDate.toJSON());
 
