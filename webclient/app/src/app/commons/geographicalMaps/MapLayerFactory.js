@@ -173,7 +173,7 @@ export class MapLayerFactory {
         })
     }
 
-    static createComparisionLayers(data, comparitionData) {
+    static createcomparisonLayers(data, comparisonData) {
 
         const common = {
             radius: 3,
@@ -203,7 +203,7 @@ export class MapLayerFactory {
             new HexagonLayer({
                 id: 'hex-B',
                 opacity: 0.3,
-                data: comparitionData,
+                data: comparisonData,
                 colorRange: [[255, 255, 255]], // blue
                 ...common
             })

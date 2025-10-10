@@ -7,7 +7,7 @@ function DetectionCompareMap(props) {
     const {
         viewState,
         detectionData = [],
-        detectionComparitionData = [],
+        detectioncomparisonData = [],
         vehicleRoutes = [],
         showCoverage = false,
         showHexagons = false,
@@ -67,7 +67,7 @@ function DetectionCompareMap(props) {
         layers.push(MapLayerFactory.createCoverageLayer(vehicleRoutes));
     }
     if (showHexagons) {
-        layers.push(MapLayerFactory.createComparisionLayers(detectionData, detectionComparitionData));
+        layers.push(MapLayerFactory.createcomparisonLayers(detectionData, detectioncomparisonData));
     }
 
 

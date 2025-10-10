@@ -36,7 +36,7 @@ function DetectionComparison() {
     } = useDetectionCount(startDate, endDate);
 
     const [types, setTypes] = useState(['hexcompare']);
-    const {detectionComparitionData} = useDetectionCountDiff(startCompDate, endCompDate, selectedObjectClasses);
+    const {detectioncomparisonData} = useDetectionCountDiff(startCompDate, endCompDate, selectedObjectClasses);
     const vehicleRoutes = useVehicleRoutes(startDate.toJSON(), endDate.toJSON());
 
     function handleStartDateChange(date) {
@@ -91,7 +91,7 @@ function DetectionComparison() {
             <DetectionCompareMap
                 viewState={VIEW_STATE}
                 detectionData={detectionData}
-                detectionComparitionData={detectionComparitionData}
+                detectioncomparisonData={detectioncomparisonData}
                 vehicleRoutes={vehicleRoutes}
                 showHexagons={types.includes("hexcompare")}
                 showCoverage={types.includes("coverage")}
