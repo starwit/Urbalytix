@@ -180,7 +180,6 @@ export class MapLayerFactory {
             coverage: 1,
             extruded: true,
             elevationScale: 0.1,
-            extruded: true,
             pickable: true,
             getTooltip: true,
             gpuAggregation: false, //needed to get data for tooltip!!!
