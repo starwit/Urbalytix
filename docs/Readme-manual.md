@@ -12,11 +12,20 @@ helm -n urbalytix install urbalytix oci://registry-1.docker.io/starwitorg/urbaly
 
 Please note, that namespace is optional and you can define your own release name. For how to use Helm refer to their [docs](https://helm.sh/docs/intro/using_helm/).
 
-The following custom values.yaml will make application available under hostname _urbalytix.cluster.local_ with no context-path
+Helm chart depends on a running PostgreSQL/Timescale. 
+
+The following custom values.yaml will make application available under hostname _urbalytix.cluster.local_ with no context-path.
 
 ```yaml
 app:
   context_path: ""
+
+database:
+  hostname: hostname
+  port: 5432
+  database: urbalytix
+  username: urbalytix
+  password: password
 
 ingress:
   enabled: true
