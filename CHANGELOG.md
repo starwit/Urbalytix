@@ -2,6 +2,13 @@
 
 Changelog of Urbalytix.
 
+## Current Version ()
+
+### Features
+
+-  added coverage to comparision view ([73121](https://github.com/starwit/Urbalytix/commit/731214c04842fe2) Anett Hübner)  
+-  ab#1867 add comparision layer for detections ([f9ca2](https://github.com/starwit/Urbalytix/commit/f9ca2b09bfc0063) Anett Hübner)  
+
 ## refs/tags/0.2.2 (2025-09-18)
 
 ### Features
