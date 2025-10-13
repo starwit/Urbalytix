@@ -30,5 +30,5 @@ database:
   port: 5432
   database: urbalytix
   username: urbalytix
-  password: password
+  password: your-secure-password
 ```
