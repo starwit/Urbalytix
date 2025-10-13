@@ -23,3 +23,12 @@ auth:
   keycloakRealmUrlExternal: https://external-hostname/realms/urbalytix
   clientId: urbalytix
   clientSecret: urbalytix 
+
+# database coordinates
+database:
+  hostname: hostname
+  port: 5432
+  database: urbalytix
+  username: urbalytix
+  password: your-secure-password
+```

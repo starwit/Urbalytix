@@ -50,14 +50,6 @@ app.kubernetes.io/name: {{ include "urbalytix.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
 
-{{- define "postgresql.servicename" -}}
-{{- printf "%s-postgresql" .Release.Name }}
-{{- end }}
-
-{{- define "postgresql.secretname" -}}
-{{- printf "%s-postgresql" .Release.Name }}
-{{- end }}
-
 {{- define "keycloak.servicename" -}}
 {{- printf "%s-keycloak" .Release.Name }}
 {{- end }}
