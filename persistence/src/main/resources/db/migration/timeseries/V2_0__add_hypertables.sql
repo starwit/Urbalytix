@@ -1,0 +1,2 @@
+SELECT create_hypertable('vehicleroutes', 'update_ts', 'vehicle_id', number_partitions => 4, if_not_exists => TRUE, migrate_data => TRUE);
+SELECT create_hypertable('detection_count', 'detection_time', 'class_name', number_partitions => 9, if_not_exists => TRUE, migrate_data => TRUE);

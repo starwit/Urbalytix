@@ -1,1 +1,0 @@
-CREATE INDEX IF NOT EXISTS "detection_count_time_idx" ON "detection_count" ("detection_time");

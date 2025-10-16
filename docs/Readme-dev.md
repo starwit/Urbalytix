@@ -51,23 +51,16 @@ Once all steps ran successfully application will be reachable with the following
   * keycloak can be reached under <http://localost:8081/auth>
 
 ### Run necessary infra
-Application needs various infrastructure to run e.g. PostgreSQL database. Folder [deployment](../deployment/) contains a number of Docker Compose scripts to run these. If you add a folder _sample_data_ that contains a file urbalytix.sql, that SQL script is executed upon first start of database. This way app can be populated with sample data.
+Application needs various infrastructure to run e.g. PostgreSQL database. Folder [deployment](../deployment/) contains a number of Docker Compose scripts to run these. If you have a binary data base dump you can restore it like so:
+```bash
+pg_restore -U urbalytix -h localhost -p 5432 -d urbalytix database_dump_file
+```
+
+Default password for dev databases is urbalytix.
+
+Docker compose script run a pre-configured PGAdmin instance here: http://localhost:5050/
 
 ## How to build Helm Chart
 The Helm Chart is templated as part of the Maven build process to make version setting easier. Therefore, the files in `deployment/helm` do not form a valid Helm Chart.\
 To generate the Helm Chart only you can run: `mvn validate -pl application`\
 The generated chart can then be found in `application/target/helm`
-
-## Debugging
-
-You can start the spring boot application in debug mode. See Spring Boot documentation for further details. The easiest way is, to use debug functionality integrated with your IDE like VS Code.
-
-## Postgres Client
-
-The database is available under localhost:5434. A database GUI (pgadmin) is available at localhost:5050 (if you started one of the docker compose environments in `./deployment`).
-
-```properties
-Username:Urbalytix
-Database:Urbalytix
-Password:Urbalytix
-```
