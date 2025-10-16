@@ -2,32 +2,31 @@ name: urbalytix
 
 services:
   db-urbalytix:
-    image: postgres:latest
+    image: timescale/timescaledb:latest-pg17
     environment:
       POSTGRES_DB: urbalytix
       POSTGRES_USER: urbalytix
       POSTGRES_PASSWORD: urbalytix
       PGDATA: /var/lib/postgresql/data
     healthcheck:
-      test: ['CMD-SHELL', 'pg_isready -U urbalytix']
+      test: ["CMD-SHELL", "pg_isready -U urbalytix"]
       interval: 5s
       timeout: 60s
       retries: 30
     volumes:
       - db-urbalytix:/var/lib/postgresql/data
-      - ./sample_data/urbalytix.sql:/docker-entrypoint-initdb.d/urbalytix.sql
     ports:
       - "5432:5432"
-  
+
   pgadmin:
     image: dpage/pgadmin4
     environment:
       PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
       PGADMIN_DEFAULT_PASSWORD: admin
-      PGADMIN_CONFIG_SERVER_MODE: 'False'
+      PGADMIN_CONFIG_SERVER_MODE: "False"
     volumes:
-       - pgadmin:/var/lib/pgadmin
-       - ./pgadmin/postgreslocal-servers-config.json:/pgadmin4/servers.json
+      - pgadmin:/var/lib/pgadmin
+      - ./pgadmin/postgreslocal-servers-config.json:/pgadmin4/servers.json
     ports:
       - "5050:80"
 

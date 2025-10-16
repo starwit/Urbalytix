@@ -5,7 +5,7 @@
             "Group": "Servers",
             "Port": 5432,
             "Username": "urbalytix",
-            "Host": "postgres",
+            "Host": "db-urbalytix",
             "SSLMode": "prefer",
             "MaintenanceDB": "postgres",
             "PasswordExecCommand": "echo 'urbalytix'"

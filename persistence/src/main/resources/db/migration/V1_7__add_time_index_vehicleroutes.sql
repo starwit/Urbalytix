@@ -1,1 +1,0 @@
-CREATE INDEX IF NOT EXISTS "vehicleroutes_time_idx" ON "vehicleroutes" ("update_ts");
