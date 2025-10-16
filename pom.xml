@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.5.5</version>
+        <version>3.5.6</version>
     </parent>
 
     <groupId>de.starwit</groupId>
@@ -28,7 +30,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <spring-boot-version>3.5.5</spring-boot-version>
+        <spring-boot-version>3.5.6</spring-boot-version>
         <vision-api.version>3.5.2</vision-api.version>
         <lettuce.version>6.8.1.RELEASE</lettuce.version>
         <openapi-version>2.8.13</openapi-version>
@@ -74,7 +76,7 @@
             <dependency>
                 <groupId>org.postgresql</groupId>
                 <artifactId>postgresql</artifactId>
-                <version>42.7.7</version>
+                <version>42.7.8</version>
                 <scope>runtime</scope>
             </dependency>
             <dependency>
@@ -136,17 +138,17 @@
             <dependency>
                 <groupId>org.apache.httpcomponents.client5</groupId>
                 <artifactId>httpclient5</artifactId>
-                <version>5.5</version>
+                <version>5.5.1</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
-                <version>3.18.0</version>
+                <version>3.19.0</version>
             </dependency>
             <dependency>
                 <groupId>org.modelmapper</groupId>
                 <artifactId>modelmapper</artifactId>
-                <version>3.2.4</version>
+                <version>3.2.5</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -191,11 +193,15 @@
                             <phase>prepare-package</phase>
                             <configuration>
                                 <target>
-                                    <concat destfile="${project.build.outputDirectory}/static/info.txt">
-                                        <fileset file="${project.build.outputDirectory}/META-INF/build-info.properties" />
-                                        <fileset file="${project.build.outputDirectory}/git.properties" />
+                                    <concat
+                                        destfile="${project.build.outputDirectory}/static/info.txt">
+                                        <fileset
+                                            file="${project.build.outputDirectory}/META-INF/build-info.properties" />
+                                        <fileset
+                                            file="${project.build.outputDirectory}/git.properties" />
                                         <filterchain>
-                                            <filterreader classname="org.apache.tools.ant.filters.LineContains">
+                                            <filterreader
+                                                classname="org.apache.tools.ant.filters.LineContains">
                                                 <param type="negate" value="true" />
                                                 <param type="contains" value="#" />
                                             </filterreader>
