@@ -2,7 +2,7 @@ name: urbalytix
 
 services:
   db-urbalytix:
-    image: timescale/timescaledb:latest-pg17
+    image: timescale/timescaledb-ha:pg17
     environment:
       POSTGRES_DB: urbalytix
       POSTGRES_USER: urbalytix
@@ -14,7 +14,8 @@ services:
       timeout: 60s
       retries: 30
     volumes:
-      - db-urbalytix:/var/lib/postgresql/data
+      - ./postgres/data:/var/lib/postgresql/data
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "5432:5432"
 
@@ -31,5 +32,4 @@ services:
       - "5050:80"
 
 volumes:
-  db-urbalytix:
   pgadmin:
