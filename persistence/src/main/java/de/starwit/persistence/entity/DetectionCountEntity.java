@@ -3,6 +3,10 @@ package de.starwit.persistence.entity;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+import org.springframework.data.geo.Point;
+
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -28,6 +32,10 @@ public class DetectionCountEntity extends AbstractEntity<Long> {
 
     @Column(name = "longitude")
     private BigDecimal longitude;
+
+    @Column(name = "location", columnDefinition = "geometry(Point,4326)")
+    @JdbcTypeCode(SqlTypes.POINT)
+    private Point location;
 
     @Column(name = "class_name")
     private String className;
@@ -59,6 +67,14 @@ public class DetectionCountEntity extends AbstractEntity<Long> {
 
     public void setLongitude(BigDecimal longitude) {
         this.longitude = longitude;
+    }
+
+    public Point getLocation() {
+        return location;
+    }
+
+    public void setLocation(Point location) {
+        this.location = location;
     }
 
     public String getClassName() {
