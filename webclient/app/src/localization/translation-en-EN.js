@@ -108,6 +108,8 @@ const translationEnEN = {
     "landing.trafficanalysis": " Traffic Analysis",
     "landing.assetmanagement": " Asset Management",
     "landing.publicsafety": " Traffic Safety",
-    "landing.parking": " Parking Management"
+    "landing.parking": " Parking Management",
+    "streetData.heading": "Street Catalog",
+    "streetData.streetName": " Street Name"
 };
 export default translationEnEN;

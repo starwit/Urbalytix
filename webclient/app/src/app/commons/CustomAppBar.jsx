@@ -2,6 +2,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import AutoDeleteIcon from '@mui/icons-material/AutoDelete';
 import DifferenceIcon from '@mui/icons-material/Difference';
+import EditRoadIcon from '@mui/icons-material/EditRoad';
 import {
     AppBar,
     Container,
@@ -54,6 +55,10 @@ function CustomAppBar() {
                             </IconButton>
                             <IconButton href="#/vehicles" size="large">
                                 <LocalShippingIcon />
+                            </IconButton>
+                            <Divider orientation="vertical" variant="middle" flexItem />
+                            <IconButton href="#/streetcatalog" size="large">
+                                <EditRoadIcon />
                             </IconButton>
                             <Divider orientation="vertical" variant="middle" flexItem />
                             <IconButton href="#/logout" size="large">
