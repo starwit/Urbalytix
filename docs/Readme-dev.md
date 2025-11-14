@@ -51,13 +51,19 @@ Once all steps ran successfully application will be reachable with the following
   * keycloak can be reached under <http://localost:8081/auth>
 
 ### Run necessary infra
-Application needs various infrastructure to run e.g. PostgreSQL database. Folder [deployment](../deployment/) contains a number of Docker Compose scripts to run these. If you have a binary data base dump you can restore it like so:
-```bash
-pg_restore -U urbalytix -h localhost -p 5432 -d urbalytix database_dump_file
-```
+Application needs various infrastructure to run e.g. PostgreSQL database. Folder [deployment](../deployment/) contains a number of Docker Compose scripts to run these. 
+
+#### Dump from Timescale running in Kubernetes
+If you need data for testing, you can create a dump and copy it to your machine:
+
+1. Access kubernetes cluster and establish a port forward for timescaledb with address 0.0.0.0 and port 5433
+2. Run docker compose with `deployment/noauth-docker-compose.yml`
+3. Access database container: `docker exec -it urbalytix-db-urbalytix-1 bash`
+4. Dump database: `pg_dump -h local-ip-address -p 5433 -U urbalytix -Fc urbalytix > urbalytix.dump`
+5. Copy to local database: `pg_restore -h localhost -p 5432 -U urbalytix -d urbalytix urbalytix.dump`
+6. Check result with pgAdmin
 
 Default password for dev databases is urbalytix.
-
 Docker compose script run a pre-configured PGAdmin instance here: http://localhost:5050/
 
 ## How to build Helm Chart
