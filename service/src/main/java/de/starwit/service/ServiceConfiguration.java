@@ -1,5 +1,6 @@
 package de.starwit.service;
 
+import org.locationtech.jts.geom.GeometryFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
@@ -47,6 +48,12 @@ public class ServiceConfiguration {
                 clientConfig);
         factory.setShareNativeConnection(false);
         return factory;
+    }
+
+    @Bean
+    GeometryFactory geometryFactory() {
+        return new GeometryFactory(new org.locationtech.jts.geom.PrecisionModel(),
+                4326);
     }
 
     @Bean

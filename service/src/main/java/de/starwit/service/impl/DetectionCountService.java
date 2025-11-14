@@ -1,11 +1,13 @@
 package de.starwit.service.impl;
 
-import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.List;
 
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Point;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -21,6 +23,9 @@ public class DetectionCountService implements ServiceInterface<DetectionCountEnt
 
     @Autowired
     private DetectionCountRepository repository;
+
+    @Autowired
+    private GeometryFactory geometryFactory;
 
     @Override
     public DetectionCountRepository getRepository() {
@@ -43,11 +48,11 @@ public class DetectionCountService implements ServiceInterface<DetectionCountEnt
                     .atZone(ZoneId.systemDefault());
             entity.setDetectionTime(dateTime);
             if (dto.hasLocation()) {
-                entity.setLatitude(new BigDecimal(dto.getLocation().getLatitude()));
-                entity.setLongitude(new BigDecimal(dto.getLocation().getLongitude()));
+                Point point = geometryFactory
+                        .createPoint(new Coordinate(dto.getLocation().getLongitude(), dto.getLocation().getLatitude()));
+                entity.setLocation(point);
             } else {
-                entity.setLatitude(null);
-                entity.setLongitude(null);
+                entity.setLocation(null);
             }
             entity.setClassName(dto.getClassName());
             entity.setCount(dto.getCount());

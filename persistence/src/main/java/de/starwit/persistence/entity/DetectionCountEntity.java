@@ -26,14 +26,6 @@ public class DetectionCountEntity extends AbstractEntity<Long> {
     @JsonDeserialize(using = ZonedDateTimeDeserializer.class)
     private ZonedDateTime detectionTime;
 
-    @JsonIgnore
-    @Column(name = "latitude")
-    private BigDecimal latitude;
-
-    @JsonIgnore
-    @Column(name = "longitude")
-    private BigDecimal longitude;
-
     @Column(name = "location", columnDefinition = "geometry(Point,4326)")
     @JsonSerialize(using = GeometrySerializer.class)
     private Point location;
@@ -52,22 +44,6 @@ public class DetectionCountEntity extends AbstractEntity<Long> {
 
     public void setDetectionTime(ZonedDateTime detectionTime) {
         this.detectionTime = detectionTime;
-    }
-
-    public BigDecimal getLatitude() {
-        return latitude;
-    }
-
-    public void setLatitude(BigDecimal latitude) {
-        this.latitude = latitude;
-    }
-
-    public BigDecimal getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(BigDecimal longitude) {
-        this.longitude = longitude;
     }
 
     public Point getLocation() {

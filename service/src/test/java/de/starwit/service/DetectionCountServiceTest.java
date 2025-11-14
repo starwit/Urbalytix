@@ -2,7 +2,6 @@ package de.starwit.service;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -10,6 +9,9 @@ import java.util.List;
 
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Point;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
@@ -27,6 +29,9 @@ public class DetectionCountServiceTest {
         @Autowired
         private DetectionCountService detectionCountService;
 
+        @Autowired
+        private GeometryFactory geometryFactory;
+
         @Test
         @Commit
         @Order(1)
@@ -34,8 +39,9 @@ public class DetectionCountServiceTest {
                 // prepare
                 DetectionCountEntity detectionCount = new DetectionCountEntity();
                 detectionCount.setDetectionTime(ZonedDateTime.ofInstant(Instant.now(), ZoneId.systemDefault()));
-                detectionCount.setLatitude(new BigDecimal("48.123456"));
-                detectionCount.setLongitude(new BigDecimal("11.123456"));
+                Point point = geometryFactory
+                                .createPoint(new Coordinate(11.123456, 48.123456));
+                detectionCount.setLocation(point);
                 detectionCount.setClassName("waste");
                 detectionCount.setCount(5);
 
