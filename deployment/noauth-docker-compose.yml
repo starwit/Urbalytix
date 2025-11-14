@@ -7,14 +7,13 @@ services:
       POSTGRES_DB: urbalytix
       POSTGRES_USER: urbalytix
       POSTGRES_PASSWORD: urbalytix
-      PGDATA: /var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U urbalytix"]
       interval: 5s
       timeout: 60s
       retries: 30
     volumes:
-      - ./postgres/data:/var/lib/postgresql/data
+      - db-urbalytix:/home/postgres/pgdata/data
       - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
     ports:
       - "5432:5432"
@@ -33,3 +32,4 @@ services:
 
 volumes:
   pgadmin:
+  db-urbalytix:
