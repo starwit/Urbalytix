@@ -57,7 +57,8 @@ public class DetectionCountService implements ServiceInterface<DetectionCountEnt
 
     public List<DetectionCountEntity> findAllLimited(int amount) {
         Page<DetectionCountEntity> p = repository.findAll(PageRequest.of(0, amount));
-        return p.toList();
+        List<DetectionCountEntity> entities = p.toList();
+        return entities;
     }
 
     public List<DetectionCountEntity> getDataFromTimeFrame(ZonedDateTime startTime, ZonedDateTime endTime) {
