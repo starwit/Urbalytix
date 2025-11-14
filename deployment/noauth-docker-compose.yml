@@ -2,19 +2,18 @@ name: urbalytix
 
 services:
   db-urbalytix:
-    image: timescale/timescaledb:latest-pg17
+    image: timescale/timescaledb-ha:pg17
     environment:
       POSTGRES_DB: urbalytix
       POSTGRES_USER: urbalytix
       POSTGRES_PASSWORD: urbalytix
-      PGDATA: /var/lib/postgresql/data
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U urbalytix"]
       interval: 5s
       timeout: 60s
       retries: 30
     volumes:
-      - db-urbalytix:/var/lib/postgresql/data
+      - db-urbalytix:/home/postgres/pgdata/data
     ports:
       - "5432:5432"
 
