@@ -28,7 +28,7 @@ export class MapLayerFactory {
                 id: 'coverage-mask',
                 getRadius: 20,
                 data: data,
-                getPosition: d => [d.longitude, d.latitude],
+                getPosition: d => d.location ? d.location : [d.longitude, d.latitude],
                 operation: 'mask',
             }),
             new PolygonLayer({
@@ -57,7 +57,7 @@ export class MapLayerFactory {
     static createHeatmapDetectionLayer(detectionData, colorRange, options = {}) {
         return new HeatmapLayer({
             data: detectionData,
-            getPosition: d => [d.longitude, d.latitude],
+            getPosition: d => d.location ? d.location : [d.longitude, d.latitude],
             getWeight: d => d.count || 1,
             aggregation: 'MAX',
             colorRange,
@@ -95,7 +95,7 @@ export class MapLayerFactory {
             data: positionData,
             getColor: d => d.status === 'online' ? [100, 155, 100] : [155, 50, 50],
             getIcon: d => 'marker',
-            getPosition: d => [d.longitude, d.latitude],
+            getPosition: d => d.location ? d.location : [d.longitude, d.latitude],
             getSize: 40,
             iconAtlas: icon,
             iconMapping: iconMapping,
@@ -106,7 +106,7 @@ export class MapLayerFactory {
     static createScatterplotLayer(data, colorProp = 'undefined', options = {}) {
         return new ScatterplotLayer({
             data: data,
-            getPosition: d => [d.longitude, d.latitude],
+            getPosition: d => d.location ? d.location : [d.longitude, d.latitude],
             getRadius: 10,
             getFillColor: d => MapLayerFactory.stringToColor(d[colorProp], d.count),
             pickable: true,
@@ -127,7 +127,7 @@ export class MapLayerFactory {
             elevationScale: 6,
             getElevation: d => d.count,
             getFillColor: d => [48, 128, d.count * 255, 255],
-            getPosition: d => [d.longitude, d.latitude],
+            getPosition: d => d.location ? d.location : [d.longitude, d.latitude],
             pickable: true,
             ...options
         });
@@ -150,7 +150,7 @@ export class MapLayerFactory {
             getElevationWeight: d => d.count,
             upperPercentile: 99.9,
             elevationDomain: [0, 20],
-            getPosition: d => [d.longitude, d.latitude],
+            getPosition: d => d.location ? d.location : [d.longitude, d.latitude],
             ...options
         });
     }
@@ -189,7 +189,7 @@ export class MapLayerFactory {
             getElevationWeight: d => d.count,
             upperPercentile: 99.9,
             elevationDomain: [0, 20],
-            getPosition: d => [d.longitude, d.latitude],
+            getPosition: d => d.location ? d.location : [d.longitude, d.latitude],
         };
 
         return [
@@ -225,7 +225,7 @@ export class MapLayerFactory {
                 [0, 190, 0, 190],
                 [0, 255, 0, 255]
             ],
-            getPosition: d => [d.longitude, d.latitude],
+            getPosition: d => d.location ? d.location : [d.longitude, d.latitude],
             getWeight: 1,
             opacity: 0.8,
             pickable: true
@@ -236,7 +236,7 @@ export class MapLayerFactory {
         return new ScatterplotLayer({
             id: `ScatterplotLayer-route-points-${layerID}`,
             data: routeData,
-            getPosition: d => [d.longitude, d.latitude],
+            getPosition: d => d.location ? d.location : [d.longitude, d.latitude],
             radiusMinPixels: 2,
             getRadius: 5,
             getFillColor: [50, 100, 200, 150],

@@ -3,9 +3,12 @@ package de.starwit.persistence.entity;
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
+import org.locationtech.jts.geom.Point;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
+import de.starwit.persistence.serializer.GeometrySerializer;
 import de.starwit.persistence.serializer.ZonedDateTimeDeserializer;
 import de.starwit.persistence.serializer.ZonedDateTimeSerializer;
 import jakarta.persistence.Column;
@@ -23,11 +26,9 @@ public class DetectionCountEntity extends AbstractEntity<Long> {
     @JsonDeserialize(using = ZonedDateTimeDeserializer.class)
     private ZonedDateTime detectionTime;
 
-    @Column(name = "latitude")
-    private BigDecimal latitude;
-
-    @Column(name = "longitude")
-    private BigDecimal longitude;
+    @Column(name = "location", columnDefinition = "geometry(Point,4326)")
+    @JsonSerialize(using = GeometrySerializer.class)
+    private Point location;
 
     @Column(name = "class_name")
     private String className;
@@ -45,20 +46,12 @@ public class DetectionCountEntity extends AbstractEntity<Long> {
         this.detectionTime = detectionTime;
     }
 
-    public BigDecimal getLatitude() {
-        return latitude;
+    public Point getLocation() {
+        return location;
     }
 
-    public void setLatitude(BigDecimal latitude) {
-        this.latitude = latitude;
-    }
-
-    public BigDecimal getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(BigDecimal longitude) {
-        this.longitude = longitude;
+    public void setLocation(Point location) {
+        this.location = location;
     }
 
     public String getClassName() {

@@ -29,3 +29,4 @@ values.yaml
 # Ignore database import files
 *sample_data.sql
 application.properties
+deployment/postgres/data/
