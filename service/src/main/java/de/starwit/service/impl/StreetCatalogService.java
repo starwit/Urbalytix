@@ -20,7 +20,8 @@ public class StreetCatalogService implements ServiceInterface<StreetCatalogEntit
 
     @PostConstruct
     void test() {
-        repository.findAll().forEach(entity -> System.out.println(entity.getStreetName()));
+        repository.findAll()
+                .forEach(entity -> System.out.println(entity.getStreetName() + " " + entity.getStreetPath()));
     }
 
 }
