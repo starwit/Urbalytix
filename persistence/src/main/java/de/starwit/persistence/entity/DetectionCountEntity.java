@@ -4,6 +4,8 @@ import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
 import org.locationtech.jts.geom.Point;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import de.starwit.persistence.serializer.GeometrySerializer;
@@ -24,9 +26,11 @@ public class DetectionCountEntity extends AbstractEntity<Long> {
     @JsonDeserialize(using = ZonedDateTimeDeserializer.class)
     private ZonedDateTime detectionTime;
 
+    @JsonIgnore
     @Column(name = "latitude")
     private BigDecimal latitude;
 
+    @JsonIgnore
     @Column(name = "longitude")
     private BigDecimal longitude;
 
