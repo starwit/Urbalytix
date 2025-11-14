@@ -1,11 +1,13 @@
 package de.starwit.persistence.entity;
 
-import java.math.BigDecimal;
 import java.time.ZonedDateTime;
+
+import org.locationtech.jts.geom.Point;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
+import de.starwit.persistence.serializer.GeometrySerializer;
 import de.starwit.persistence.serializer.ZonedDateTimeDeserializer;
 import de.starwit.persistence.serializer.ZonedDateTimeSerializer;
 import jakarta.persistence.Column;
@@ -25,11 +27,9 @@ public class VehicleDataEntity extends AbstractEntity<Long> {
     @Column(name = "description")
     private String description;
 
-    @Column(name = "latitude")
-    private BigDecimal latitude;
-
-    @Column(name = "longitude")
-    private BigDecimal longitude;
+    @Column(name = "location", columnDefinition = "geometry(Point,4326)")
+    @JsonSerialize(using = GeometrySerializer.class)
+    private Point location;
 
     @Column(name = "last_update")
     @JsonSerialize(using = ZonedDateTimeSerializer.class)
@@ -60,20 +60,12 @@ public class VehicleDataEntity extends AbstractEntity<Long> {
         this.description = description;
     }
 
-    public BigDecimal getLatitude() {
-        return latitude;
+    public Point getLocation() {
+        return location;
     }
 
-    public void setLatitude(BigDecimal latitude) {
-        this.latitude = latitude;
-    }
-
-    public BigDecimal getLongitude() {
-        return longitude;
-    }
-
-    public void setLongitude(BigDecimal longitude) {
-        this.longitude = longitude;
+    public void setLocation(Point location) {
+        this.location = location;
     }
 
     public ZonedDateTime getLastUpdate() {

@@ -1,10 +1,12 @@
 package de.starwit.service.impl;
 
-import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Point;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +31,9 @@ public class VehicleDataService implements ServiceInterface<VehicleDataEntity, V
     @Autowired
     private VehicleRoutesRepository routesRepository;
 
+    @Autowired
+    private GeometryFactory geometryFactory;
+
     @Override
     public VehicleDataRepository getRepository() {
         return repository;
@@ -49,14 +54,17 @@ public class VehicleDataService implements ServiceInterface<VehicleDataEntity, V
 
         String streamName = keyParts[1];
 
-        var vehicle = repository.findByStreamKey(streamName);
+        VehicleDataEntity vehicle = repository.findByStreamKey(streamName);
         if (vehicle == null) {
             vehicle = new VehicleDataEntity();
             vehicle.setStreamKey(streamName);
             vehicle.setName(streamKey);
         }
-        vehicle.setLatitude(new BigDecimal(positionMessage.getGeoCoordinate().getLatitude()));
-        vehicle.setLongitude(new BigDecimal(positionMessage.getGeoCoordinate().getLongitude()));
+        Point point = geometryFactory
+                .createPoint(new Coordinate(
+                        positionMessage.getGeoCoordinate().getLongitude(),
+                        positionMessage.getGeoCoordinate().getLatitude()));
+        vehicle.setLocation(point);
 
         Instant instant = Instant.ofEpochSecond(positionMessage.getTimestampUtcMs() / 1000);
         ZonedDateTime z = ZonedDateTime.ofInstant(instant, timeZone);
@@ -65,8 +73,7 @@ public class VehicleDataService implements ServiceInterface<VehicleDataEntity, V
 
         VehicleRouteEntity route = new VehicleRouteEntity();
         route.setVehicleData(vehicle);
-        route.setLatitude(new BigDecimal(positionMessage.getGeoCoordinate().getLatitude()));
-        route.setLongitude(new BigDecimal(positionMessage.getGeoCoordinate().getLongitude()));
+        route.setLocation(point);
         route.setUpdateTimestamp(z);
         routesRepository.save(route);
     }
