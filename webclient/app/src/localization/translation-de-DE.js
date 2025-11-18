@@ -108,6 +108,8 @@ const translationDeDE = {
     "landing.trafficanalysis": "Verkehrsanalysen",
     "landing.assetmanagement": "Inventarmanagement",
     "landing.publicsafety": "Verkehrssicherheit",
-    "landing.parking": "Parkflächennutzung"
+    "landing.parking": "Parkflächennutzung",
+    "streetData.heading": "Straßenkatalog",
+    "streetData.streetName": " Straßenname"
 };
 export default translationDeDE;

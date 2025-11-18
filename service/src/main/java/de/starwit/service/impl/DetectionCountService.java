@@ -78,6 +78,9 @@ public class DetectionCountService implements ServiceInterface<DetectionCountEnt
 
     public List<DetectionCountEntity> getDataByStreetName(String streetName) {
         Geometry street = streetCatalogRepository.findStreet(streetName);
+        if (street == null) {
+            return java.util.Collections.emptyList();
+        }
         List<DetectionCountEntity> entities = repository.findByStreet(street);
         return entities;
     }
