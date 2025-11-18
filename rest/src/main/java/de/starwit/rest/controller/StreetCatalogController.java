@@ -52,6 +52,15 @@ public class StreetCatalogController {
         return convertToGeoJSON(streets);
     }
 
+    @GetMapping(value = "/catalog/{city}")
+    public List<StreetCatalogEntity> listByCity(@PathVariable("city") String city) {
+        List<StreetCatalogEntity> streets = this.streetCatalogService.findByCity(city);
+        for (StreetCatalogEntity streetCatalogEntity : streets) {
+            streetCatalogEntity.setStreetPath(null);
+        }
+        return streets;
+    }
+
     private FeatureCollection convertToGeoJSON(List<StreetCatalogEntity> streets) {
         FeatureCollection result = new FeatureCollection();
         for (StreetCatalogEntity streetCatalogEntity : streets) {
