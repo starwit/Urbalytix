@@ -1,7 +1,7 @@
 import {HeatmapLayer, HexagonLayer, ScreenGridLayer} from "@deck.gl/aggregation-layers";
 import {MaskExtension} from "@deck.gl/extensions";
 import {TileLayer} from "@deck.gl/geo-layers";
-import {BitmapLayer, GridCellLayer, IconLayer, PolygonLayer, ScatterplotLayer} from "@deck.gl/layers";
+import {BitmapLayer, GeoJsonLayer, GridCellLayer, IconLayer, PolygonLayer, ScatterplotLayer} from "@deck.gl/layers";
 import {TILE_LAYER_CONFIG} from './BaseMapConfig';
 
 export class MapLayerFactory {
@@ -19,6 +19,29 @@ export class MapLayerFactory {
                     bounds: [west, south, east, north]
                 });
             }
+        });
+    }
+
+    static createGeoJsonLayer(data) {
+        return new GeoJsonLayer({
+            id: 'GeoJsonLayer',
+            //data: 'http://localhost:5173/urbalytix/api/street-catalog/1',
+            data: data,
+            stroked: false,
+            filled: true,
+            pointType: 'circle+text',
+            pickable: true,
+
+            getFillColor: [160, 160, 180, 200],
+            getLineColor: f => {
+                const hex = f.properties.color;
+                // convert to RGB
+                return hex ? hex.match(/[0-9a-f]{2}/g).map(x => parseInt(x, 16)) : [0, 0, 0];
+            },
+            getLineWidth: 20,
+            getPointRadius: 4,
+            getText: f => f.properties.name,
+            getTextSize: 12
         });
     }
 
