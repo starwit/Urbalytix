@@ -72,7 +72,7 @@ function StreetCatalog() {
     }
 
     return (
-        <div>
+        <>
             <Typography variant="h2" gutterBottom sx={{flex: 1}}>
                 {t("streetData.heading")}
             </Typography>
@@ -113,7 +113,7 @@ function StreetCatalog() {
                     />
                 </Stack>
             </Stack>
-        </div >
+        </ >
     );
 }
 
