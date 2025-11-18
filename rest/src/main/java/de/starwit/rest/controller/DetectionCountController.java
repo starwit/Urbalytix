@@ -48,6 +48,12 @@ public class DetectionCountController {
         return entities;
     }
 
+    @GetMapping(value = "/street/{street}")
+    public List<DetectionCountEntity> findByStreetName(@PathVariable("street") String streetName) {
+        List<DetectionCountEntity> entities = this.detectionCountService.getDataByStreetName(streetName);
+        return entities;
+    }
+
     @Operation(summary = "Find latest data")
     @GetMapping(value = "/limited/{amount}")
     public List<DetectionCountEntity> findAllLimited(@PathVariable("amount") int amount) {

@@ -6,6 +6,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 
 import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.locationtech.jts.geom.Point;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import de.starwit.persistence.entity.DetectionCountEntity;
 import de.starwit.persistence.repository.DetectionCountRepository;
+import de.starwit.persistence.repository.StreetCatalogRepository;
 import de.starwit.visionapi.Analytics.DetectionCount;
 import de.starwit.visionapi.Analytics.DetectionCountMessage;
 
@@ -23,6 +25,9 @@ public class DetectionCountService implements ServiceInterface<DetectionCountEnt
 
     @Autowired
     private DetectionCountRepository repository;
+
+    @Autowired
+    private StreetCatalogRepository streetCatalogRepository;
 
     @Autowired
     private GeometryFactory geometryFactory;
@@ -70,4 +75,14 @@ public class DetectionCountService implements ServiceInterface<DetectionCountEnt
         List<DetectionCountEntity> entities = repository.findByDetectionTimeBetween(startTime, endTime);
         return entities;
     }
+
+    public List<DetectionCountEntity> getDataByStreetName(String streetName) {
+        Geometry street = streetCatalogRepository.findStreet(streetName);
+        if (street == null) {
+            return java.util.Collections.emptyList();
+        }
+        List<DetectionCountEntity> entities = repository.findByStreet(street);
+        return entities;
+    }
+
 }
