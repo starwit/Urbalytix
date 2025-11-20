@@ -27,7 +27,7 @@
         "react-router": "7.9.6",
         "react-router-dom": "7.9.6",
         "react-toastify": "11.0.5",
-        "@turf/turf": "^7.3.0"
+        "@turf/turf": "7.3.0"
     },
     "scripts": {
         "start": "vite",
