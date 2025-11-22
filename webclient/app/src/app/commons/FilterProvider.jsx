@@ -1,7 +1,7 @@
 import {createContext, useState} from "react";
 import dayjs from "dayjs";
 
-export const FilterContext = createContext(null);
+export const FilterContext = createContext();
 
 export function FilterProvider({children}) {
     const [startDate, setStartDate] = useState(dayjs().startOf('week'));

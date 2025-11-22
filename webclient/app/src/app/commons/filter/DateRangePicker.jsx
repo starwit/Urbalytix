@@ -5,7 +5,7 @@ import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
 import {PickersDay} from '@mui/x-date-pickers/PickersDay';
 import dayjs from 'dayjs';
 import isBetweenPlugin from 'dayjs/plugin/isBetween';
-import {useContext, useEffect, useState} from 'react';
+import {useContext, useState} from 'react';
 import {FilterContext} from '../FilterProvider';
 
 dayjs.extend(isBetweenPlugin);
@@ -70,18 +70,21 @@ function Day(props) {
 export default function DateRangePicker() {
     const {setStartDate, setEndDate, date, setDate} = useContext(FilterContext);
     const [hoveredDay, setHoveredDay] = useState(null);
-    const [value, setValue] = useState(dayjs());
 
-    useEffect(() => {
-        setStartDate(dayjs(date).startOf('week'));
-        setEndDate(dayjs(date).endOf('week'));
-    }, [date]);
+    function handleDateChange(newValue) {
+        if (dayjs(date).isSame(newValue, 'week')) {
+            return;
+        }
+        setStartDate(dayjs(newValue).startOf('week'));
+        setEndDate(dayjs(newValue).endOf('week'));
+        setDate(dayjs(newValue).startOf('week'));
+    }
 
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
                 value={date}
-                onChange={(newValue) => setDate(dayjs(newValue).startOf('week'))}
+                onChange={handleDateChange}
                 showDaysOutsideCurrentMonth
                 displayWeekNumber
                 slots={{day: Day}}

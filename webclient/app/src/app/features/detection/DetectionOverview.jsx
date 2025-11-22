@@ -1,5 +1,4 @@
-import dayjs from 'dayjs';
-import {useContext, useState} from "react";
+import {useState} from "react";
 import DataFilter from "../../commons/filter/DataFilter";
 import DateTimeFilter from "../../commons/filter/DateTimeFilter";
 import FeatureFilter from "../../commons/filter/FeatureFilter";
@@ -11,7 +10,6 @@ import {useDetectionCount} from "./hooks/useDetectionCount";
 import {useFeatures} from "./hooks/useFeatures";
 import {useVehicleData} from "./hooks/useVehicleData";
 import {useVehicleRoutes} from "./hooks/useVehicleRoutes";
-import {FilterContext} from '../../commons/FilterProvider';
 
 const VIEW_STATE = {
     longitude: 10.785000000000000,
@@ -27,15 +25,12 @@ const DATA_FILTERS = [
 
 
 function DetectionOverview() {
-    const {startDate, endDate} = useContext(FilterContext);
-
-
     const {
         detectionData,
         objectClasses,
         selectedObjectClasses,
         setSelectedObjectClasses
-    } = useDetectionCount(startDate, endDate);
+    } = useDetectionCount();
 
     const vehicleData = useVehicleData(2000);
 
@@ -48,7 +43,7 @@ function DetectionOverview() {
     } = useFeatures();
     const [types, setTypes] = useState(['heatmap', 'hexagon']);
 
-    const vehicleRoutes = useVehicleRoutes(startDate.toJSON(), endDate.toJSON());
+    const vehicleRoutes = useVehicleRoutes();
 
     function handleTypes(event, newTypes) {
         if (newTypes.length) {

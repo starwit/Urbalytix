@@ -1,13 +1,14 @@
-import {useState, useEffect, useMemo} from "react";
+import {useContext, useEffect, useMemo, useState} from "react";
+import {FilterContext} from "../../../commons/FilterProvider";
 import DetectionCountRest from "../../../services/DetectionCountRest";
-import dayjs from 'dayjs';
 
 /**
  * Custom hook to fetch detection data with a limit.
  * @param {number} initialCount - Initial detection count limit.
  * @returns {[Array, number, Function]} [detectionData, detectionCount, setDetectionCount]
  */
-export function useDetectionCount(startDate, endDate) {
+export function useDetectionCount() {
+    const {startDate, endDate} = useContext(FilterContext);
     const [rawDetectionData, setDetectionData] = useState([]);
     const [objectClasses, setObjectClasses] = useState([]);
     const [selectedObjectClasses, setSelectedObjectClasses] = useState();
