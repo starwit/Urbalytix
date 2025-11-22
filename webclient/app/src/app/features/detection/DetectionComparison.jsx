@@ -28,14 +28,11 @@ function DetectionComparison() {
     const {t} = useTranslation();
 
     const {
-        detectionData,
-        objectClasses,
-        selectedObjectClasses,
-        setSelectedObjectClasses
+        detectionData
     } = useDetectionCount();
 
     const [types, setTypes] = useState(['hexcompare']);
-    const {detectioncomparisonData} = useDetectionCountDiff(startCompDate, endCompDate, selectedObjectClasses);
+    const {detectioncomparisonData} = useDetectionCountDiff(startCompDate, endCompDate);
     const vehicleRoutes = useVehicleRoutes();
 
     useEffect(() => {
@@ -58,9 +55,6 @@ function DetectionComparison() {
                     handleTypes={handleTypes}
                 />
                 <ObjectClassFilter
-                    objectClasses={objectClasses}
-                    selectedObjectClasses={selectedObjectClasses}
-                    onSelectedObjectClassesChange={setSelectedObjectClasses}
                     prefix='wastedata'
                 />
             </FilterLayout>

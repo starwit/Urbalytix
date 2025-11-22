@@ -26,10 +26,7 @@ const DATA_FILTERS = [
 
 function DetectionOverview() {
     const {
-        detectionData,
-        objectClasses,
-        selectedObjectClasses,
-        setSelectedObjectClasses
+        detectionData
     } = useDetectionCount();
 
     const vehicleData = useVehicleData(2000);
@@ -61,9 +58,6 @@ function DetectionOverview() {
                     handleTypes={handleTypes}
                 />
                 <ObjectClassFilter
-                    objectClasses={objectClasses}
-                    selectedObjectClasses={selectedObjectClasses}
-                    onSelectedObjectClassesChange={setSelectedObjectClasses}
                     prefix='wastedata'
                 />
                 <DataFilter

@@ -8,8 +8,22 @@ export function FilterProvider({children}) {
     const [endDate, setEndDate] = useState(dayjs().endOf('week'));
     const [date, setDate] = useState(dayjs(new Date()));
 
+    const [objectClasses, setObjectClasses] = useState([]);
+    const [selectedObjectClasses, setSelectedObjectClasses] = useState();
+
     return (
-        <FilterContext.Provider value={{startDate, endDate, date, setStartDate, setEndDate, setDate}}>
+        <FilterContext.Provider value={{
+            startDate,
+            endDate,
+            date,
+            setStartDate,
+            setEndDate,
+            setDate,
+            objectClasses,
+            setObjectClasses,
+            selectedObjectClasses,
+            setSelectedObjectClasses
+        }}>
             {children}
         </FilterContext.Provider>
     );

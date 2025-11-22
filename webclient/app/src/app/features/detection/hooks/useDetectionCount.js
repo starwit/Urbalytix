@@ -8,10 +8,8 @@ import DetectionCountRest from "../../../services/DetectionCountRest";
  * @returns {[Array, number, Function]} [detectionData, detectionCount, setDetectionCount]
  */
 export function useDetectionCount() {
-    const {startDate, endDate} = useContext(FilterContext);
+    const {startDate, endDate, selectedObjectClasses} = useContext(FilterContext);
     const [rawDetectionData, setDetectionData] = useState([]);
-    const [objectClasses, setObjectClasses] = useState([]);
-    const [selectedObjectClasses, setSelectedObjectClasses] = useState();
     const detectionCountRest = useMemo(() => new DetectionCountRest(), []);
 
     useEffect(() => {
@@ -20,17 +18,7 @@ export function useDetectionCount() {
                 setDetectionData(response.data);
             }
         });
-    }, [detectionCountRest, startDate, endDate]);
-
-    useEffect(() => {
-        detectionCountRest.getObjectClasses(startDate.toJSON(), endDate.toJSON()).then(response => {
-            setObjectClasses(response.data);
-        });
-    }, [detectionCountRest, startDate, endDate]);
-
-    useEffect(() => {
-        setSelectedObjectClasses(objectClasses);
-    }, [objectClasses]);
+    }, [startDate, endDate]);
 
     var detectionData = rawDetectionData.filter(d => {
         if (selectedObjectClasses.includes(d.className)) {
@@ -40,9 +28,6 @@ export function useDetectionCount() {
     });
 
     return {
-        detectionData,
-        objectClasses,
-        selectedObjectClasses,
-        setSelectedObjectClasses
+        detectionData
     };
 }

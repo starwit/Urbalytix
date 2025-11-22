@@ -8,16 +8,17 @@ import {
     FormControlLabel,
     Typography
 } from '@mui/material';
+import {useContext} from 'react';
 import {useTranslation} from 'react-i18next';
+import {FilterContext} from '../FilterProvider';
 
 function ObjectClassFilter(props) {
     const {
-        objectClasses = [],
-        selectedObjectClasses = [],
-        onSelectedObjectClassesChange = () => { },
         prefix = 'objectclass'
 
     } = props;
+    const {objectClasses, selectedObjectClasses, setSelectedObjectClasses} = useContext(FilterContext);
+
     const {t} = useTranslation();
 
     return (
@@ -41,9 +42,9 @@ function ObjectClassFilter(props) {
                                     checked={selectedObjectClasses.includes(objectClass)}
                                     onChange={(e) => {
                                         if (e.target.checked) {
-                                            onSelectedObjectClassesChange([...selectedObjectClasses, objectClass]);
+                                            setSelectedObjectClasses([...selectedObjectClasses, objectClass]);
                                         } else {
-                                            onSelectedObjectClassesChange(selectedObjectClasses.filter(s => s !== objectClass));
+                                            setSelectedObjectClasses(selectedObjectClasses.filter(s => s !== objectClass));
                                         }
                                     }}
                                     size="small"

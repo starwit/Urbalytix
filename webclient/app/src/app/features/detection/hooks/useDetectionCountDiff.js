@@ -1,12 +1,14 @@
-import {useState, useEffect, useMemo} from "react";
+import {useState, useEffect, useMemo, useContext} from "react";
 import DetectionCountRest from "../../../services/DetectionCountRest";
+import {FilterContext} from "../../../commons/FilterProvider";
 
 /**
  * Custom hook to fetch detection data with a limit.
  * @param {number} initialCount - Initial detection count limit.
  * @returns {[Array, number, Function]} [detectionData, detectionCount, setDetectionCount]
  */
-export function useDetectionCountDiff(startDate, endDate, selectedObjectClasses) {
+export function useDetectionCountDiff(startDate, endDate) {
+    const {selectedObjectClasses} = useContext(FilterContext);
     const [rawDetectionData, setDetectionData] = useState([]);
     const detectionCountRest = useMemo(() => new DetectionCountRest(), []);
 

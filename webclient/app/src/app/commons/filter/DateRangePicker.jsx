@@ -5,8 +5,9 @@ import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
 import {PickersDay} from '@mui/x-date-pickers/PickersDay';
 import dayjs from 'dayjs';
 import isBetweenPlugin from 'dayjs/plugin/isBetween';
-import {useContext, useState} from 'react';
+import {useContext, useMemo, useState} from 'react';
 import {FilterContext} from '../FilterProvider';
+import DetectionCountRest from '../../services/DetectionCountRest';
 
 dayjs.extend(isBetweenPlugin);
 
@@ -68,16 +69,24 @@ function Day(props) {
 }
 
 export default function DateRangePicker() {
-    const {setStartDate, setEndDate, date, setDate} = useContext(FilterContext);
+    const {setStartDate, setEndDate, date, setDate, setObjectClasses, setSelectedObjectClasses} = useContext(FilterContext);
     const [hoveredDay, setHoveredDay] = useState(null);
+    const detectionCountRest = useMemo(() => new DetectionCountRest(), []);
 
     function handleDateChange(newValue) {
         if (dayjs(date).isSame(newValue, 'week')) {
             return;
         }
-        setStartDate(dayjs(newValue).startOf('week'));
-        setEndDate(dayjs(newValue).endOf('week'));
-        setDate(dayjs(newValue).startOf('week'));
+        const curDate = dayjs(newValue).startOf('week');
+        const curEndDate = curDate.endOf('week');
+
+        setDate(curDate);
+        setStartDate(curDate);
+        setEndDate(curEndDate);
+        detectionCountRest.getObjectClasses(curDate.toJSON(), curEndDate.toJSON()).then(response => {
+            setObjectClasses(response.data);
+            setSelectedObjectClasses(response.data);
+        });
     }
 
     return (
