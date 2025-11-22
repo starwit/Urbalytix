@@ -1,11 +1,11 @@
-import dayjs from 'dayjs';
-import {useState} from "react";
+import {useContext, useState} from "react";
 import DataFilter from "../../commons/filter/DataFilter";
 import DateTimeFilter from "../../commons/filter/DateTimeFilter";
 import FeatureFilter from "../../commons/filter/FeatureFilter";
 import FilterLayout from "../../commons/filter/FilterLayout";
 import MapFilter from "../../commons/filter/MapFilter";
 import ObjectClassFilter from "../../commons/filter/ObjectClassFilter";
+import {FilterContext} from '../../commons/FilterProvider';
 import DetectionMap from '../../commons/geographicalMaps/DetectionMap';
 import {useDetectionCount} from "./hooks/useDetectionCount";
 import {useFeatures} from "./hooks/useFeatures";
@@ -26,8 +26,9 @@ const DATA_FILTERS = [
 
 
 function DetectionOverview() {
-    const [startDate, setStartDate] = useState(dayjs().startOf('week'));
-    const [endDate, setEndDate] = useState(dayjs().endOf('week'));
+    const {cStartDate, cEndDate, setCStartDate, setCEndDate} = useContext(FilterContext);
+    const [startDate, setStartDate] = useState(cStartDate.startOf('week'));
+    const [endDate, setEndDate] = useState(cEndDate.endOf('week'));
 
     const {
         detectionData,
@@ -59,8 +60,10 @@ function DetectionOverview() {
         <>
             <FilterLayout leftPosition={10}>
                 <DateTimeFilter
-                    setStartDate={setStartDate}
-                    setEndDate={setEndDate}
+                    setStartDate={(date) => {setStartDate(date); setCStartDate(date);}}
+                    setEndDate={(date) => {setEndDate(date); setCEndDate(date);}}
+                    date={startDate}
+                    setDate={(date) => {setStartDate(date); setCStartDate(date);}}
                 />
                 <MapFilter
                     types={types}
