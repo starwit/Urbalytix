@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import {useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import DateTimeFilter from "../../commons/filter/DateTimeFilter";
 import FilterLayout from "../../commons/filter/FilterLayout";
 import ObjectClassFilter from "../../commons/filter/ObjectClassFilter";
@@ -11,6 +11,7 @@ import HexagonIcon from '@mui/icons-material/Hexagon';
 import {useTranslation} from 'react-i18next';
 import {useVehicleRoutes} from './hooks/useVehicleRoutes';
 import CompareMapFilter from '../../commons/filter/CompareMapFilter';
+import {FilterContext} from '../../commons/FilterProvider';
 
 const VIEW_STATE = {
     longitude: 10.785000000000000,
@@ -22,10 +23,9 @@ const VIEW_STATE = {
 
 
 function DetectionComparison() {
-    const [startDate, setStartDate] = useState(dayjs().startOf('week'));
-    const [endDate, setEndDate] = useState(dayjs().endOf('week'));
-    const [startCompDate, setStartCompDate] = useState(dayjs().subtract(1, 'week').startOf('week'));
-    const [endCompDate, setEndCompDate] = useState(dayjs().subtract(1, 'week').endOf('week'));
+    const {startDate, endDate, date} = useContext(FilterContext);
+    const [startCompDate, setStartCompDate] = useState(date.subtract(1, 'week').startOf('week'));
+    const [endCompDate, setEndCompDate] = useState(date.subtract(1, 'week').endOf('week'));
     const {t} = useTranslation();
 
     const {
@@ -39,15 +39,10 @@ function DetectionComparison() {
     const {detectioncomparisonData} = useDetectionCountDiff(startCompDate, endCompDate, selectedObjectClasses);
     const vehicleRoutes = useVehicleRoutes(startDate.toJSON(), endDate.toJSON());
 
-    function handleStartDateChange(date) {
-        setStartDate(date);
+    useEffect(() => {
         setStartCompDate(date.subtract(1, 'week').startOf('week'));
-    }
-
-    function handleEndDateChange(date) {
-        setEndDate(date);
         setEndCompDate(date.subtract(1, 'week').endOf('week'));
-    }
+    }, [date]);
 
     function handleTypes(event, newTypes) {
         if (newTypes.length) {
@@ -58,10 +53,7 @@ function DetectionComparison() {
     return (
         <>
             <FilterLayout leftPosition={10}>
-                <DateTimeFilter
-                    setStartDate={handleStartDateChange}
-                    setEndDate={handleEndDateChange}
-                />
+                <DateTimeFilter />
                 <CompareMapFilter
                     types={types}
                     handleTypes={handleTypes}

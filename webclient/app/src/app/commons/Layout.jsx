@@ -1,6 +1,7 @@
 import {Container} from "@mui/material";
 import CustomAppBar from "./CustomAppBar";
 import CustomFooter from "./CustomFooter";
+import {FilterProvider} from "./FilterProvider";
 
 function Layout({children}) {
 
@@ -8,7 +9,9 @@ function Layout({children}) {
         <>
             <CustomAppBar />
             <Container sx={{paddingTop: "5em", paddingBottom: "4em"}}>
-                {children}
+                <FilterProvider>
+                    {children}
+                </FilterProvider>
             </Container >
             <CustomFooter />
         </>

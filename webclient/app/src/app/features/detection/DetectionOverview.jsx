@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import {useState} from "react";
+import {useContext, useState} from "react";
 import DataFilter from "../../commons/filter/DataFilter";
 import DateTimeFilter from "../../commons/filter/DateTimeFilter";
 import FeatureFilter from "../../commons/filter/FeatureFilter";
@@ -11,6 +11,7 @@ import {useDetectionCount} from "./hooks/useDetectionCount";
 import {useFeatures} from "./hooks/useFeatures";
 import {useVehicleData} from "./hooks/useVehicleData";
 import {useVehicleRoutes} from "./hooks/useVehicleRoutes";
+import {FilterContext} from '../../commons/FilterProvider';
 
 const VIEW_STATE = {
     longitude: 10.785000000000000,
@@ -26,8 +27,8 @@ const DATA_FILTERS = [
 
 
 function DetectionOverview() {
-    const [startDate, setStartDate] = useState(dayjs().startOf('week'));
-    const [endDate, setEndDate] = useState(dayjs().endOf('week'));
+    const {startDate, endDate} = useContext(FilterContext);
+
 
     const {
         detectionData,
@@ -59,8 +60,6 @@ function DetectionOverview() {
         <>
             <FilterLayout leftPosition={10}>
                 <DateTimeFilter
-                    setStartDate={setStartDate}
-                    setEndDate={setEndDate}
                 />
                 <MapFilter
                     types={types}
