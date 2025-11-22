@@ -10,6 +10,7 @@ export function FilterProvider({children}) {
 
     const [objectClasses, setObjectClasses] = useState([]);
     const [selectedObjectClasses, setSelectedObjectClasses] = useState();
+    const [featureKeys, setFeatureKeys] = useState([]);
 
     return (
         <FilterContext.Provider value={{
@@ -22,7 +23,9 @@ export function FilterProvider({children}) {
             objectClasses,
             setObjectClasses,
             selectedObjectClasses,
-            setSelectedObjectClasses
+            setSelectedObjectClasses,
+            featureKeys,
+            setFeatureKeys
         }}>
             {children}
         </FilterContext.Provider>
