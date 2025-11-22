@@ -1,4 +1,4 @@
-import {useContext, useState} from "react";
+import {useContext, useState, useEffect} from "react";
 import DataFilter from "../../commons/filter/DataFilter";
 import DateTimeFilter from "../../commons/filter/DateTimeFilter";
 import FeatureFilter from "../../commons/filter/FeatureFilter";
@@ -37,6 +37,11 @@ function DetectionOverview() {
         setSelectedObjectClasses
     } = useDetectionCount(startDate, endDate);
 
+    useEffect(() => {
+        setStartDate(cStartDate);
+        setEndDate(cEndDate);
+    }, []);
+
     const vehicleData = useVehicleData(2000);
 
     const [selectedFilterLabels, setSelectedFilterLabels] = useState([DATA_FILTERS[0].label]);
@@ -62,8 +67,6 @@ function DetectionOverview() {
                 <DateTimeFilter
                     setStartDate={(date) => {setStartDate(date); setCStartDate(date);}}
                     setEndDate={(date) => {setEndDate(date); setCEndDate(date);}}
-                    date={startDate}
-                    setDate={(date) => {setStartDate(date); setCStartDate(date);}}
                 />
                 <MapFilter
                     types={types}

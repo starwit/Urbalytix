@@ -68,26 +68,31 @@ function Day(props) {
 }
 
 export default function DateRangePicker(props) {
-    const {setStartDate = () => { }, setEndDate = () => { }, date = dayjs(), setDate = () => { }} = props
+    const {cStartDate} = useContext(FilterContext);
+    const {setStartDate = () => { }, setEndDate = () => { }} = props
     const [hoveredDay, setHoveredDay] = useState(null);
+    const [value, setValue] = useState(dayjs());
 
-    function handleDate(date) {
-        setStartDate(dayjs(date).startOf('week'));
-        setEndDate(dayjs(date).endOf('week'));
-        setDate(dayjs(date).startOf('week'));
-    }
+    useEffect(() => {
+        setValue(cStartDate)
+    }, []);
+
+    useEffect(() => {
+        setStartDate(dayjs(value).startOf('week'));
+        setEndDate(dayjs(value).endOf('week'));
+    }, [value]);
 
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
-                value={date}
-                onChange={handleDate}
+                value={value}
+                onChange={(newValue) => setValue(dayjs(newValue).startOf('week'))}
                 showDaysOutsideCurrentMonth
                 displayWeekNumber
                 slots={{day: Day}}
                 slotProps={{
                     day: (ownerState) => ({
-                        selectedDay: date,
+                        selectedDay: value,
                         hoveredDay,
                         onPointerEnter: () => setHoveredDay(ownerState.day),
                         onPointerLeave: () => setHoveredDay(null),

@@ -30,7 +30,7 @@
         "@turf/turf": "7.3.0"
     },
     "scripts": {
-        "start": "vite",
+        "start": "vite --force",
         "build": "vite build"
     },
     "eslintConfig": {

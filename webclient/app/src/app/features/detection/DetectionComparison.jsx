@@ -77,8 +77,6 @@ function DetectionComparison() {
                 <DateTimeFilter
                     setStartDate={handleStartDateChange}
                     setEndDate={handleEndDateChange}
-                    date={startDate}
-                    setDate={(date) => {setStartDate(date); setCStartDate(date);}}
                 />
                 <CompareMapFilter
                     types={types}
