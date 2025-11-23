@@ -35,7 +35,6 @@ export function useVehicleRoutes() {
         const allRoutes = routeResponses.map(r => r.data).flat();
         setVehicleRoutes(allRoutes);
 
-
     }
 
     return vehicleRoutes;
