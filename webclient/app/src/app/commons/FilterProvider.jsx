@@ -6,7 +6,7 @@ export const FilterContext = createContext();
 export function FilterProvider({children}) {
     const [startDate, setStartDate] = useState(dayjs().startOf('week'));
     const [endDate, setEndDate] = useState(dayjs().endOf('week'));
-    const [date, setDate] = useState(dayjs(new Date()));
+    const [date, setDate] = useState(dayjs());
 
     const [objectClasses, setObjectClasses] = useState([]);
     const [selectedObjectClasses, setSelectedObjectClasses] = useState([]);
