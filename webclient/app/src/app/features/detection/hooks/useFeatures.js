@@ -19,7 +19,7 @@ export function useFeatures() {
             obj[key] = features[key];
             return obj;
         }, {}));
-        setFeatureKeys(selectedFeatureKeys)
+        setFeatureKeys(selectedFeatureKeys);
     }, [selectedFeatureKeys, features]);
 
     function reloadFeatures() {
