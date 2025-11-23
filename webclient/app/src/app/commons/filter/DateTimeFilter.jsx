@@ -4,10 +4,11 @@ import {
 
 import DateRangePicker from './DateRangePicker';
 
-function DateTimeFilter() {
+function DateTimeFilter(props) {
+    const {additionalLogic = () => { }} = props;
     return (
         <FormControl fullWidth size="small">
-            <DateRangePicker />
+            <DateRangePicker additionalLogic={additionalLogic} />
         </FormControl>
     );
 }

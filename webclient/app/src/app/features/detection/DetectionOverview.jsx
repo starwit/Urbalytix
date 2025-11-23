@@ -10,6 +10,8 @@ import {useDetectionCount} from "./hooks/useDetectionCount";
 import {useFeatures} from "./hooks/useFeatures";
 import {useVehicleData} from "./hooks/useVehicleData";
 import {useVehicleRoutes} from "./hooks/useVehicleRoutes";
+import {useObjectClasses} from "./hooks/useObjectClasses";
+
 
 const VIEW_STATE = {
     longitude: 10.785000000000000,
@@ -30,6 +32,8 @@ function DetectionOverview() {
     } = useDetectionCount();
 
     const vehicleData = useVehicleData(2000);
+
+    const handleObjectClasses = useObjectClasses();
 
     const [selectedFilterLabels, setSelectedFilterLabels] = useState([DATA_FILTERS[0].label]);
     const {
@@ -52,6 +56,9 @@ function DetectionOverview() {
         <>
             <FilterLayout leftPosition={10}>
                 <DateTimeFilter
+                    additionalLogic={(curStartDate, curEndDate, changed) => {
+                        handleObjectClasses.loadObjectClasses(curStartDate, curEndDate, changed);
+                    }}
                 />
                 <MapFilter
                     types={types}

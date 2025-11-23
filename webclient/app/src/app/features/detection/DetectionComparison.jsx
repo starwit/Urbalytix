@@ -11,6 +11,7 @@ import DetectionCompareMap from '../../commons/geographicalMaps/DetectionCompare
 import {useDetectionCount} from "./hooks/useDetectionCount";
 import {useDetectionCountDiff} from "./hooks/useDetectionCountDiff";
 import {useVehicleRoutes} from './hooks/useVehicleRoutes';
+import {useObjectClasses} from "./hooks/useObjectClasses";
 
 const VIEW_STATE = {
     longitude: 10.785000000000000,
@@ -30,7 +31,7 @@ function DetectionComparison() {
     const {
         detectionData
     } = useDetectionCount();
-
+    const handleObjectClasses = useObjectClasses();
     const [types, setTypes] = useState(['hexcompare']);
     const {detectioncomparisonData} = useDetectionCountDiff(startCompDate, endCompDate);
     const vehicleRoutes = useVehicleRoutes();
@@ -49,7 +50,11 @@ function DetectionComparison() {
     return (
         <>
             <FilterLayout leftPosition={10}>
-                <DateTimeFilter />
+                <DateTimeFilter
+                    additionalLogic={(curStartDate, curEndDate, changed) => {
+                        handleObjectClasses.loadObjectClasses(curStartDate, curEndDate, changed);
+                    }}
+                />
                 <CompareMapFilter
                     types={types}
                     handleTypes={handleTypes}
