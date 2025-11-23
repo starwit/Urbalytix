@@ -25,7 +25,6 @@ export class MapLayerFactory {
     static createGeoJsonLayer(data) {
         return new GeoJsonLayer({
             id: 'GeoJsonLayer',
-            //data: 'http://localhost:5173/urbalytix/api/street-catalog/1',
             data: data,
             stroked: false,
             filled: true,
@@ -42,6 +41,40 @@ export class MapLayerFactory {
             getPointRadius: 4,
             getText: f => f.properties.name,
             getTextSize: 12
+        });
+    }
+
+    static createDistrictLayer(data) {
+        new GeoJsonLayer({
+            id: 'district-outlines',
+            data: data,
+            // We only want outlines: stroked true, filled false
+            stroked: true,
+            filled: false,
+            // Control how widths scale with device pixels
+            lineWidthScale: 10,
+            lineWidthMinPixels: 10,
+            // getLineWidth receives the feature (or feature.properties)
+            getLineWidth: () => lineWidth,
+
+
+            // Colors for the outline (rgba array)
+            getLineColor: (f) => {
+                // optionally use properties to style per-feature:
+                // const importance = f.properties?.importance || 0;
+                // return importance > 5 ? [255,0,0,255] : lineColor;
+                return lineColor;
+            },
+
+            // Make it interactive so hover/click works
+            pickable: true,
+
+            // Optional - make joins look nicer
+            rounded: true,
+            lineJointRounded: true,
+            parameters: {
+                depthTest: false
+            }
         });
     }
 

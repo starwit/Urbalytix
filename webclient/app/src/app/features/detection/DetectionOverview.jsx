@@ -9,6 +9,7 @@ import ObjectClassFilter from "../../commons/filter/ObjectClassFilter";
 import DetectionMap from '../../commons/geographicalMaps/DetectionMap';
 import {useDetectionCount} from "./hooks/useDetectionCount";
 import {useFeatures} from "./hooks/useFeatures";
+import {useDistricts} from "./hooks/useCityDistricts";
 import {useVehicleData} from "./hooks/useVehicleData";
 import {useVehicleRoutes} from "./hooks/useVehicleRoutes";
 
@@ -45,6 +46,7 @@ function DetectionOverview() {
         setSelectedFeatureKeys,
         selectedFeatures
     } = useFeatures();
+    const {districts, setDistricts} = useDistricts();
     const [types, setTypes] = useState(['heatmap', 'hexagon']);
 
     const vehicleRoutes = useVehicleRoutes(startDate.toJSON(), endDate.toJSON());
@@ -82,6 +84,7 @@ function DetectionOverview() {
                     availableFeatureKeys={Object.keys(features)}
                     selectedFeatureKeys={selectedFeatureKeys}
                     onSelectedFeatureChange={setSelectedFeatureKeys}
+                    onSelectedDistrictChange={setDistricts}
                 />
             </FilterLayout>
             <DetectionMap
@@ -89,6 +92,7 @@ function DetectionOverview() {
                 detectionData={detectionData}
                 vehicleRoutes={vehicleRoutes}
                 features={selectedFeatures}
+                districts={districts}
                 positionData={vehicleData}
                 showPosition={selectedFilterLabels.includes("selection.currentPosition")}
                 showHeatmap={types.includes("heatmap")}

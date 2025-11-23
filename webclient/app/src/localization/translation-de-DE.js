@@ -110,6 +110,7 @@ const translationDeDE = {
     "landing.publicsafety": "Verkehrssicherheit",
     "landing.parking": "Parkflächennutzung",
     "streetData.heading": "Straßenkatalog",
-    "streetData.streetName": " Straßenname"
+    "streetData.streetName": " Straßenname",
+    "features.selection.districts": "Stadtbezirke"
 };
 export default translationDeDE;

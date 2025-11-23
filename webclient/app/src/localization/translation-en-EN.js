@@ -110,6 +110,7 @@ const translationEnEN = {
     "landing.publicsafety": " Traffic Safety",
     "landing.parking": " Parking Management",
     "streetData.heading": "Street Catalog",
-    "streetData.streetName": " Street Name"
+    "streetData.streetName": " Street Name",
+    "features.selection.districts": "City Districts"
 };
 export default translationEnEN;
