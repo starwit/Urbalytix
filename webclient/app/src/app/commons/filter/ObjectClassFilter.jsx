@@ -39,7 +39,7 @@ function ObjectClassFilter(props) {
                             control={
                                 <Checkbox
                                     key={`object-label-${objectClass}`}
-                                    checked={selectedObjectClasses.includes(objectClass)}
+                                    checked={selectedObjectClasses?.includes(objectClass) ?? false}
                                     onChange={(e) => {
                                         if (e.target.checked) {
                                             setSelectedObjectClasses([...selectedObjectClasses, objectClass]);
