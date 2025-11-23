@@ -9,7 +9,7 @@ export function FilterProvider({children}) {
     const [date, setDate] = useState(dayjs(new Date()));
 
     const [objectClasses, setObjectClasses] = useState([]);
-    const [selectedObjectClasses, setSelectedObjectClasses] = useState();
+    const [selectedObjectClasses, setSelectedObjectClasses] = useState([]);
     const [featureKeys, setFeatureKeys] = useState([]);
 
     return (
