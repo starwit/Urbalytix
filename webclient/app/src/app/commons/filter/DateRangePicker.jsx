@@ -72,7 +72,7 @@ export default function DateRangePicker(props) {
     const {additionalLogic = () => { }} = props;
     const [hoveredDay, setHoveredDay] = useState(null);
 
-    // ! be aware, that rerendering components after changing routes will activate this function
+    // Note: This effect runs on mount and will execute when components are re-rendered after route changes.
     useEffect(() => {
         additionalLogic(startDate, endDate, false);
     }, [])
