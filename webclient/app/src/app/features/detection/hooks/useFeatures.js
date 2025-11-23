@@ -39,7 +39,7 @@ export function useFeatures() {
             acc[objectType].push(feature);
             return acc;
         }, {});
-        if (selectedFeatureKeys.length === 0) {
+        if (selectedFeatureKeys.length === 0 && featureKeys.length > 0) {
             setSelectedFeatureKeys(featureKeys);
         }
         setFeatures(groupedFeatures);
