@@ -4,8 +4,8 @@ import VehicleDataRest from "../../../services/VehicleDataRest";
 import VehicleRoutesRest from "../../../services/VehicleRoutesRest";
 
 /**
- * Custom hook to fetch vehicle routes
- * @returns {Array} vehicleRoutes - Array of vehicle route objects
+ * Custom React hook to fetch vehicle routes based on the current filter context.
+ * @returns {Array} Array of vehicle route objects.
  */
 export function useVehicleRoutes() {
     const {startDate, endDate} = useContext(FilterContext);
