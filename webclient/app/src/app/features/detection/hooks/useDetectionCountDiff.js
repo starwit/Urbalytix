@@ -3,9 +3,10 @@ import DetectionCountRest from "../../../services/DetectionCountRest";
 import {FilterContext} from "../../../commons/FilterProvider";
 
 /**
- * Custom hook to fetch detection data with a limit.
- * @param {number} initialCount - Initial detection count limit.
- * @returns {[Array, number, Function]} [detectionData, detectionCount, setDetectionCount]
+ * Custom hook to fetch and filter detection data within a time frame.
+ * @param {Date} startDate - The start date of the time frame.
+ * @param {Date} endDate - The end date of the time frame.
+ * @returns {{detectioncomparisonData: Array}} An object containing the filtered detection data.
  */
 export function useDetectionCountDiff(startDate, endDate) {
     const {selectedObjectClasses} = useContext(FilterContext);
