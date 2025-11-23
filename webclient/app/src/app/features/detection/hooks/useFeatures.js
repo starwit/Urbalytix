@@ -20,7 +20,7 @@ export function useFeatures() {
             return obj;
         }, {}));
         setFeatureKeys(selectedFeatureKeys);
-    }, [selectedFeatureKeys, features]);
+    }, [selectedFeatureKeys, features, setFeatureKeys]);
 
     function reloadFeatures() {
         featureCollectorRest.findAll().then(response => handleLoadFeatures(response));
