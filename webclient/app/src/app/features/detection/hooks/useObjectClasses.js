@@ -1,4 +1,4 @@
-import {useContext, useMemo} from "react";
+import {useCallback, useContext, useMemo} from "react";
 import {FilterContext} from "../../../commons/FilterProvider";
 import DetectionCountRest from "../../../services/DetectionCountRest";
 
@@ -6,7 +6,7 @@ export function useObjectClasses() {
     const {objectClasses, selectedObjectClasses, setSelectedObjectClasses, setObjectClasses} = useContext(FilterContext);
     const detectionCountRest = useMemo(() => new DetectionCountRest(), []);
 
-    function loadObjectClasses(startDate, endDate, changed) {
+    const loadObjectClasses = useCallback((startDate, endDate, changed) => {
         // only load data initially or after startDate / endDate changes even it components are rerendered
         if (changed || !objectClasses || objectClasses.length === 0) {
             detectionCountRest.getObjectClasses(startDate.toJSON(), endDate.toJSON()).then(response => {
@@ -17,7 +17,7 @@ export function useObjectClasses() {
                     setSelectedObjectClasses(newClasses);
             });
         }
-    }
+    }, [objectClasses, detectionCountRest, selectedObjectClasses, setObjectClasses, setSelectedObjectClasses]);
 
     return {
         loadObjectClasses
