@@ -75,7 +75,7 @@ export default function DateRangePicker(props) {
     // Note: This effect runs on mount and will execute when components are re-rendered after route changes.
     useEffect(() => {
         additionalLogic(startDate, endDate, false);
-    }, [additionalLogic])
+    }, [])
 
     function handleDateChange(newValue) {
         if (dayjs(date).isSame(newValue, 'week')) {
