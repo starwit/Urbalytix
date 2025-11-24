@@ -1,16 +1,15 @@
-import {useState, useEffect, useMemo} from "react";
+import {useContext, useEffect, useMemo, useState} from "react";
+import {FilterContext} from "../../../commons/FilterProvider";
 import DetectionCountRest from "../../../services/DetectionCountRest";
-import dayjs from 'dayjs';
 
 /**
  * Custom hook to fetch detection data with a limit.
  * @param {number} initialCount - Initial detection count limit.
  * @returns {[Array, number, Function]} [detectionData, detectionCount, setDetectionCount]
  */
-export function useDetectionCount(startDate, endDate) {
+export function useDetectionCount() {
+    const {startDate, endDate, selectedObjectClasses} = useContext(FilterContext);
     const [rawDetectionData, setDetectionData] = useState([]);
-    const [objectClasses, setObjectClasses] = useState([]);
-    const [selectedObjectClasses, setSelectedObjectClasses] = useState();
     const detectionCountRest = useMemo(() => new DetectionCountRest(), []);
 
     useEffect(() => {
@@ -19,17 +18,7 @@ export function useDetectionCount(startDate, endDate) {
                 setDetectionData(response.data);
             }
         });
-    }, [detectionCountRest, startDate, endDate]);
-
-    useEffect(() => {
-        detectionCountRest.getObjectClasses(startDate.toJSON(), endDate.toJSON()).then(response => {
-            setObjectClasses(response.data);
-        });
-    }, [detectionCountRest, startDate, endDate]);
-
-    useEffect(() => {
-        setSelectedObjectClasses(objectClasses);
-    }, [objectClasses]);
+    }, [startDate, endDate]);
 
     var detectionData = rawDetectionData.filter(d => {
         if (selectedObjectClasses.includes(d.className)) {
@@ -39,9 +28,6 @@ export function useDetectionCount(startDate, endDate) {
     });
 
     return {
-        detectionData,
-        objectClasses,
-        selectedObjectClasses,
-        setSelectedObjectClasses
+        detectionData
     };
 }

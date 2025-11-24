@@ -4,14 +4,11 @@ import {
 
 import DateRangePicker from './DateRangePicker';
 
-function DateTimeFilter({
-    setStartDate = () => { },
-    setEndDate = () => { },
-    setDate = () => { }
-}) {
+function DateTimeFilter(props) {
+    const {additionalLogic = () => { }} = props;
     return (
         <FormControl fullWidth size="small">
-            <DateRangePicker setEndDate={setEndDate} setStartDate={setStartDate} setDate={setDate} />
+            <DateRangePicker additionalLogic={additionalLogic} />
         </FormControl>
     );
 }

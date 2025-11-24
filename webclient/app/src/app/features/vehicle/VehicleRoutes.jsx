@@ -1,6 +1,6 @@
 import {deDE, enUS} from '@mui/x-data-grid/locales';
 import dayjs from 'dayjs';
-import {useEffect, useMemo, useState} from "react";
+import {useContext, useEffect, useMemo, useState} from "react";
 import {useTranslation} from "react-i18next";
 
 import VehicleFilter from "../../commons/filter/VehicleFilter";
@@ -9,6 +9,7 @@ import VehicleDataRest from '../../services/VehicleDataRest';
 import VehicleRoutesRest from '../../services/VehicleRoutesRest';
 import DateTimeFilter from '../../commons/filter/DateTimeFilter';
 import FilterLayout from '../../commons/filter/FilterLayout';
+import {FilterContext} from '../../commons/FilterProvider';
 
 const DEFAULT_VIEW_STATE = {
     longitude: 10.779998775029739,
@@ -27,7 +28,7 @@ function VehicleRoutes() {
     const [vehicleData, setVehicleData] = useState([]);
     const [selectedVehicleData, setSelectedVehicleData] = useState([]);
     const [prevSelectedVehicleData, setPrevSelectedVehicleData] = useState([]);
-    const [selectedDate, setSelectedDate] = useState(dayjs(new Date()));
+    const {date} = useContext(FilterContext);
     const [routes, setRoutes] = useState([]);
 
     useEffect(() => {
@@ -36,7 +37,7 @@ function VehicleRoutes() {
 
     useEffect(() => {
         reloadAllRouteData();
-    }, [selectedDate]);
+    }, [date]);
 
     useEffect(() => {
         reloadPartialVehicleRouteData();
@@ -86,7 +87,7 @@ function VehicleRoutes() {
             setRoutes(tmpRoutes);
             return;
         }
-        const promises = addedVehicles.map(vehicle => vehicleRoutesRest.findAllByVehicleAndWeek(vehicle, selectedDate.year(), selectedDate.week())
+        const promises = addedVehicles.map(vehicle => vehicleRoutesRest.findAllByVehicleAndWeek(vehicle, date.year(), date.week())
             .then(response => ({vehicle, data: response.data || []}))
         );
 
@@ -102,7 +103,6 @@ function VehicleRoutes() {
         <>
             <FilterLayout leftPosition={250}>
                 <DateTimeFilter
-                    setDate={setSelectedDate}
                 />
                 <VehicleFilter
                     vehicleData={vehicleData}

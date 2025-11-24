@@ -1,12 +1,14 @@
-import {useEffect, useMemo, useState} from "react";
+import {useContext, useEffect, useMemo, useState} from "react";
+import {FilterContext} from "../../../commons/FilterProvider";
 import VehicleDataRest from "../../../services/VehicleDataRest";
 import VehicleRoutesRest from "../../../services/VehicleRoutesRest";
 
 /**
- * Custom hook to fetch vehicle routes
- * @returns {Array} vehicleRoutes - Array of vehicle route objects
+ * Custom React hook to fetch vehicle routes based on the current filter context.
+ * @returns {Array} Array of vehicle route objects.
  */
-export function useVehicleRoutes(startDate = null, endDate = null) {
+export function useVehicleRoutes() {
+    const {startDate, endDate} = useContext(FilterContext);
     const [vehicleRoutes, setVehicleRoutes] = useState([]);
     const vehicleRoutesRest = useMemo(() => new VehicleRoutesRest(), []);
     const vehicleDataRest = useMemo(() => new VehicleDataRest(), []);
@@ -29,11 +31,10 @@ export function useVehicleRoutes(startDate = null, endDate = null) {
             return;
         }
 
-        const routeResponses = await Promise.all(vehicleStreamKeys.map(name => vehicleRoutesRest.findAllByVehicleAndTimeframe(name, startDate, endDate)));
+        const routeResponses = await Promise.all(vehicleStreamKeys.map(name => vehicleRoutesRest.findAllByVehicleAndTimeframe(name, startDate.toJSON(), endDate.toJSON())));
         const allRoutes = routeResponses.map(r => r.data).flat();
         setVehicleRoutes(allRoutes);
 
-        
     }
 
     return vehicleRoutes;

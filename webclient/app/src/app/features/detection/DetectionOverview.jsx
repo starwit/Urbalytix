@@ -1,4 +1,3 @@
-import dayjs from 'dayjs';
 import {useState} from "react";
 import DataFilter from "../../commons/filter/DataFilter";
 import DateTimeFilter from "../../commons/filter/DateTimeFilter";
@@ -12,6 +11,8 @@ import {useFeatures} from "./hooks/useFeatures";
 import {useDistricts} from "./hooks/useCityDistricts";
 import {useVehicleData} from "./hooks/useVehicleData";
 import {useVehicleRoutes} from "./hooks/useVehicleRoutes";
+import {useObjectClasses} from "./hooks/useObjectClasses";
+
 
 const VIEW_STATE = {
     longitude: 10.785000000000000,
@@ -27,18 +28,15 @@ const DATA_FILTERS = [
 
 
 function DetectionOverview() {
-    const [startDate, setStartDate] = useState(dayjs().startOf('week'));
-    const [endDate, setEndDate] = useState(dayjs().endOf('week'));
     const [showDistricts, setShowDistricts] = useState(false);
 
     const {
-        detectionData,
-        objectClasses,
-        selectedObjectClasses,
-        setSelectedObjectClasses
-    } = useDetectionCount(startDate, endDate);
+        detectionData
+    } = useDetectionCount();
 
     const vehicleData = useVehicleData(2000);
+
+    const handleObjectClasses = useObjectClasses();
 
     const [selectedFilterLabels, setSelectedFilterLabels] = useState([DATA_FILTERS[0].label]);
     const {
@@ -52,7 +50,7 @@ function DetectionOverview() {
 
     const [types, setTypes] = useState(['heatmap', 'hexagon']);
 
-    const vehicleRoutes = useVehicleRoutes(startDate.toJSON(), endDate.toJSON());
+    const vehicleRoutes = useVehicleRoutes();
 
     function handleTypes(event, newTypes) {
         if (newTypes.length) {
@@ -64,17 +62,15 @@ function DetectionOverview() {
         <>
             <FilterLayout leftPosition={10}>
                 <DateTimeFilter
-                    setStartDate={setStartDate}
-                    setEndDate={setEndDate}
+                    additionalLogic={(curStartDate, curEndDate, changed) => {
+                        handleObjectClasses.loadObjectClasses(curStartDate, curEndDate, changed);
+                    }}
                 />
                 <MapFilter
                     types={types}
                     handleTypes={handleTypes}
                 />
                 <ObjectClassFilter
-                    objectClasses={objectClasses}
-                    selectedObjectClasses={selectedObjectClasses}
-                    onSelectedObjectClassesChange={setSelectedObjectClasses}
                     prefix='wastedata'
                 />
                 <DataFilter
