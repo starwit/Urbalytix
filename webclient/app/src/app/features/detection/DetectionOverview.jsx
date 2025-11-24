@@ -29,6 +29,7 @@ const DATA_FILTERS = [
 function DetectionOverview() {
     const [startDate, setStartDate] = useState(dayjs().startOf('week'));
     const [endDate, setEndDate] = useState(dayjs().endOf('week'));
+    const [showDistricts, setShowDistricts] = useState(false);
 
     const {
         detectionData,
@@ -46,7 +47,9 @@ function DetectionOverview() {
         setSelectedFeatureKeys,
         selectedFeatures
     } = useFeatures();
+
     const {districts, setDistricts} = useDistricts();
+
     const [types, setTypes] = useState(['heatmap', 'hexagon']);
 
     const vehicleRoutes = useVehicleRoutes(startDate.toJSON(), endDate.toJSON());
@@ -84,7 +87,7 @@ function DetectionOverview() {
                     availableFeatureKeys={Object.keys(features)}
                     selectedFeatureKeys={selectedFeatureKeys}
                     onSelectedFeatureChange={setSelectedFeatureKeys}
-                    onSelectedDistrictChange={setDistricts}
+                    onSelectedDistrictChange={setShowDistricts}
                 />
             </FilterLayout>
             <DetectionMap
@@ -99,6 +102,7 @@ function DetectionOverview() {
                 showHexagons={types.includes("hexagon")}
                 showScatterplot={types.includes("scatterplot")}
                 showCoverage={types.includes("coverage")}
+                showDistricts={showDistricts}
             />
         </>
     );

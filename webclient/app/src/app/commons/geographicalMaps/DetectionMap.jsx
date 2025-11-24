@@ -40,6 +40,7 @@ function DetectionMap(props) {
         showHeatmap = false,
         showHexagons = false,
         showCoverage = false,
+        showDistricts = false
     } = props;
     const {t} = useTranslation();
 
@@ -112,10 +113,12 @@ function DetectionMap(props) {
 
     const layers = [
         MapLayerFactory.createBaseMapLayer(),
-        MapLayerFactory.createDistrictLayer(districts),
         ...Object.entries(features).map(([objectType, featureData], index) =>
             MapLayerFactory.createIconLayer(featureData, objectType, index, ICON_MAPPING, featureIcon))
     ];
+    if (showDistricts) {
+        layers.push(MapLayerFactory.createDistrictLayer(districts));
+    }
     if (showHexagons) {
         layers.push(MapLayerFactory.createHexagonLayer(detectionData, {
             id: 'HexagonLayer',

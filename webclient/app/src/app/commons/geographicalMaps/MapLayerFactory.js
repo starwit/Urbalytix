@@ -45,36 +45,20 @@ export class MapLayerFactory {
     }
 
     static createDistrictLayer(data) {
-        new GeoJsonLayer({
-            id: 'district-outlines',
+        return new GeoJsonLayer({
+            id: 'GeoJsonLayer',
             data: data,
-            // We only want outlines: stroked true, filled false
             stroked: true,
             filled: false,
-            // Control how widths scale with device pixels
-            lineWidthScale: 10,
-            lineWidthMinPixels: 10,
-            // getLineWidth receives the feature (or feature.properties)
-            getLineWidth: () => lineWidth,
-
-
-            // Colors for the outline (rgba array)
-            getLineColor: (f) => {
-                // optionally use properties to style per-feature:
-                // const importance = f.properties?.importance || 0;
-                // return importance > 5 ? [255,0,0,255] : lineColor;
-                return lineColor;
-            },
-
-            // Make it interactive so hover/click works
+            pointType: 'circle+text',
             pickable: true,
-
-            // Optional - make joins look nicer
-            rounded: true,
-            lineJointRounded: true,
-            parameters: {
-                depthTest: false
-            }
+            getLineColor: f => {
+                const hex = f.properties.color;
+                return hex ? hex.match(/[0-9a-f]{2}/g).map(x => parseInt(x, 16)) : [0, 0, 0];
+            },
+            getLineWidth: 10,
+            getText: f => f.properties.district_name,
+            getTextSize: 22
         });
     }
 

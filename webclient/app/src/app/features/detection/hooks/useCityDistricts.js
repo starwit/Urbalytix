@@ -10,7 +10,6 @@ export function useDistricts() {
     }, []);
 
     function reloadDistricts() {
-        console.log("Loading city districts for Wolfsburg");
         cityDistrictRest.findAllByCityAsGeometry('Wolfsburg').then(response => handleLoadDistricts(response));
     }
 
