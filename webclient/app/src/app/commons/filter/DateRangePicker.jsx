@@ -5,7 +5,8 @@ import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
 import {PickersDay} from '@mui/x-date-pickers/PickersDay';
 import dayjs from 'dayjs';
 import isBetweenPlugin from 'dayjs/plugin/isBetween';
-import {useEffect, useState} from 'react';
+import {useContext, useEffect, useState} from 'react';
+import {FilterContext} from '../FilterProvider';
 
 dayjs.extend(isBetweenPlugin);
 
@@ -67,27 +68,42 @@ function Day(props) {
 }
 
 export default function DateRangePicker(props) {
-    const {setStartDate = () => { }, setEndDate = () => { }, setDate = () => { }} = props
+    const {startDate, endDate, setStartDate, setEndDate, date, setDate} = useContext(FilterContext);
+    const {additionalLogic = () => { }} = props;
     const [hoveredDay, setHoveredDay] = useState(null);
-    const [value, setValue] = useState(dayjs());
 
+    // Note: This effect runs on mount and will execute when components are re-rendered after route changes.
     useEffect(() => {
-        setStartDate(dayjs(value).startOf('week'));
-        setEndDate(dayjs(value).endOf('week'));
-        setDate(dayjs(value));
-    }, [value]);
+        additionalLogic(startDate, endDate, false);
+    }, [])
+
+    function handleDateChange(newValue) {
+        if (dayjs(date).isSame(newValue, 'week')) {
+            return;
+        }
+        const curDate = dayjs(newValue).startOf('week');
+        const curEndDate = curDate.endOf('week');
+
+        setDate(curDate);
+        setStartDate(curDate);
+        setEndDate(curEndDate);
+        if (additionalLogic) {
+            additionalLogic(curDate, curEndDate, true);
+        }
+
+    }
 
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
             <DatePicker
-                value={value}
-                onChange={(newValue) => setValue(dayjs(newValue).startOf('week'))}
+                value={date}
+                onChange={handleDateChange}
                 showDaysOutsideCurrentMonth
                 displayWeekNumber
                 slots={{day: Day}}
                 slotProps={{
                     day: (ownerState) => ({
-                        selectedDay: value,
+                        selectedDay: date,
                         hoveredDay,
                         onPointerEnter: () => setHoveredDay(ownerState.day),
                         onPointerLeave: () => setHoveredDay(null),
