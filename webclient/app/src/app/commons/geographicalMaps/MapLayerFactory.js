@@ -25,7 +25,6 @@ export class MapLayerFactory {
     static createGeoJsonLayer(data) {
         return new GeoJsonLayer({
             id: 'GeoJsonLayer',
-            //data: 'http://localhost:5173/urbalytix/api/street-catalog/1',
             data: data,
             stroked: false,
             filled: true,
@@ -42,6 +41,24 @@ export class MapLayerFactory {
             getPointRadius: 4,
             getText: f => f.properties.name,
             getTextSize: 12
+        });
+    }
+
+    static createDistrictLayer(data) {
+        return new GeoJsonLayer({
+            id: 'GeoJsonLayer',
+            data: data,
+            stroked: true,
+            filled: false,
+            pointType: 'circle+text',
+            pickable: true,
+            getLineColor: f => {
+                const hex = f.properties.color;
+                return hex ? hex.match(/[0-9a-f]{2}/g).map(x => parseInt(x, 16)) : [0, 0, 0];
+            },
+            getLineWidth: 10,
+            getText: f => f.properties.district_name,
+            getTextSize: 22
         });
     }
 

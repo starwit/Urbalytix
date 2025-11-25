@@ -32,6 +32,7 @@ function DetectionMap(props) {
         vehicleRoutes = [],
         features = [],
         featureIcon = featureImage,
+        districts = [],
         positionData = [],
         positionIcon = positionImage,
         showPosition = false,
@@ -39,6 +40,7 @@ function DetectionMap(props) {
         showHeatmap = false,
         showHexagons = false,
         showCoverage = false,
+        showDistricts = false
     } = props;
     const {t} = useTranslation();
 
@@ -110,10 +112,13 @@ function DetectionMap(props) {
     }
 
     const layers = [
-            MapLayerFactory.createBaseMapLayer(),
-            ...Object.entries(features).map(([objectType, featureData], index) =>
-                MapLayerFactory.createIconLayer(featureData, objectType, index, ICON_MAPPING, featureIcon))
+        MapLayerFactory.createBaseMapLayer(),
+        ...Object.entries(features).map(([objectType, featureData], index) =>
+            MapLayerFactory.createIconLayer(featureData, objectType, index, ICON_MAPPING, featureIcon))
     ];
+    if (showDistricts) {
+        layers.push(MapLayerFactory.createDistrictLayer(districts));
+    }
     if (showHexagons) {
         layers.push(MapLayerFactory.createHexagonLayer(detectionData, {
             id: 'HexagonLayer',

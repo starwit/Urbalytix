@@ -8,6 +8,7 @@ import ObjectClassFilter from "../../commons/filter/ObjectClassFilter";
 import DetectionMap from '../../commons/geographicalMaps/DetectionMap';
 import {useDetectionCount} from "./hooks/useDetectionCount";
 import {useFeatures} from "./hooks/useFeatures";
+import {useDistricts} from "./hooks/useCityDistricts";
 import {useVehicleData} from "./hooks/useVehicleData";
 import {useVehicleRoutes} from "./hooks/useVehicleRoutes";
 import {useObjectClasses} from "./hooks/useObjectClasses";
@@ -27,6 +28,8 @@ const DATA_FILTERS = [
 
 
 function DetectionOverview() {
+    const [showDistricts, setShowDistricts] = useState(false);
+
     const {
         detectionData
     } = useDetectionCount();
@@ -42,6 +45,9 @@ function DetectionOverview() {
         setSelectedFeatureKeys,
         selectedFeatures
     } = useFeatures();
+
+    const {districts} = useDistricts({showDistricts});
+
     const [types, setTypes] = useState(['heatmap', 'hexagon']);
 
     const vehicleRoutes = useVehicleRoutes();
@@ -77,6 +83,7 @@ function DetectionOverview() {
                     availableFeatureKeys={Object.keys(features)}
                     selectedFeatureKeys={selectedFeatureKeys}
                     onSelectedFeatureChange={setSelectedFeatureKeys}
+                    onSelectedDistrictChange={setShowDistricts}
                 />
             </FilterLayout>
             <DetectionMap
@@ -84,12 +91,14 @@ function DetectionOverview() {
                 detectionData={detectionData}
                 vehicleRoutes={vehicleRoutes}
                 features={selectedFeatures}
+                districts={districts}
                 positionData={vehicleData}
                 showPosition={selectedFilterLabels.includes("selection.currentPosition")}
                 showHeatmap={types.includes("heatmap")}
                 showHexagons={types.includes("hexagon")}
                 showScatterplot={types.includes("scatterplot")}
                 showCoverage={types.includes("coverage")}
+                showDistricts={showDistricts}
             />
         </>
     );

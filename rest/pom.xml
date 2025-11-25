@@ -56,8 +56,8 @@
       <artifactId>geojson-jackson</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.h2database</groupId>
-      <artifactId>h2</artifactId>
+      <groupId>org.orbisgis</groupId>
+      <artifactId>h2gis</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
