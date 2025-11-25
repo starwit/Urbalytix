@@ -1,13 +1,16 @@
 import {useEffect, useMemo, useState} from "react";
 import CityDistrictRest from '../../../services/CityDistrictRest';
 
-export function useDistricts() {
+export function useDistricts(props) {
     const [districts, setDistricts] = useState([]);
+    const {showDistricts} = props;
     const cityDistrictRest = useMemo(() => new CityDistrictRest(), []);
 
     useEffect(() => {
-        reloadDistricts();
-    }, []);
+        if (showDistricts) {
+            reloadDistricts();
+        }
+    }, [showDistricts]);
 
     function reloadDistricts() {
         cityDistrictRest.findAllByCityAsGeometry('Wolfsburg').then(response => handleLoadDistricts(response));
@@ -21,7 +24,6 @@ export function useDistricts() {
     }
 
     return {
-        districts,
-        reloadDistricts: reloadDistricts
+        districts
     };
 }

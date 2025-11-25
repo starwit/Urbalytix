@@ -31,7 +31,9 @@ spring:
     password: ${spring.datasource.password}
     url: ${spring.datasource.url}
     baseline-on-migrate: true
-    locations: classpath:db/migration/relational
+    locations: 
+      - classpath:db/test
+      - classpath:db/migration/relational
     encoding: UTF-8
     placeholder-replacement: false
 

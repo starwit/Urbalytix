@@ -46,7 +46,7 @@ function DetectionOverview() {
         selectedFeatures
     } = useFeatures();
 
-    const {districts, setDistricts} = useDistricts();
+    const {districts} = useDistricts({showDistricts});
 
     const [types, setTypes] = useState(['heatmap', 'hexagon']);
 
