@@ -1,6 +1,6 @@
-import {useEffect, useState, useMemo} from "react";
-import {Box, Paper, Stack, Tooltip, Typography} from "@mui/material";
+import {useEffect, useState, useMemo, useRef} from "react";
 import StreetCatalogRest from "../../services/StreetCatalogRest";
+import ConfigurationRest from "../../services/ConfigurationRest";
 import {useTranslation} from "react-i18next";
 import {deDE, enUS} from '@mui/x-data-grid/locales';
 import {DataGrid} from "@mui/x-data-grid";
@@ -8,14 +8,25 @@ import DeckGL from "@deck.gl/react";
 import {MapView} from "@deck.gl/core";
 import {MapLayerFactory} from "../../commons/geographicalMaps/MapLayerFactory";
 import {centroid} from '@turf/turf';
+import {WebMercatorViewport} from "@deck.gl/core";
+import StreetTableLayout from "./StreetTableLayout";
 
 function StreetCatalog() {
     const {t, i18n} = useTranslation();
     const locale = i18n.language == "de" ? deDE : enUS;
     const streetCatalogRest = useMemo(() => new StreetCatalogRest(), []);
+    const configurationRest = useMemo(() => new ConfigurationRest(), []);
     const [streetData, setStreetData] = useState([]);
     const [selectedStreet, setSelectedStreet] = useState([]);
-    const [viewState, setViewState] = useState();
+    const [viewState, setViewState] = useState({
+        longitude: 10.779998775029739,
+        latitude: 52.41988232741599,
+        zoom: 10,
+        pitch: 0,
+        bearing: 0
+    });
+    const gridRef = useState(null);
+    const [gridHeight, setGridHeight] = useState(0);
 
     const columns = [
         {field: "id", headerName: "ID", width: 90},
@@ -28,19 +39,27 @@ function StreetCatalog() {
     ];
 
     useEffect(() => {
-        setViewState({
-            longitude: 10.779998775029739,
-            latitude: 52.41988232741599,
-            zoom: 12,
-            pitch: 0,
-            bearing: 0
-        });
+        loadMapCenter();
         loadStreetData();
         streetCatalogRest.findById(1).then(response => {
             setSelectedStreet(response.data);
-            console.log(response.data);
-        })
+        });
+        if (gridRef.current) {
+            setGridHeight(gridRef.current.clientHeight);
+        }
     }, []);
+
+    function loadMapCenter() {
+        configurationRest.getMapCenter().then(response => {
+            setViewState({
+                longitude: response.data.geometry.coordinates[0],
+                latitude: response.data.geometry.coordinates[1],
+                zoom: 12,
+                pitch: 0,
+                bearing: 0
+            });
+        });
+    }
 
     function loadStreetData() {
         streetCatalogRest.findAllByCityNamesOnly("Wolfsburg").then(response => {
@@ -61,58 +80,71 @@ function StreetCatalog() {
     function handleRowClick(params) {
         streetCatalogRest.findById(params.row.id).then(response => {
             setSelectedStreet(response.data);
-            setViewState({
-                longitude: centroid(response.data).geometry.coordinates[0],
-                latitude: centroid(response.data).geometry.coordinates[1],
+            const lon = centroid(response.data).geometry.coordinates[0];
+            const lat = centroid(response.data).geometry.coordinates[1];
+
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+
+            const vp = new WebMercatorViewport({
+                longitude: viewState.longitude,
+                latitude: viewState.latitude,
+                zoom: viewState.zoom,
+                width: width,
+                height: height
+            });
+
+            const [xPx, yPx] = vp.project([lon, lat]);
+            const paddingPx = 15; // tweak as needed
+            const offsetY = gridHeight / 2 + paddingPx;
+            const newScreen = [xPx, yPx + offsetY];
+            const [newLon, newLat] = vp.unproject(newScreen);
+
+            console.log(lon, lat);
+            console.log(newLon, newLat);
+
+            setViewState(prev => ({
+                longitude: lon,
+                latitude: newLat,
                 zoom: 12,
                 pitch: 0,
                 bearing: 0
-            });
+            }));
         })
     }
 
     return (
         <>
-            <Typography variant="h2" gutterBottom sx={{flex: 1}}>
-                {t("streetData.heading")}
-            </Typography>
-            <Stack direction="column">
-                <Stack >
-                    <Box sx={{aspectRatio: "inherit", position: 'relative'}}>
-                        <Box sx={{aspectRatio: "16/2", objectFit: "contain"}}>
-                            <DeckGL
-                                layers={layers}
-                                views={MAP_VIEW}
-                                initialViewState={viewState}
-                                controller={{dragRotate: false}}
-                            >
-                            </DeckGL >
-                        </Box>
-                    </Box>
-                </Stack>
-                <Stack >
-                    <DataGrid
-                        localeText={locale.components.MuiDataGrid.defaultProps.localeText}
-                        rows={streetData}
-                        columns={columns}
-                        resizeable={true}
-                        onRowClick={handleRowClick}
-                        showToolbar
-                        initialState={{
-                            pagination: {
-                                paginationModel: {
-                                    pageSize: 20
-                                }
-                            },
-                            sorting: {
-                                sortModel: [{field: "name", sort: "asc"}]
+            <DeckGL
+                layers={layers}
+                views={MAP_VIEW}
+                initialViewState={viewState}
+                controller={{dragRotate: false}}
+            >
+            </DeckGL >
+            <StreetTableLayout>
+                <DataGrid
+                    ref={gridRef}
+                    localeText={locale.components.MuiDataGrid.defaultProps.localeText}
+                    rows={streetData}
+                    columns={columns}
+                    resizeable={true}
+                    onRowClick={handleRowClick}
+                    showToolbar
+                    initialState={{
+                        pagination: {
+                            paginationModel: {
+                                pageSize: 5
                             }
-                        }}
-                        pageSizeOptions={[10]}
-                        disableRowSelectionOnClick
-                    />
-                </Stack>
-            </Stack>
+                        },
+                        sorting: {
+                            sortModel: [{field: "name", sort: "asc"}]
+                        }
+                    }}
+                    pageSizeOptions={[10]}
+                    disableRowSelectionOnClick
+                />
+            </StreetTableLayout>
         </ >
     );
 }

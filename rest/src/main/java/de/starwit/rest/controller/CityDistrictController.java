@@ -18,7 +18,6 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.starwit.persistence.entity.CityDistrictEntity;
-import de.starwit.persistence.entity.StreetCatalogEntity;
 import de.starwit.service.impl.CityDistrictService;
 import io.swagger.v3.oas.annotations.Operation;
 
