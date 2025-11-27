@@ -2,6 +2,12 @@
 
 Changelog of Urbalytix.
 
+## Current Version ()
+
+### Features
+
+-  create map menu bar ([1ed5d](https://github.com/starwit/Urbalytix/commit/1ed5d0e0c557ee4) Anett Hübner)  
+
 ## refs/tags/0.2.5 (2025-10-13)
 
 ### Features
