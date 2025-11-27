@@ -1,28 +1,38 @@
 package de.starwit.rest.controller;
 
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import org.geojson.Feature;
+import org.geojson.LngLatAlt;
+import org.geojson.Point;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import de.starwit.service.impl.StreamSubscriptionService;
 import io.swagger.v3.oas.annotations.Operation;
 
 @RestController
 @RequestMapping("${rest.base-path}/configuration")
 public class ConfigurationController {
 
-    @Autowired
-    StreamSubscriptionService detectionService;
+    @Value("${config.mapcenter.lat}")
+    private double latitude;
 
-    @Operation(summary = "Get all stream subscriptions")
+    @Value("${config.mapcenter.long}")
+    private double longitude;
 
-    @GetMapping
-    public Map<String, List<String>> findAll() {
-        return this.detectionService.getKeysPerStream();
+    @Value("${config.mapcenter.city}")
+    private String city;
+
+    @Operation(summary = "Base coordinate to center map views")
+    @GetMapping(value = "/mapcenter", produces = "application/geo+json")
+    public Feature getMapCenter() {
+        Feature feature = new Feature();
+        Point mapCenter = new Point();
+        mapCenter.setCoordinates(new LngLatAlt(longitude, latitude));
+        feature.setGeometry(mapCenter);
+        feature.setProperty("city", city);
+
+        return feature;
     }
 
 }

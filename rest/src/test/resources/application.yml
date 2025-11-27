@@ -37,6 +37,13 @@ spring:
     encoding: UTF-8
     placeholder-replacement: false
 
+config:
+  mapCenter:
+    lat: 52.41988232741599
+    long: 10.779998775029739
+    mapZoom: 12
+    city: "Wolfsburg"
+
 infra:
   trash:
     endpoint: https://hostname
