@@ -10,12 +10,19 @@ import {MapLayerFactory} from "../../commons/geographicalMaps/MapLayerFactory";
 import {centroid} from '@turf/turf';
 import {WebMercatorViewport} from "@deck.gl/core";
 import StreetTableLayout from "./StreetTableLayout";
+import FilterLayout from "../../commons/filter/FilterLayout";
+import {useDistricts} from "../detection/hooks/useCityDistricts";
+import DistrictFilter from "../../commons/filter/DistrictFilter";
 
 function StreetCatalog() {
     const {t, i18n} = useTranslation();
     const locale = i18n.language == "de" ? deDE : enUS;
     const streetCatalogRest = useMemo(() => new StreetCatalogRest(), []);
     const configurationRest = useMemo(() => new ConfigurationRest(), []);
+
+    const [showDistricts, setShowDistricts] = useState(false);
+    const {districts} = useDistricts({showDistricts: true});
+
     const [streetData, setStreetData] = useState([]);
     const [selectedStreet, setSelectedStreet] = useState([]);
     const [viewState, setViewState] = useState({
@@ -35,12 +42,17 @@ function StreetCatalog() {
             headerName: t("streetData.streetName"),
             flex: 0.5,
             editable: false
+        },
+        {
+            field: "districtName",
+            headerName: t("streetData.districtName"),
+            flex: 0.5,
+            editable: false
         }
     ];
 
     useEffect(() => {
         loadMapCenter();
-        loadStreetData();
         streetCatalogRest.findById(1).then(response => {
             setSelectedStreet(response.data);
         });
@@ -58,11 +70,12 @@ function StreetCatalog() {
                 pitch: 0,
                 bearing: 0
             });
+            loadStreetData(response.data.properties['city']);
         });
     }
 
-    function loadStreetData() {
-        streetCatalogRest.findAllByCityNamesOnly("Wolfsburg").then(response => {
+    function loadStreetData(city) {
+        streetCatalogRest.findAllListByCity(city).then(response => {
             if (response.data == null) {
                 return;
             }
@@ -76,8 +89,11 @@ function StreetCatalog() {
         MapLayerFactory.createBaseMapLayer(),
         MapLayerFactory.createGeoJsonLayer(selectedStreet)
     ];
+    if (showDistricts) {
+        layers.push(MapLayerFactory.createDistrictLayer(districts));
+    }
 
-    function handleRowClick(params) {
+    function handleStreetRowClick(params) {
         streetCatalogRest.findById(params.row.id).then(response => {
             setSelectedStreet(response.data);
             const lon = centroid(response.data).geometry.coordinates[0];
@@ -100,9 +116,6 @@ function StreetCatalog() {
             const newScreen = [xPx, yPx + offsetY];
             const [newLon, newLat] = vp.unproject(newScreen);
 
-            console.log(lon, lat);
-            console.log(newLon, newLat);
-
             setViewState(prev => ({
                 longitude: lon,
                 latitude: newLat,
@@ -115,13 +128,19 @@ function StreetCatalog() {
 
     return (
         <>
+            <FilterLayout leftPosition={10}>
+                <DistrictFilter
+                    onShowDistrictChange={setShowDistricts}
+                />
+            </FilterLayout>
             <DeckGL
                 layers={layers}
                 views={MAP_VIEW}
                 initialViewState={viewState}
                 controller={{dragRotate: false}}
             >
-            </DeckGL >
+            </DeckGL>
+
             <StreetTableLayout>
                 <DataGrid
                     ref={gridRef}
@@ -129,7 +148,7 @@ function StreetCatalog() {
                     rows={streetData}
                     columns={columns}
                     resizeable={true}
-                    onRowClick={handleRowClick}
+                    onRowClick={handleStreetRowClick}
                     showToolbar
                     initialState={{
                         pagination: {

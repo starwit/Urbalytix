@@ -111,6 +111,8 @@ const translationDeDE = {
     "landing.parking": "Parkflächennutzung",
     "streetData.heading": "Straßenkatalog",
     "streetData.streetName": " Straßenname",
+    "streetData.districtName": "Bezirksname",
+    "streetData.toggleDistricts": "Zeige Stadtteile",
     "features.selection.districts": "Stadtbezirke"
 };
 export default translationDeDE;

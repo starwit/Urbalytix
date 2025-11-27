@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import de.starwit.persistence.dto.StreetDistrictDTO;
 import de.starwit.persistence.entity.StreetCatalogEntity;
 import de.starwit.service.impl.StreetCatalogService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -43,19 +44,17 @@ public class StreetCatalogController {
         return feature;
     }
 
-    @Operation(summary = "Get street with id")
-    @GetMapping(value = "/city/{city}", produces = "application/geo+json")
-    public FeatureCollection findByCity(@PathVariable("city") String city) {
+    @Operation(summary = "Get street geometries for given city")
+    @GetMapping(value = "/geometrybycity/{city}", produces = "application/geo+json")
+    public FeatureCollection findAllByCity(@PathVariable("city") String city) {
         List<StreetCatalogEntity> streets = this.streetCatalogService.findByCity(city);
         return convertToGeoJSON(streets);
     }
 
-    @GetMapping(value = "/catalog/{city}")
-    public List<StreetCatalogEntity> listByCity(@PathVariable("city") String city) {
-        List<StreetCatalogEntity> streets = this.streetCatalogService.findByCity(city);
-        for (StreetCatalogEntity streetCatalogEntity : streets) {
-            streetCatalogEntity.setStreetPath(null);
-        }
+    @Operation(summary = "Get street for given city, add city district")
+    @GetMapping(value = "/list/{city}", produces = "application/geo+json")
+    public List<StreetDistrictDTO> findAllByCityWithDistrict(@PathVariable("city") String city) {
+        List<StreetDistrictDTO> streets = this.streetCatalogService.findByCityWithDistrict(city);
         return streets;
     }
 

@@ -46,7 +46,7 @@ export class MapLayerFactory {
 
     static createDistrictLayer(data) {
         return new GeoJsonLayer({
-            id: 'GeoJsonLayer',
+            id: 'District-GeoJsonLayer',
             data: data,
             stroked: true,
             filled: false,

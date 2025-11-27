@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import de.starwit.persistence.dto.StreetDistrictDTO;
 import de.starwit.persistence.entity.StreetCatalogEntity;
 import de.starwit.persistence.repository.StreetCatalogRepository;
 
@@ -21,6 +22,11 @@ public class StreetCatalogService implements ServiceInterface<StreetCatalogEntit
 
     public List<StreetCatalogEntity> findByCity(String city) {
         return repository.findByCity(city);
+    }
+
+    public List<StreetDistrictDTO> findByCityWithDistrict(String city) {
+        List<StreetDistrictDTO> list = repository.findStreetsByCityWithDistrict(city);
+        return list;
     }
 
 }
