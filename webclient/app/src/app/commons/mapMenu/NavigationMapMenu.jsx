@@ -1,5 +1,4 @@
 import NavigationIcon from '@mui/icons-material/Navigation';
-import RouteIcon from '@mui/icons-material/Route';
 import ViewInArIcon from '@mui/icons-material/ViewInAr';
 import {Divider} from "@mui/material";
 import {useTranslation} from "react-i18next";
