@@ -13,7 +13,7 @@ function CompareMapMenu(props) {
         <>
             <ToggleButtonGroup size="small"
                 sx={{
-                    position: 'absolute',
+                    position: 'fixed',
                     right: 10,
                     top: 60,
                     zIndex: 1,
@@ -35,7 +35,7 @@ function CompareMapMenu(props) {
             </ToggleButtonGroup >
 
             <Paper sx={{
-                position: 'absolute',
+                position: 'fixed',
                 top: 310,
                 right: 10,
                 zIndex: 1,

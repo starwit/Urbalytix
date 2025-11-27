@@ -17,7 +17,7 @@ function DetectionMapMenu(props) {
         <>
             <ToggleButtonGroup size="small"
                 sx={{
-                    position: 'absolute',
+                    position: 'fixed',
                     right: 10,
                     top: 60,
                     zIndex: 1,
