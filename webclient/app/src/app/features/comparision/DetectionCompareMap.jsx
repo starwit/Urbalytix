@@ -1,11 +1,12 @@
 import DeckGL from "@deck.gl/react";
 import {useTranslation} from "react-i18next";
-import {MAP_VIEW} from './BaseMapConfig';
-import {MapLayerFactory} from './MapLayerFactory';
+import {MAP_VIEW} from '../../commons/geographicalMaps/BaseMapConfig';
+import {MapLayerFactory} from '../../commons/geographicalMaps/MapLayerFactory';
 
 function DetectionCompareMap(props) {
     const {
         viewState,
+        onViewStateChange,
         detectionData = [],
         detectioncomparisonData = [],
         vehicleRoutes = [],
@@ -64,7 +65,7 @@ function DetectionCompareMap(props) {
         MapLayerFactory.createBaseMapLayer()
     ];
     if (showCoverage) {
-        layers.push(MapLayerFactory.createCoverageLayer(vehicleRoutes));
+        layers.push(...MapLayerFactory.createMaskingLayers(vehicleRoutes));
     }
     if (showHexagons) {
         layers.push(MapLayerFactory.createcomparisonLayers(detectionData, detectioncomparisonData));
@@ -78,6 +79,7 @@ function DetectionCompareMap(props) {
                 layers={layers}
                 views={MAP_VIEW}
                 initialViewState={viewState}
+                onViewStateChange={onViewStateChange}
                 controller={true}
                 getTooltip={({object, layer}) => getTooltip({object, layer})}
             />
