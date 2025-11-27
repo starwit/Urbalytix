@@ -20,7 +20,7 @@ function NavigationMapMenu(props) {
             ...v,
             bearing: 0   // set north
         }));
-    };
+    }
 
     return (
         <>
