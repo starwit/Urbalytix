@@ -2,10 +2,10 @@ import BlurOnIcon from '@mui/icons-material/BlurOn';
 import HexagonIcon from '@mui/icons-material/Hexagon';
 import RouteIcon from '@mui/icons-material/Route';
 import ScatterPlotIcon from '@mui/icons-material/ScatterPlot';
-import {ToggleButtonGroup} from "@mui/material";
 import {useTranslation} from "react-i18next";
-import NavigationMapMenu from './NavigationMapMenu';
-import StyledToggleButton from './StyledToggleButton';
+import MapMenuLayout from '../../commons/mapMenu/MapMenuLayout';
+import NavigationMapMenu from '../../commons/mapMenu/NavigationMapMenu';
+import StyledToggleButton from '../../commons/mapMenu/StyledToggleButton';
 
 
 
@@ -15,18 +15,9 @@ function DetectionMapMenu(props) {
 
     return (
         <>
-            <ToggleButtonGroup size="small"
-                sx={{
-                    position: 'fixed',
-                    right: 10,
-                    top: 60,
-                    zIndex: 1,
-                    gap: 1
-                }}
+            <MapMenuLayout
                 value={types}
-                orientation="vertical"
                 onChange={handleTypes}
-                color='success'
             >
                 <NavigationMapMenu setViewState={setViewState} />
 
@@ -42,7 +33,7 @@ function DetectionMapMenu(props) {
                 <StyledToggleButton title={t('map.coverage')} value="coverage" aria-label="coverage">
                     <RouteIcon />
                 </StyledToggleButton>
-            </ToggleButtonGroup >
+            </MapMenuLayout>
         </>
     );
 }

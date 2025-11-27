@@ -1,9 +1,10 @@
 import HexagonIcon from '@mui/icons-material/Hexagon';
 import RouteIcon from '@mui/icons-material/Route';
-import {Box, Paper, ToggleButtonGroup, Typography} from "@mui/material";
+import {Box, Paper, Typography} from "@mui/material";
 import {useTranslation} from "react-i18next";
-import NavigationMapMenu from './NavigationMapMenu';
-import StyledToggleButton from './StyledToggleButton';
+import MapMenuLayout from '../../commons/mapMenu/MapMenuLayout';
+import NavigationMapMenu from '../../commons/mapMenu/NavigationMapMenu';
+import StyledToggleButton from '../../commons/mapMenu/StyledToggleButton';
 
 function CompareMapMenu(props) {
     const {types, handleTypes, setViewState} = props;
@@ -11,18 +12,9 @@ function CompareMapMenu(props) {
 
     return (
         <>
-            <ToggleButtonGroup size="small"
-                sx={{
-                    position: 'fixed',
-                    right: 10,
-                    top: 60,
-                    zIndex: 1,
-                    gap: 1
-                }}
+            <MapMenuLayout
                 value={types}
-                orientation="vertical"
                 onChange={handleTypes}
-                color='success'
             >
                 <NavigationMapMenu setViewState={setViewState} />
 
@@ -32,7 +24,7 @@ function CompareMapMenu(props) {
                 <StyledToggleButton value="coverage" aria-label="coverage" title={t('map.coverageweek')}>
                     <RouteIcon />
                 </StyledToggleButton>
-            </ToggleButtonGroup >
+            </MapMenuLayout>
 
             <Paper sx={{
                 position: 'fixed',

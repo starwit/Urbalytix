@@ -1,7 +1,7 @@
 import DeckGL from "@deck.gl/react";
 import {useTranslation} from "react-i18next";
-import {MAP_VIEW} from './BaseMapConfig';
-import {MapLayerFactory} from './MapLayerFactory';
+import {MAP_VIEW} from '../../commons/geographicalMaps/BaseMapConfig';
+import {MapLayerFactory} from '../../commons/geographicalMaps/MapLayerFactory';
 
 function DetectionCompareMap(props) {
     const {

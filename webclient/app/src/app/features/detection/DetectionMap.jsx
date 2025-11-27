@@ -1,10 +1,9 @@
 import DeckGL from "@deck.gl/react";
-import {useMemo} from "react";
+import {useTranslation} from "react-i18next";
 import featureImage from "../../assets/icons/recycling.png";
 import positionImage from "../../assets/icons/vehicle.png";
-import {HEATMAP_COLOR_RANGES, MAP_VIEW} from './BaseMapConfig';
-import {MapLayerFactory} from './MapLayerFactory';
-import {useTranslation} from "react-i18next";
+import {HEATMAP_COLOR_RANGES, MAP_VIEW} from '../../commons/geographicalMaps/BaseMapConfig';
+import {MapLayerFactory} from '../../commons/geographicalMaps/MapLayerFactory';
 
 const ICON_MAPPING = {
     "marker": {
