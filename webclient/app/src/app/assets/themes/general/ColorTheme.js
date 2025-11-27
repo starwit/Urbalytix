@@ -14,9 +14,11 @@ const ColorTheme = createTheme({
         background: {
             default: "#fff",
             bgimage: "#eee",
+            grey: "#eee",
             paper: "#fff",
             lightdark: "#cecece",
-            light: "#fff"
+            light: "#fff",
+            green: "#dbf7e5ff"
         },
         line: {
             width: 4

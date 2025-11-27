@@ -28,6 +28,7 @@ const ICON_MAPPING = {
 function DetectionMap(props) {
     const {
         viewState,
+        onViewStateChange,
         detectionData = [],
         vehicleRoutes = [],
         features = [],
@@ -145,6 +146,7 @@ function DetectionMap(props) {
         <>
             <DeckGL
                 layers={layers}
+                onViewStateChange={onViewStateChange}
                 views={MAP_VIEW}
                 initialViewState={viewState}
                 controller={true}

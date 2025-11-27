@@ -199,7 +199,7 @@ export class MapLayerFactory {
         return new HexagonLayer({
             id: 'hex-diff',
             data: data,
-            getPosition: d => [d.longitude, d.latitude],
+            getPosition: d => d.location ? d.location : [d.longitude, d.latitude],
             getColorValue: points => {
                 const a = points.filter(d => d.className === 'waste').length;
                 const b = points.filter(d => d.className === 'cigarette').length;

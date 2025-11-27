@@ -40,7 +40,8 @@ function FilterLayout(props) {
                     borderRadius: 1,
                     width: '250px',
                     maxHeight: '80vh',
-                    overflowY: 'auto'
+                    overflowY: 'auto',
+                    boxShadow: theme => theme.shadows[4]
                 }}>
                     {children}
                 </Box>)}
