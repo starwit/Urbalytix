@@ -99,6 +99,8 @@ const translationEnEN = {
     "map.hexcompare": "Detection Comparison",
     "map.coverageweek": "Coverage selected Week",
     "map.detectioncount": "GPS detections",
+    "map.3d": "3D/2D",
+    "map.nav": "Align Map to North",
     "map.legend": "Legend",
     "legend.selected": "selected week",
     "legend.before": "week before",
