@@ -150,6 +150,7 @@ function StreetCatalog() {
                     resizeable={true}
                     onRowClick={handleStreetRowClick}
                     showToolbar
+                    density="compact"
                     initialState={{
                         pagination: {
                             paginationModel: {

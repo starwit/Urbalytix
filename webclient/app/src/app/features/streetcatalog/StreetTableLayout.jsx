@@ -7,7 +7,7 @@ function StreetTableLayout(props) {
     return (
         <Box sx={{
             position: 'fixed',
-            bottom: '5%',
+            bottom: 60,
             left: '15%',
             zIndex: 1,
             backgroundColor: theme => theme.palette.background.paper,
@@ -16,7 +16,8 @@ function StreetTableLayout(props) {
             width: '80%',
             maxHeight: '70vh',
             overflowY: 'auto',
-            mx: "auto"
+            mx: "auto",
+            boxShadow: theme => theme.shadows[4]
         }}>
             {children}
         </Box>
