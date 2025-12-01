@@ -1,5 +1,5 @@
 import {useEffect, useMemo, useState} from "react";
-import CityDistrictRest from '../../../services/CityDistrictRest';
+import CityDistrictRest from '../../services/CityDistrictRest';
 
 export function useDistricts(props) {
     const [districts, setDistricts] = useState([]);

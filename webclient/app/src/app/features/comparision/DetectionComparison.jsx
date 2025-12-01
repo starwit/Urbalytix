@@ -6,10 +6,10 @@ import ObjectClassFilter from "../../commons/filter/ObjectClassFilter";
 import {FilterContext} from '../../commons/FilterProvider';
 import DetectionCompareMap from './DetectionCompareMap';
 import CompareMapMenu from './CompareMapMenu';
-import {useDetectionCount} from "../detection/hooks/useDetectionCount";
-import {useDetectionCountDiff} from "../detection/hooks/useDetectionCountDiff";
-import {useObjectClasses} from "../detection/hooks/useObjectClasses";
-import {useVehicleRoutes} from '../detection/hooks/useVehicleRoutes';
+import {useDetectionCount} from "../hooks/useDetectionCount";
+import {useDetectionCountDiff} from "../hooks/useDetectionCountDiff";
+import {useObjectClasses} from "../hooks/useObjectClasses";
+import {useVehicleRoutes} from '../hooks/useVehicleRoutes';
 
 const VIEW_STATE = {
     longitude: 10.785000000000000,

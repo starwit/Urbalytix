@@ -1,6 +1,6 @@
 import {useState, useEffect, useMemo, useContext} from "react";
-import DetectionCountRest from "../../../services/DetectionCountRest";
-import {FilterContext} from "../../../commons/FilterProvider";
+import DetectionCountRest from '../../services/DetectionCountRest';
+import {FilterContext} from "../../commons/FilterProvider";
 
 /**
  * Custom hook to fetch and filter detection data within a time frame.

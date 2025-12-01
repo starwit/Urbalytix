@@ -1,6 +1,6 @@
 import {useContext, useEffect, useMemo, useState} from "react";
-import FeatureCollectorRest from '../../../services/FeatureCollectorRest';
-import {FilterContext} from "../../../commons/FilterProvider";
+import FeatureCollectorRest from '../../services/FeatureCollectorRest';
+import {FilterContext} from "../../commons/FilterProvider";
 
 export function useFeatures() {
     const {featureKeys, setFeatureKeys} = useContext(FilterContext);

@@ -11,7 +11,7 @@ import {centroid} from '@turf/turf';
 import {WebMercatorViewport} from "@deck.gl/core";
 import StreetTableLayout from "./StreetTableLayout";
 import FilterLayout from "../../commons/filter/FilterLayout";
-import {useDistricts} from "../detection/hooks/useCityDistricts";
+import {useDistricts} from "../hooks/useCityDistricts";
 import DistrictFilter from "../../commons/filter/DistrictFilter";
 
 function StreetCatalog() {

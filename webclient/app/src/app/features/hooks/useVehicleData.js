@@ -1,5 +1,5 @@
 import {useState, useEffect, useMemo} from "react";
-import VehicleDataRest from "../../../services/VehicleDataRest";
+import VehicleDataRest from "../../services/VehicleDataRest";
 
 /**
  * Custom hook to fetch vehicle data periodically.

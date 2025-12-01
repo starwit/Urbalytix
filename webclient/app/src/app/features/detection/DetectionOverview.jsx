@@ -6,12 +6,12 @@ import FilterLayout from "../../commons/filter/FilterLayout";
 import ObjectClassFilter from "../../commons/filter/ObjectClassFilter";
 import DetectionMap from './DetectionMap';
 import DetectionMapMenu from "./DetectionMapMenu";
-import {useDistricts} from "./hooks/useCityDistricts";
-import {useDetectionCount} from "./hooks/useDetectionCount";
-import {useFeatures} from "./hooks/useFeatures";
-import {useObjectClasses} from "./hooks/useObjectClasses";
-import {useVehicleData} from "./hooks/useVehicleData";
-import {useVehicleRoutes} from "./hooks/useVehicleRoutes";
+import {useDistricts} from "../hooks/useCityDistricts";
+import {useDetectionCount} from "../hooks/useDetectionCount";
+import {useFeatures} from "../hooks/useFeatures";
+import {useObjectClasses} from "../hooks/useObjectClasses";
+import {useVehicleData} from "../hooks/useVehicleData";
+import {useVehicleRoutes} from "../hooks/useVehicleRoutes";
 
 
 const VIEW_STATE = {

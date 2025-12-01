@@ -1,7 +1,7 @@
 import {useContext, useEffect, useMemo, useState} from "react";
-import {FilterContext} from "../../../commons/FilterProvider";
-import VehicleDataRest from "../../../services/VehicleDataRest";
-import VehicleRoutesRest from "../../../services/VehicleRoutesRest";
+import {FilterContext} from "../../commons/FilterProvider";
+import VehicleDataRest from "../../services/VehicleDataRest";
+import VehicleRoutesRest from "../../services/VehicleRoutesRest";
 
 /**
  * Custom React hook to fetch vehicle routes based on the current filter context.

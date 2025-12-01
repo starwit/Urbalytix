@@ -1,6 +1,6 @@
 import {useContext, useMemo} from "react";
-import {FilterContext} from "../../../commons/FilterProvider";
-import DetectionCountRest from "../../../services/DetectionCountRest";
+import {FilterContext} from "../../commons/FilterProvider";
+import DetectionCountRest from "../../services/DetectionCountRest";
 
 export function useObjectClasses() {
     const {objectClasses, selectedObjectClasses, setSelectedObjectClasses, setObjectClasses} = useContext(FilterContext);

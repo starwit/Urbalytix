@@ -1,6 +1,6 @@
 import {useContext, useEffect, useMemo, useState} from "react";
-import {FilterContext} from "../../../commons/FilterProvider";
-import DetectionCountRest from "../../../services/DetectionCountRest";
+import {FilterContext} from "../../commons/FilterProvider";
+import DetectionCountRest from "../../services/DetectionCountRest";
 
 /**
  * Custom hook to fetch detection data with a limit.
