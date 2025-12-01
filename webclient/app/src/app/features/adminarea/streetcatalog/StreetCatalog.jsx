@@ -1,18 +1,18 @@
 import {useEffect, useState, useMemo, useRef} from "react";
-import StreetCatalogRest from "../../services/StreetCatalogRest";
-import ConfigurationRest from "../../services/ConfigurationRest";
+import StreetCatalogRest from "../../../services/StreetCatalogRest";
+import ConfigurationRest from "../../../services/ConfigurationRest";
 import {useTranslation} from "react-i18next";
 import {deDE, enUS} from '@mui/x-data-grid/locales';
 import {DataGrid} from "@mui/x-data-grid";
 import DeckGL from "@deck.gl/react";
 import {MapView} from "@deck.gl/core";
-import {MapLayerFactory} from "../../commons/geographicalMaps/MapLayerFactory";
+import {MapLayerFactory} from "../../../commons/geographicalMaps/MapLayerFactory";
 import {centroid} from '@turf/turf';
 import {WebMercatorViewport} from "@deck.gl/core";
 import StreetTableLayout from "./StreetTableLayout";
-import FilterLayout from "../../commons/filter/FilterLayout";
-import {useDistricts} from "../hooks/useCityDistricts";
-import DistrictFilter from "../../commons/filter/DistrictFilter";
+import FilterLayout from "../../../commons/filter/FilterLayout";
+import {useDistricts} from "../../hooks/useCityDistricts";
+import DistrictFilter from "../../../commons/filter/DistrictFilter";
 
 function StreetCatalog() {
     const {t, i18n} = useTranslation();

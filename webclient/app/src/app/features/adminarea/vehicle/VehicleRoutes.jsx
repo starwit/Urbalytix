@@ -3,13 +3,13 @@ import dayjs from 'dayjs';
 import {useContext, useEffect, useMemo, useState} from "react";
 import {useTranslation} from "react-i18next";
 
-import VehicleFilter from "../../commons/filter/VehicleFilter";
-import VehicleRouteMap from "../../commons/geographicalMaps/VehicleRouteMap";
-import VehicleDataRest from '../../services/VehicleDataRest';
-import VehicleRoutesRest from '../../services/VehicleRoutesRest';
-import DateTimeFilter from '../../commons/filter/DateTimeFilter';
-import FilterLayout from '../../commons/filter/FilterLayout';
-import {FilterContext} from '../../commons/FilterProvider';
+import VehicleFilter from "../../../commons/filter/VehicleFilter";
+import VehicleRouteMap from "../../../commons/geographicalMaps/VehicleRouteMap";
+import VehicleDataRest from '../../../services/VehicleDataRest';
+import VehicleRoutesRest from '../../../services/VehicleRoutesRest';
+import DateTimeFilter from '../../../commons/filter/DateTimeFilter';
+import FilterLayout from '../../../commons/filter/FilterLayout';
+import {FilterContext} from '../../../commons/FilterProvider';
 
 const DEFAULT_VIEW_STATE = {
     longitude: 10.779998775029739,
