@@ -5,7 +5,7 @@ import {useTranslation} from "react-i18next";
 import {deDE, enUS} from '@mui/x-data-grid/locales';
 import VehicleIcon from '@mui/icons-material/LocalShipping';
 
-import VehicleDataRest from '../../services/VehicleDataRest';
+import VehicleDataRest from '../../../services/VehicleDataRest';
 
 function VehicleTable() {
 

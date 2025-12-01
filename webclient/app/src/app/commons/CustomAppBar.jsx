@@ -13,6 +13,7 @@ import {
     Typography
 } from "@mui/material";
 import general from "../assets/images/logo_color.png";
+import AdminMenu from '../features/adminarea/AdminMenu';
 
 
 function CustomAppBar() {
@@ -53,13 +54,8 @@ function CustomAppBar() {
                             <IconButton href="#/diff" size="large">
                                 <DifferenceIcon />
                             </IconButton>
-                            <IconButton href="#/vehicles" size="large">
-                                <LocalShippingIcon />
-                            </IconButton>
                             <Divider orientation="vertical" variant="middle" flexItem />
-                            <IconButton href="#/streetcatalog" size="large">
-                                <EditRoadIcon />
-                            </IconButton>
+                            <AdminMenu />
                             <Divider orientation="vertical" variant="middle" flexItem />
                             <IconButton href="#/logout" size="large">
                                 <LogoutIcon />

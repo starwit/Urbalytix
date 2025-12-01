@@ -1,10 +1,10 @@
 import {Route, Routes} from "react-router-dom";
 import Layout from "./commons/Layout";
 import LandingLayout from "./commons/LandingLayout";
-import Vehicles from "./features/vehicle/Vehicles";
+import Vehicles from "./features/adminarea/vehicle/Vehicles";
 import LandingPage from "./features/landing/LandingPage";
 import DetectionOverview from "./features/detection/DetectionOverview";
-import StreetCatalog from "./features/streetcatalog/StreetCatalog";
+import StreetCatalog from "./features/adminarea/streetcatalog/StreetCatalog";
 import DetectionComparison from "./features/comparision/DetectionComparison";
 
 function MainContentRouter() {
