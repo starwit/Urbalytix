@@ -35,7 +35,7 @@ public class CityDistrictController {
 
     private final GeoJsonWriter geoJsonWriter = new GeoJsonWriter();
 
-    @Operation(summary = "Get city districts by city name")
+    @Operation(summary = "Get city district list by city name")
     @GetMapping(value = "/{city}")
     public List<CityDistrictEntity> findByCity(@PathVariable("city") String city) {
         List<CityDistrictEntity> districts = this.cityDistrictService.findByCity(city);

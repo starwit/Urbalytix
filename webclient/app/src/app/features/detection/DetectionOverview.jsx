@@ -1,4 +1,4 @@
-import {use, useState, useEffect, useMemo} from "react";
+import {useState, useEffect, useMemo, useContext} from "react";
 import DataFilter from "../../commons/filter/DataFilter";
 import DateTimeFilter from "../../commons/filter/DateTimeFilter";
 import FeatureFilter from "../../commons/filter/FeatureFilter";
@@ -13,10 +13,13 @@ import {useObjectClasses} from "../hooks/useObjectClasses";
 import {useVehicleData} from "../hooks/useVehicleData";
 import {useVehicleRoutes} from "../hooks/useVehicleRoutes";
 import {useTranslation} from "react-i18next";
-import StreetCatalogRest from "../../services/StreetCatalogRest";
+import CityDistrictRest from "../../services/CityDistrictRest";
 import {deDE, enUS} from '@mui/x-data-grid/locales';
 import StreetTableLayout from "../adminarea/streetcatalog/StreetTableLayout";
 import {DataGrid} from "@mui/x-data-grid";
+import ConfigurationRest from "../../services/ConfigurationRest";
+import {FilterContext} from "../../commons/FilterProvider";
+import DetectionCountRest from "../../services/DetectionCountRest";
 
 const VIEW_STATE = {
     longitude: 10.785000000000000,
@@ -29,7 +32,6 @@ const VIEW_STATE = {
 const DATA_FILTERS = [
     {value: 0, label: 'selection.currentPosition'},
 ]
-
 
 function DetectionOverview() {
     const {t, i18n} = useTranslation();
@@ -56,24 +58,34 @@ function DetectionOverview() {
     const {districts} = useDistricts({showDistricts});
     const vehicleRoutes = useVehicleRoutes();
 
+    const {startDate, endDate} = useContext(FilterContext);
+    const cityDistrictRest = useMemo(() => new CityDistrictRest(), []);
+    const configurationRest = useMemo(() => new ConfigurationRest(), []);
+    const detectionCountRest = useMemo(() => new DetectionCountRest(), []);
+
     // data table
-    const streetCatalogRest = useMemo(() => new StreetCatalogRest(), []);
     const [gridHeight, setGridHeight] = useState(0);
-    const [city, setCity] = useState('Wolfsburg');
+    const [city, setCity] = useState('');
     const [showDataTable, setShowDataTable] = useState(false);
-    const [streetCatalog, setStreetCatalog] = useState([]);
+    const [districtCatalog, setDistrictCatalog] = useState([]);
     const gridRef = useState(null);
     const columns = [
         {field: "id", headerName: "ID", width: 90},
         {
-            field: "streetName",
-            headerName: t("streetData.streetName"),
+            field: "districtName",
+            headerName: t("district.name"),
             flex: 0.5,
             editable: false
         },
         {
-            field: "districtName",
-            headerName: t("streetData.districtName"),
+            field: "className",
+            headerName: t("district.councilName"),
+            flex: 0.5,
+            editable: false
+        },
+        {
+            field: "totalCount",
+            headerName: t("district.councilName"),
             flex: 0.5,
             editable: false
         }
@@ -84,15 +96,32 @@ function DetectionOverview() {
             setGridHeight(gridRef.current.clientHeight);
         }
         if (showDataTable) {
-            streetCatalogRest.findAllListByCity(city)
-                .then(response => {
-                    setStreetCatalog(response.data);
-                })
-                .catch((error) => {
-                    //TODO
+            detectionCountRest.findByDistrictAndTimeFrame(startDate.toJSON(), endDate.toJSON()).then(response => {
+                if (response.data == null) {
+                    return;
+                }
+                var data = response.data;
+                var i = 1;
+                data.forEach(d => {
+                    d.id = i++;
                 });
+                setDistrictCatalog(data);
+            })
         }
-    }, [showDataTable, streetCatalog]);
+    }, [showDataTable]);
+
+    useEffect(() => {
+        configurationRest.getMapCenter().then(response => {
+            setViewState({
+                longitude: response.data.geometry.coordinates[0],
+                latitude: response.data.geometry.coordinates[1],
+                zoom: 12,
+                pitch: 0,
+                bearing: 0
+            });
+            setCity(response.data.properties['city']);
+        });
+    }, []);
 
     function handleTypes(event, newTypes) {
         if (newTypes.length) {
@@ -111,7 +140,7 @@ function DetectionOverview() {
                     <DataGrid
                         ref={gridRef}
                         localeText={locale.components.MuiDataGrid.defaultProps.localeText}
-                        rows={streetCatalog}
+                        rows={districtCatalog}
                         columns={columns}
                         resizeable={true}
                         //onRowClick={handleStreetRowClick}
@@ -120,7 +149,7 @@ function DetectionOverview() {
                         initialState={{
                             pagination: {
                                 paginationModel: {
-                                    pageSize: 5
+                                    pageSize: 8
                                 }
                             },
                             sorting: {

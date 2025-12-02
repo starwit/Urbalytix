@@ -114,6 +114,9 @@ const translationDeDE = {
     "streetData.streetName": " Straßenname",
     "streetData.districtName": "Bezirksname",
     "streetData.toggleDistricts": "Zeige Stadtteile",
-    "features.selection.districts": "Stadtbezirke"
+    "features.selection.districts": "Stadtbezirke",
+    "district.name": "Stadtteilname",
+    "district.councilName": "Ortsrat",
+    "district.detections": "Detektionen"
 };
 export default translationDeDE;

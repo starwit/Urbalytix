@@ -114,6 +114,9 @@ const translationEnEN = {
     "streetData.streetName": "Street Name",
     "streetData.districtName": "District Name",
     "streetData.toggleDistricts": "Show Districts",
-    "features.selection.districts": "City Districts"
+    "features.selection.districts": "City Districts",
+    "district.name": "District Name",
+    "district.councilName": "District Government",
+    "district.detections": "Detection"
 };
 export default translationEnEN;
