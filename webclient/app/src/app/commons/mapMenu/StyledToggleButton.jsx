@@ -19,7 +19,7 @@ function StyledToggleButton(props) {
 
     return (
         <Tooltip title={title}>
-            <ToggleButtonStyling value={value} aria-label={ariaLabel} onClick={onClick}>
+            <ToggleButtonStyling size='small' value={value} aria-label={ariaLabel} onClick={onClick} color='success'>
                 {children}
             </ToggleButtonStyling>
         </Tooltip>

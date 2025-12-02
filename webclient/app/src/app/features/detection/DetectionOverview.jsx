@@ -1,4 +1,4 @@
-import {useState} from "react";
+import {use, useState, useEffect, useMemo} from "react";
 import DataFilter from "../../commons/filter/DataFilter";
 import DateTimeFilter from "../../commons/filter/DateTimeFilter";
 import FeatureFilter from "../../commons/filter/FeatureFilter";
@@ -12,7 +12,11 @@ import {useFeatures} from "../hooks/useFeatures";
 import {useObjectClasses} from "../hooks/useObjectClasses";
 import {useVehicleData} from "../hooks/useVehicleData";
 import {useVehicleRoutes} from "../hooks/useVehicleRoutes";
-
+import {useTranslation} from "react-i18next";
+import StreetCatalogRest from "../../services/StreetCatalogRest";
+import {deDE, enUS} from '@mui/x-data-grid/locales';
+import StreetTableLayout from "../adminarea/streetcatalog/StreetTableLayout";
+import {DataGrid} from "@mui/x-data-grid";
 
 const VIEW_STATE = {
     longitude: 10.785000000000000,
@@ -28,6 +32,8 @@ const DATA_FILTERS = [
 
 
 function DetectionOverview() {
+    const {t, i18n} = useTranslation();
+    const locale = i18n.language == "de" ? deDE : enUS;
     const [showDistricts, setShowDistricts] = useState(false);
     const [viewState, setViewState] = useState(VIEW_STATE);
     const [types, setTypes] = useState(['heatmap', 'hexagon', '3d']);
@@ -50,9 +56,84 @@ function DetectionOverview() {
     const {districts} = useDistricts({showDistricts});
     const vehicleRoutes = useVehicleRoutes();
 
+    // data table
+    const streetCatalogRest = useMemo(() => new StreetCatalogRest(), []);
+    const [gridHeight, setGridHeight] = useState(0);
+    const [city, setCity] = useState('Wolfsburg');
+    const [showDataTable, setShowDataTable] = useState(false);
+    const [streetCatalog, setStreetCatalog] = useState([]);
+    const gridRef = useState(null);
+    const columns = [
+        {field: "id", headerName: "ID", width: 90},
+        {
+            field: "streetName",
+            headerName: t("streetData.streetName"),
+            flex: 0.5,
+            editable: false
+        },
+        {
+            field: "districtName",
+            headerName: t("streetData.districtName"),
+            flex: 0.5,
+            editable: false
+        }
+    ];
+
+    useEffect(() => {
+        if (gridRef.current) {
+            setGridHeight(gridRef.current.clientHeight);
+        }
+        if (showDataTable) {
+            streetCatalogRest.findAllListByCity(city)
+                .then(response => {
+                    setStreetCatalog(response.data);
+                })
+                .catch((error) => {
+                    //TODO
+                });
+        }
+    }, [showDataTable, streetCatalog]);
+
     function handleTypes(event, newTypes) {
         if (newTypes.length) {
             setTypes(newTypes);
+        }
+    }
+
+    function toggleDataTable() {
+        setShowDataTable(!showDataTable);
+    }
+
+    function renderDataTable() {
+        if (showDataTable) {
+            return (
+                <StreetTableLayout>
+                    <DataGrid
+                        ref={gridRef}
+                        localeText={locale.components.MuiDataGrid.defaultProps.localeText}
+                        rows={streetCatalog}
+                        columns={columns}
+                        resizeable={true}
+                        //onRowClick={handleStreetRowClick}
+                        showToolbar
+                        density="compact"
+                        initialState={{
+                            pagination: {
+                                paginationModel: {
+                                    pageSize: 5
+                                }
+                            },
+                            sorting: {
+                                sortModel: [{field: "name", sort: "asc"}]
+                            }
+                        }}
+                        pageSizeOptions={[10]}
+                        disableRowSelectionOnClick
+                    />
+                </StreetTableLayout>
+            );
+        } else {
+            return null;
         }
     }
 
@@ -85,6 +166,7 @@ function DetectionOverview() {
                 types={types}
                 handleTypes={handleTypes}
                 setViewState={setViewState}
+                showDataTable={toggleDataTable}
             />
 
             <DetectionMap
@@ -102,6 +184,7 @@ function DetectionOverview() {
                 showCoverage={types.includes("coverage")}
                 showDistricts={showDistricts}
             />
+            {renderDataTable()}
         </>
     );
 }
