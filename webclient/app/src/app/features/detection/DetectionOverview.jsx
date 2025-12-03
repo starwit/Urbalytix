@@ -19,7 +19,7 @@ import {DataGrid} from "@mui/x-data-grid";
 import ConfigurationRest from "../../services/ConfigurationRest";
 import {FilterContext} from "../../commons/FilterProvider";
 import DetectionCountRest from "../../services/DetectionCountRest";
-import {func} from "prop-types";
+import WasteDataTable from "./WasteDataTable";
 
 const VIEW_STATE = {
     longitude: 10.785000000000000,
@@ -58,51 +58,12 @@ function DetectionOverview() {
     const {districts} = useDistricts({showDistricts});
     const vehicleRoutes = useVehicleRoutes();
 
-    const {startDate, endDate} = useContext(FilterContext);
     const configurationRest = useMemo(() => new ConfigurationRest(), []);
-    const detectionCountRest = useMemo(() => new DetectionCountRest(), []);
 
-    // data table
+    // to reposition map center according to data table height
     const [gridHeight, setGridHeight] = useState(0);
     const [city, setCity] = useState('');
     const [showDataTable, setShowDataTable] = useState(false);
-    const [districtCatalog, setDistrictCatalog] = useState([]);
-    const gridRef = useState(null);
-    const columns = [
-        {field: "id", headerName: "ID", width: 90},
-        {
-            field: "districtName",
-            headerName: t("district.name"),
-            flex: 0.5,
-            editable: false
-        },
-        {
-            field: "totalCount",
-            headerName: t("wastedata.heading"),
-            flex: 0.5,
-            editable: false
-        }
-    ];
-
-    useEffect(() => {
-        if (gridRef.current) {
-            setGridHeight(gridRef.current.clientHeight);
-        }
-        if (showDataTable) {
-            detectionCountRest.findByDistrictAndTimeFrame(startDate.toJSON(), endDate.toJSON()).then(response => {
-                if (response.data == null) {
-                    return;
-                }
-                var data = response.data;
-                // add an ID column
-                var i = 1;
-                data.forEach(d => {
-                    d.id = i++;
-                });
-                setDistrictCatalog(data);
-            })
-        }
-    }, [showDataTable, startDate]);
 
     useEffect(() => {
         configurationRest.getMapCenter().then(response => {
@@ -129,39 +90,7 @@ function DetectionOverview() {
 
     function handleStreetRowClick(data) {
         console.log(data);
-    }
-
-    function renderDataTable() {
-        if (showDataTable) {
-            return (
-                <StreetTableLayout>
-                    <DataGrid
-                        ref={gridRef}
-                        localeText={locale.components.MuiDataGrid.defaultProps.localeText}
-                        rows={districtCatalog}
-                        columns={columns}
-                        resizeable={true}
-                        onRowClick={handleStreetRowClick}
-                        showToolbar
-                        density="compact"
-                        initialState={{
-                            pagination: {
-                                paginationModel: {
-                                    pageSize: 8
-                                }
-                            },
-                            sorting: {
-                                sortModel: [{field: "name", sort: "asc"}]
-                            }
-                        }}
-                        pageSizeOptions={[10]}
-                        disableRowSelectionOnClick
-                    />
-                </StreetTableLayout>
-            );
-        } else {
-            return null;
-        }
+        // TODO what if user clicks on district
     }
 
     return (
@@ -211,7 +140,12 @@ function DetectionOverview() {
                 showCoverage={types.includes("coverage")}
                 showDistricts={showDistricts}
             />
-            {renderDataTable()}
+            <WasteDataTable
+                showDataTable={showDataTable}
+                handleStreetRowClick={handleStreetRowClick}
+                setGridHeight={setGridHeight}
+                city={city}
+            />
         </>
     );
 }
