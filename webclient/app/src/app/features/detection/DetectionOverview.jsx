@@ -14,12 +14,9 @@ import {useVehicleData} from "../hooks/useVehicleData";
 import {useVehicleRoutes} from "../hooks/useVehicleRoutes";
 import {useTranslation} from "react-i18next";
 import {deDE, enUS} from '@mui/x-data-grid/locales';
-import StreetTableLayout from "../adminarea/streetcatalog/StreetTableLayout";
-import {DataGrid} from "@mui/x-data-grid";
 import ConfigurationRest from "../../services/ConfigurationRest";
-import {FilterContext} from "../../commons/FilterProvider";
-import DetectionCountRest from "../../services/DetectionCountRest";
 import WasteDataTable from "./WasteDataTable";
+import {FilterContext} from '../../commons/FilterProvider';
 
 const VIEW_STATE = {
     longitude: 10.785000000000000,
@@ -36,9 +33,9 @@ const DATA_FILTERS = [
 function DetectionOverview() {
     const {t, i18n} = useTranslation();
     const locale = i18n.language == "de" ? deDE : enUS;
-    const [showDistricts, setShowDistricts] = useState(false);
+    const {showDistricts, setShowDistricts} = useContext(FilterContext);
     const [viewState, setViewState] = useState(VIEW_STATE);
-    const [types, setTypes] = useState(['heatmap', 'hexagon', '3d']);
+    const [types, setTypes] = useState(['heatmap', 'hexagon']);
 
     const {
         detectionData
@@ -93,6 +90,10 @@ function DetectionOverview() {
         // TODO what if user clicks on district
     }
 
+    function toggleDistricts() {
+        setShowDistricts(!showDistricts);
+    }
+
     return (
         <>
             <FilterLayout leftPosition={10}>
@@ -114,7 +115,6 @@ function DetectionOverview() {
                     availableFeatureKeys={Object.keys(features)}
                     selectedFeatureKeys={selectedFeatureKeys}
                     onSelectedFeatureChange={setSelectedFeatureKeys}
-                    onSelectedDistrictChange={setShowDistricts}
                 />
             </FilterLayout>
 
@@ -123,6 +123,7 @@ function DetectionOverview() {
                 handleTypes={handleTypes}
                 setViewState={setViewState}
                 showDataTable={toggleDataTable}
+                showDistricts={toggleDistricts}
             />
 
             <DetectionMap

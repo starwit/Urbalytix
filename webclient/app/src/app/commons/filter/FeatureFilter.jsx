@@ -16,13 +16,11 @@ function FeatureFilter({
     availableFeatureKeys = [],
     selectedFeatureKeys = [],
     onSelectedFeatureChange = () => { },
-    onSelectedDistrictChange = () => { },
     label = 'features.selection'
 }) {
 
     const {t} = useTranslation();
     const [selectAllFeatures, setSelectAllFeatures] = useState(false);
-    const [selectCityDistricts, setSelectCityDistricts] = useState(false);
 
     const featureItems = availableFeatureKeys.map((item, index) => ({
         id: index + 1,   // or you could use item itself if you prefer
@@ -82,24 +80,6 @@ function FeatureFilter({
                             label={t(`feature.${name.toLowerCase()}`)}
                         />
                     ))}
-                    <Divider />
-                    <FormControlLabel
-                        key={`city-districts`}
-                        control={
-                            <Checkbox
-                                checked={selectCityDistricts}
-                                size="small"
-                                onChange={(e) => {
-                                    if (e.target.checked) {
-                                        onSelectedDistrictChange(true);
-                                    } else {
-                                        onSelectedDistrictChange(false);
-                                    }
-                                    setSelectCityDistricts(!selectCityDistricts);
-                                }}
-                            />}
-                        label={t('features.selection.districts')}
-                    />
                 </FormGroup>
             </AccordionDetails>
         </Accordion>

@@ -101,6 +101,7 @@ const translationEnEN = {
     "map.detectioncount": "GPS detections",
     "map.3d": "3D/2D",
     "map.nav": "Align Map to North",
+    "map.districts": "Show Districts",
     "map.legend": "Legend",
     "legend.selected": "selected week",
     "legend.before": "week before",

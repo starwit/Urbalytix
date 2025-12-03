@@ -101,6 +101,7 @@ const translationDeDE = {
     "map.detectioncount": "GPS-Punkte",
     "map.3d": "3D/2D",
     "map.nav": "Karte nach Norden ausrichten",
+    "map.districts": "Stadtteile",
     "map.legend": "Legende",
     "legend.selected": "ausgewählte Woche",
     "legend.before": "vorherige Woche",

@@ -30,7 +30,6 @@ function NavigationMapMenu(props) {
             <StyledToggleButton title={t('map.nav')} onClick={setNorth} >
                 <NavigationIcon />
             </StyledToggleButton>
-            <Divider sx={{paddingTop: 5}} />
         </>
     );
 }
