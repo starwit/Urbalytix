@@ -108,7 +108,7 @@ function DetectionOverview() {
                 setDistrictCatalog(data);
             })
         }
-    }, [showDataTable]);
+    }, [showDataTable, startDate]);
 
     useEffect(() => {
         configurationRest.getMapCenter().then(response => {
