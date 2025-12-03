@@ -62,6 +62,7 @@ const translationEnEN = {
     "wastedata.selection": "Collected data",
     "wastedata.waste": "Waste",
     "wastedata.cigarette": "Cigarettes",
+    "wastedata.heading": "Waste Type",
     "wastedata.": "undefined",
     "features.selection.all": "All data",
     "features.selection": "Additional Data",

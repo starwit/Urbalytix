@@ -38,6 +38,25 @@ public interface DetectionCountRepository extends JpaRepository<DetectionCountEn
                 GROUP BY d.id, d.name, dc.className
                 ORDER BY d.name, dc.className
             """)
+    List<DetectionCountDistrictDTO> findByDistrictInTimeframeByWasteType(ZonedDateTime startTimeStamp,
+            ZonedDateTime endTimeStamp);
+
+    @Query(value = """
+                SELECT
+                    new de.starwit.persistence.dto.DetectionCountDistrictDTO(
+                        d.id,
+                        d.name,
+                        'waste',
+                        SUM(dc.count)
+                    )
+                FROM CityDistrictEntity d
+                JOIN DetectionCountEntity dc
+                    ON ST_Within(dc.location, d.districtGeometry)
+                WHERE dc.detectionTime >= :startTimeStamp
+                AND dc.detectionTime < :endTimeStamp
+                GROUP BY d.id, d.name
+                ORDER BY d.name
+            """)
     List<DetectionCountDistrictDTO> findByDistrictInTimeframe(ZonedDateTime startTimeStamp,
             ZonedDateTime endTimeStamp);
 

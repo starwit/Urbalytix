@@ -62,6 +62,7 @@ const translationDeDE = {
     "wastedata.selection": "Messdaten",
     "wastedata.waste": "Abfall",
     "wastedata.cigarette": "Zigaretten",
+    "wastedata.heading": "Abfalltyp",
     "wastedata.": "Sonstiges",
     "features.selection.all": "Alle Daten",
     "features.selection": "Weitere Daten",

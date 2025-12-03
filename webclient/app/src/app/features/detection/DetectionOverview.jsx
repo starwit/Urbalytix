@@ -13,13 +13,13 @@ import {useObjectClasses} from "../hooks/useObjectClasses";
 import {useVehicleData} from "../hooks/useVehicleData";
 import {useVehicleRoutes} from "../hooks/useVehicleRoutes";
 import {useTranslation} from "react-i18next";
-import CityDistrictRest from "../../services/CityDistrictRest";
 import {deDE, enUS} from '@mui/x-data-grid/locales';
 import StreetTableLayout from "../adminarea/streetcatalog/StreetTableLayout";
 import {DataGrid} from "@mui/x-data-grid";
 import ConfigurationRest from "../../services/ConfigurationRest";
 import {FilterContext} from "../../commons/FilterProvider";
 import DetectionCountRest from "../../services/DetectionCountRest";
+import {func} from "prop-types";
 
 const VIEW_STATE = {
     longitude: 10.785000000000000,
@@ -59,7 +59,6 @@ function DetectionOverview() {
     const vehicleRoutes = useVehicleRoutes();
 
     const {startDate, endDate} = useContext(FilterContext);
-    const cityDistrictRest = useMemo(() => new CityDistrictRest(), []);
     const configurationRest = useMemo(() => new ConfigurationRest(), []);
     const detectionCountRest = useMemo(() => new DetectionCountRest(), []);
 
@@ -78,14 +77,8 @@ function DetectionOverview() {
             editable: false
         },
         {
-            field: "className",
-            headerName: t("district.councilName"),
-            flex: 0.5,
-            editable: false
-        },
-        {
             field: "totalCount",
-            headerName: t("district.councilName"),
+            headerName: t("wastedata.heading"),
             flex: 0.5,
             editable: false
         }
@@ -101,6 +94,7 @@ function DetectionOverview() {
                     return;
                 }
                 var data = response.data;
+                // add an ID column
                 var i = 1;
                 data.forEach(d => {
                     d.id = i++;
@@ -133,6 +127,10 @@ function DetectionOverview() {
         setShowDataTable(!showDataTable);
     }
 
+    function handleStreetRowClick(data) {
+        console.log(data);
+    }
+
     function renderDataTable() {
         if (showDataTable) {
             return (
@@ -143,7 +141,7 @@ function DetectionOverview() {
                         rows={districtCatalog}
                         columns={columns}
                         resizeable={true}
-                        //onRowClick={handleStreetRowClick}
+                        onRowClick={handleStreetRowClick}
                         showToolbar
                         density="compact"
                         initialState={{
