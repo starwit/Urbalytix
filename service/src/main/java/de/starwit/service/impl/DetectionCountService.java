@@ -15,7 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import de.starwit.persistence.dto.DetectionCountDistrictDTO;
+import de.starwit.persistence.dto.DistrictWithDetectionCountDto;
 import de.starwit.persistence.entity.DetectionCountEntity;
 import de.starwit.persistence.repository.DetectionCountRepository;
 import de.starwit.persistence.repository.StreetCatalogRepository;
@@ -78,9 +78,9 @@ public class DetectionCountService implements ServiceInterface<DetectionCountEnt
         return entities;
     }
 
-    public List<DetectionCountDistrictDTO> getDataByDistrictAndTimeframe(ZonedDateTime startTime,
+    public List<DistrictWithDetectionCountDto> getDataByDistrictAndTimeframe(ZonedDateTime startTime,
             ZonedDateTime endTime) {
-        List<DetectionCountDistrictDTO> entities = repository.findByDistrictInTimeframe(startTime, endTime);
+        List<DistrictWithDetectionCountDto> entities = repository.findByDistrictInTimeframe(startTime, endTime);
         return entities;
     }
 

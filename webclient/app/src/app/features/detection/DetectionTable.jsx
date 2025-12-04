@@ -1,54 +1,40 @@
-import {useState, useEffect, useMemo, useContext} from "react";
-import ConfigurationRest from "../../services/ConfigurationRest";
-import DetectionCountRest from "../../services/DetectionCountRest";
 import {DataGrid} from "@mui/x-data-grid";
-import StreetTableLayout from "../adminarea/streetcatalog/StreetTableLayout";
-import {useTranslation} from "react-i18next";
 import {deDE, enUS} from '@mui/x-data-grid/locales';
+import {useContext, useEffect, useMemo, useState} from "react";
+import {useTranslation} from "react-i18next";
 import {FilterContext} from "../../commons/FilterProvider";
+import DetectionCountRest from "../../services/DetectionCountRest";
+import StreetTableLayout from "../adminarea/streetcatalog/StreetTableLayout";
 
-function WasteDataTable(props) {
-    const {showDataTable, handleStreetRowClick, setGridHeight, city} = props;
+function DetectionTable(props) {
+    const {showDataTable, handleStreetRowClick = () => { }, city} = props;
     const {t, i18n} = useTranslation();
     const locale = i18n.language == "de" ? deDE : enUS;
 
     const {startDate, endDate} = useContext(FilterContext);
     const detectionCountRest = useMemo(() => new DetectionCountRest(), []);
-    const gridRef = useState(null);
     const [districtCatalog, setDistrictCatalog] = useState([]);
 
     const columns = [
-        {field: "id", headerName: "ID", width: 90},
         {
             field: "districtName",
             headerName: t("district.name"),
-            flex: 0.5,
-            editable: false
+            flex: 0.5
         },
         {
             field: "totalCount",
-            headerName: t("wastedata.heading"),
-            flex: 0.5,
-            editable: false
+            headerName: t("detectiondata.heading"),
+            flex: 0.5
         }
     ];
 
     useEffect(() => {
-        if (gridRef.current) {
-            setGridHeight(gridRef.current.clientHeight);
-        }
         if (showDataTable) {
             detectionCountRest.findByDistrictAndTimeFrame(startDate.toJSON(), endDate.toJSON()).then(response => {
                 if (response.data == null) {
                     return;
                 }
-                var data = response.data;
-                // add an ID column
-                var i = 1;
-                data.forEach(d => {
-                    d.id = i++;
-                });
-                setDistrictCatalog(data);
+                setDistrictCatalog(response.data);
             })
         }
     }, [showDataTable, startDate]);
@@ -57,25 +43,25 @@ function WasteDataTable(props) {
         return (
             <StreetTableLayout>
                 <DataGrid
-                    ref={gridRef}
                     localeText={locale.components.MuiDataGrid.defaultProps.localeText}
                     rows={districtCatalog}
                     columns={columns}
                     resizeable={true}
+                    editable={false}
                     onRowClick={handleStreetRowClick}
                     showToolbar
                     density="compact"
                     initialState={{
                         pagination: {
                             paginationModel: {
-                                pageSize: 8
+                                pageSize: 5
                             }
                         },
                         sorting: {
                             sortModel: [{field: "name", sort: "asc"}]
                         }
                     }}
-                    pageSizeOptions={[10]}
+                    pageSizeOptions={[5, 10]}
                     disableRowSelectionOnClick
                 />
             </StreetTableLayout>
@@ -85,4 +71,4 @@ function WasteDataTable(props) {
     }
 }
 
-export default WasteDataTable;
+export default DetectionTable;
