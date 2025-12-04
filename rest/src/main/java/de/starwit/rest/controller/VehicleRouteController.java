@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import de.starwit.persistence.dto.MilagePerWeekDto;
+import de.starwit.persistence.dto.MilagePerWeekView;
 import de.starwit.persistence.entity.VehicleRouteEntity;
 import de.starwit.service.impl.VehicleRouteService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -50,7 +52,6 @@ public class VehicleRouteController {
     public List<VehicleRouteEntity> findAllPerVehicleAndCalendarWeek(@PathVariable String name,
             @PathVariable("year") int year,
             @PathVariable("week") int week) {
-
         return this.vehicleRouteService.findByVehicleAndCalendarWeek(name, year, week);
     }
 
@@ -58,6 +59,20 @@ public class VehicleRouteController {
     @GetMapping(value = "/timeframes")
     public Map<Integer, List<Integer>> getAvailableTimeFrames() {
         return vehicleRouteService.getAvailableTimeFrames();
+    }
+
+    @Operation(summary = "Get route length per vehicle and calendar week")
+    @GetMapping(value = "/milage/{year}/{week}")
+    public List<MilagePerWeekDto> findMilagePerVehicleAndCalendarWeek(@PathVariable("year") int year,
+            @PathVariable("week") int week) {
+        return this.vehicleRouteService.getMilagePerWeek(year, week);
+    }
+
+    @Operation(summary = "Get route length per vehicle and calendar week")
+    @GetMapping(value = "/milage-timeframe/{year}/{startweek}/{endweek}")
+    public List<MilagePerWeekDto> findMilagePerVehicleForTimeFrame(@PathVariable("year") int year,
+            @PathVariable("startweek") int startweek, @PathVariable("endweek") int endweek) {
+        return this.vehicleRouteService.getMilagePerMultipleWeek(year, startweek, endweek);
     }
 
 }
