@@ -86,6 +86,7 @@ const translationDeDE = {
     "vehicledata.views.table": "Überblick",
     "vehicledata.selectvehicle": "Fahrzeuge",
     "vehicledata.selectweek": "Woche auswählen",
+    "vehicledata.showRoutes": "Route zeigen",
     "map.latitude": "Breitengrad",
     "map.longitude": "Längengrad",
     "map.detectedObjects": "Erkannte Objekte",

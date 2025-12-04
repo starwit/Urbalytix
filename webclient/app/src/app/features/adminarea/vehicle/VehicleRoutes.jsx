@@ -10,6 +10,8 @@ import VehicleRoutesRest from '../../../services/VehicleRoutesRest';
 import DateTimeFilter from '../../../commons/filter/DateTimeFilter';
 import FilterLayout from '../../../commons/filter/FilterLayout';
 import {FilterContext} from '../../../commons/FilterProvider';
+import VehicleTable from './VehicleTable';
+import StreetTableLayout from '../streetcatalog/StreetTableLayout';
 
 const DEFAULT_VIEW_STATE = {
     longitude: 10.779998775029739,
@@ -101,19 +103,20 @@ function VehicleRoutes() {
 
     return (
         <>
-            <FilterLayout leftPosition={250}>
+            <FilterLayout leftPosition={10}>
                 <DateTimeFilter
-                />
-                <VehicleFilter
-                    vehicleData={vehicleData}
-                    selectedVehicleData={selectedVehicleData}
-                    onSelectedVehicleDataChange={setSelectedVehicleData}
                 />
             </FilterLayout>
             <VehicleRouteMap
                 viewState={DEFAULT_VIEW_STATE}
                 routes={routes}
             />
+            <StreetTableLayout>
+                <VehicleTable
+                    selectedVehicleData={selectedVehicleData}
+                    onSelectedVehicleDataChange={setSelectedVehicleData}
+                />
+            </StreetTableLayout>
         </>
     );
 }

@@ -20,39 +20,7 @@ function Vehicles() {
     };
 
     return (
-        <Box sx={{display: 'flex', position: 'absolute', left: 0, top: 50, overflow: 'hidden', width: '100vw', height: 'calc(100vh - 50px)'}}>
-            <AppBar color="secondary" position="static" sx={{width: 240, paddingTop: '16px', zIndex: 1000}}>
-                <Tabs
-                    orientation="vertical"
-                    value={selectedTab}
-                    onChange={handleTabChange}
-                    sx={{borderRight: 1, borderColor: 'divider', '& .MuiTab-root': {justifyContent: 'flex-start', minHeight: 'auto', padding: '8px 16px'}}}
-                >
-                    <Tab
-                        label={
-                            <Box sx={{display: 'flex', alignItems: 'center', gap: 1, justifyContent: 'flex-start', width: '100%'}}>
-                                <FormatListBulletedIcon />
-                                <Typography>{t("vehicledata.views.table")}</Typography>
-                            </Box>
-                        }
-                    />
-                    <Tab
-                        label={
-                            <Box sx={{display: 'flex', alignItems: 'center', gap: 1, justifyContent: 'flex-start', width: '100%'}}>
-                                <TimelineIcon />
-                                <Typography>{t("vehicledata.views.routes")}</Typography>
-                            </Box>
-                        }
-                    />
-                </Tabs>
-            </AppBar>
-
-            <Box sx={{flexGrow: 1, padding: 2, width: `calc(100vw - 240px)`, zIndex: 1}}>
-                {selectedTab === 0 && <VehicleTable />}
-                {selectedTab === 1 && <VehicleRoutes />}
-            </Box>
-        </Box >
-
+        <VehicleRoutes />
     );
 }
 
