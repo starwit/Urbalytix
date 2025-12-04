@@ -1,25 +1,25 @@
 package de.starwit.persistence.dto;
 
-public class DetectionCountDistrictDTO {
+public class DistrictWithDetectionCountDto {
 
-    private long districtId;
+    private long id;
     private String districtName;
     private String className;
     private long totalCount;
 
-    public DetectionCountDistrictDTO(long districtId, String districtName, String className, long totalCount) {
-        this.districtId = districtId;
+    public DistrictWithDetectionCountDto(long id, String districtName, String className, long totalCount) {
+        this.id = id;
         this.districtName = districtName;
         this.className = className;
         this.totalCount = totalCount;
     }
 
-    public long getDistrictId() {
-        return districtId;
+    public long getId() {
+        return id;
     }
 
-    public void setDistrictId(long districtId) {
-        this.districtId = districtId;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getDistrictName() {

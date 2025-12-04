@@ -1,14 +1,14 @@
 package de.starwit.persistence.dto;
 
-public class StreetDistrictDTO {
+public class StreetWithDistrictDto {
 
     private long id;
     private String city;
     private String districtName;
     private String streetName;
 
-    public StreetDistrictDTO(long streetId, String city, String districtName, String streetName) {
-        this.id = streetId;
+    public StreetWithDistrictDto(long id, String city, String districtName, String streetName) {
+        this.id = id;
         this.city = city;
         this.districtName = districtName;
         this.streetName = streetName;
@@ -18,8 +18,8 @@ public class StreetDistrictDTO {
         return id;
     }
 
-    public void setId(long streetId) {
-        this.id = streetId;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getCity() {

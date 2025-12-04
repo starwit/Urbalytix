@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import de.starwit.persistence.dto.DetectionCountDistrictDTO;
+import de.starwit.persistence.dto.DistrictWithDetectionCountDto;
 import de.starwit.persistence.entity.DetectionCountEntity;
 
 @Repository
@@ -24,7 +24,7 @@ public interface DetectionCountRepository extends JpaRepository<DetectionCountEn
 
     @Query(value = """
                 SELECT
-                    new de.starwit.persistence.dto.DetectionCountDistrictDTO(
+                    new de.starwit.persistence.dto.DistrictWithDetectionCountDto(
                         d.id,
                         d.name,
                         dc.className,
@@ -38,12 +38,12 @@ public interface DetectionCountRepository extends JpaRepository<DetectionCountEn
                 GROUP BY d.id, d.name, dc.className
                 ORDER BY d.name, dc.className
             """)
-    List<DetectionCountDistrictDTO> findByDistrictInTimeframeByWasteType(ZonedDateTime startTimeStamp,
+    List<DistrictWithDetectionCountDto> findByDistrictInTimeframeByWasteType(ZonedDateTime startTimeStamp,
             ZonedDateTime endTimeStamp);
 
     @Query(value = """
                 SELECT
-                    new de.starwit.persistence.dto.DetectionCountDistrictDTO(
+                    new de.starwit.persistence.dto.DistrictWithDetectionCountDto(
                         d.id,
                         d.name,
                         'waste',
@@ -57,7 +57,7 @@ public interface DetectionCountRepository extends JpaRepository<DetectionCountEn
                 GROUP BY d.id, d.name
                 ORDER BY d.name
             """)
-    List<DetectionCountDistrictDTO> findByDistrictInTimeframe(ZonedDateTime startTimeStamp,
+    List<DistrictWithDetectionCountDto> findByDistrictInTimeframe(ZonedDateTime startTimeStamp,
             ZonedDateTime endTimeStamp);
 
 }
