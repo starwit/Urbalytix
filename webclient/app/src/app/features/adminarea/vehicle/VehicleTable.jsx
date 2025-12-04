@@ -1,6 +1,6 @@
 import {useEffect, useState, useMemo} from "react";
 import {Checkbox, Tooltip} from "@mui/material";
-import {DataGrid, GridActionsCellItem} from "@mui/x-data-grid";
+import {DataGrid} from "@mui/x-data-grid";
 import {useTranslation} from "react-i18next";
 import {deDE, enUS} from '@mui/x-data-grid/locales';
 import VehicleIcon from '@mui/icons-material/LocalShipping';
@@ -8,7 +8,7 @@ import VehicleIcon from '@mui/icons-material/LocalShipping';
 import VehicleDataRest from '../../../services/VehicleDataRest';
 
 function VehicleTable(props) {
-    const {selectedVehicleData, onSelectedVehicleDataChange} = props;
+    const {showDataTable, selectedVehicleData, onSelectedVehicleDataChange} = props;
     const {t, i18n} = useTranslation();
     const locale = i18n.language == "de" ? deDE : enUS
     const [rowSelectionModel, setRowSelectionModel] = useState({
@@ -124,33 +124,38 @@ function VehicleTable(props) {
         });
     }
 
-    return (
-        <>
-            <DataGrid
-                localeText={locale.components.MuiDataGrid.defaultProps.localeText}
-                rows={vehicleData}
-                columns={columns}
-                resizeable={true}
-                editable={false}
-                showToolbar
-                density="compact"
-                rowSelectionModel={rowSelectionModel}
-                onRowSelectionModelChange={(newModel) => setRowSelectionModel(newModel)}
-                initialState={{
-                    pagination: {
-                        paginationModel: {
-                            pageSize: 10
+    if (showDataTable) {
+        return (
+            <>
+                <DataGrid
+                    localeText={locale.components.MuiDataGrid.defaultProps.localeText}
+                    rows={vehicleData}
+                    columns={columns}
+                    resizeable={true}
+                    editable={false}
+                    showToolbar
+                    density="compact"
+                    rowSelectionModel={rowSelectionModel}
+                    onRowSelectionModelChange={(newModel) => setRowSelectionModel(newModel)}
+                    initialState={{
+                        pagination: {
+                            paginationModel: {
+                                pageSize: 10
+                            }
+                        },
+                        sorting: {
+                            sortModel: [{field: "name", sort: "asc"}]
                         }
-                    },
-                    sorting: {
-                        sortModel: [{field: "name", sort: "asc"}]
-                    }
-                }}
-                pageSizeOptions={[10]}
-                disableRowSelectionOnClick
-            />
-        </>
-    );
+                    }}
+                    pageSizeOptions={[10]}
+                    disableRowSelectionOnClick
+                />
+            </>
+        );
+    }
+    else {
+        <></>
+    }
 }
 
 export default VehicleTable;

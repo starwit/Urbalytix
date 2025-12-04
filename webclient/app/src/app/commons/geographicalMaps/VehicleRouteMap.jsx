@@ -7,22 +7,24 @@ import {MAP_VIEW} from './BaseMapConfig';
 function VehicleRouteMap(props) {
     const {
         viewState,
-        routes = []
+        routes = [],
+        districts,
+        showDistricts = false
     } = props;
 
-    const layers = useMemo(() => {
+    const layers = [
+        MapLayerFactory.createBaseMapLayer(),
+    ];
 
-        var result = [
-            MapLayerFactory.createBaseMapLayer(),
-        ];
+    if (showDistricts) {
+        layers.push(MapLayerFactory.createDistrictLayer(districts));
+    }
 
-        for (const vehicle in routes) {
-            if (routes[vehicle] && routes[vehicle].length > 0) {
-                result.push(MapLayerFactory.createRouteLayer(routes[vehicle], vehicle));
-            }
+    for (const vehicle in routes) {
+        if (routes[vehicle] && routes[vehicle].length > 0) {
+            layers.push(MapLayerFactory.createRouteLayer(routes[vehicle], vehicle));
         }
-        return result;
-    }, [routes]);
+    }
 
     return (
         <>
