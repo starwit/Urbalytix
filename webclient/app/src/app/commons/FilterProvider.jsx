@@ -12,6 +12,7 @@ export function FilterProvider({children}) {
     const [objectClasses, setObjectClasses] = useState([]);
     const [selectedObjectClasses, setSelectedObjectClasses] = useState([]);
     const [featureKeys, setFeatureKeys] = useState([]);
+    const [types, setTypes] = useState(['heatmap', 'hexagon']);
 
     return (
         <FilterContext.Provider value={{
@@ -28,7 +29,9 @@ export function FilterProvider({children}) {
             featureKeys,
             setFeatureKeys,
             showDistricts,
-            setShowDistricts
+            setShowDistricts,
+            types,
+            setTypes
         }}>
             {children}
         </FilterContext.Provider>

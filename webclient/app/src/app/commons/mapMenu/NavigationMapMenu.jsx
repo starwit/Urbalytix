@@ -1,18 +1,29 @@
+import LocationCityIcon from '@mui/icons-material/LocationCity';
 import NavigationIcon from '@mui/icons-material/Navigation';
 import ViewInArIcon from '@mui/icons-material/ViewInAr';
-import {Divider} from "@mui/material";
+import {Box} from '@mui/material';
 import {useTranslation} from "react-i18next";
 import StyledToggleButton from './StyledToggleButton';
+import {useContext} from 'react';
+import {FilterContext} from '../FilterProvider';
 
 function NavigationMapMenu(props) {
-    const {setViewState} = props;
+    const {setViewState, setShowDistricts} = props;
+    const {types} = useContext(FilterContext);
     const {t} = useTranslation();
 
     function toggle3dView() {
-        setViewState(v => ({
-            ...v,
-            pitch: v.pitch === 0 ? 60 : 0
-        }));
+        if (types.includes("3d")) {
+            setViewState(v => ({
+                ...v,
+                pitch: 0
+            }));
+        } else {
+            setViewState(v => ({
+                ...v,
+                pitch: 60
+            }));
+        }
     }
 
     function setNorth() {
@@ -20,6 +31,10 @@ function NavigationMapMenu(props) {
             ...v,
             bearing: 0   // set north
         }));
+    }
+
+    function toggleShowDistricts() {
+        setShowDistricts(d => (!d));
     }
 
     return (
@@ -30,6 +45,10 @@ function NavigationMapMenu(props) {
             <StyledToggleButton title={t('map.nav')} onClick={setNorth} >
                 <NavigationIcon />
             </StyledToggleButton>
+            <StyledToggleButton value='districts' onClick={toggleShowDistricts} aria-label="districts">
+                <LocationCityIcon />
+            </StyledToggleButton>
+            <Box sx={{paddingBottom: 5}} />
         </>
     );
 }
