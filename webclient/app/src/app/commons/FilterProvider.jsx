@@ -7,10 +7,12 @@ export function FilterProvider({children}) {
     const [startDate, setStartDate] = useState(dayjs().startOf('week'));
     const [endDate, setEndDate] = useState(dayjs().endOf('week'));
     const [date, setDate] = useState(dayjs());
+    const [showDistricts, setShowDistricts] = useState(false);
 
     const [objectClasses, setObjectClasses] = useState([]);
     const [selectedObjectClasses, setSelectedObjectClasses] = useState([]);
     const [featureKeys, setFeatureKeys] = useState([]);
+    const [types, setTypes] = useState(['heatmap', 'hexagon']);
 
     return (
         <FilterContext.Provider value={{
@@ -25,7 +27,11 @@ export function FilterProvider({children}) {
             selectedObjectClasses,
             setSelectedObjectClasses,
             featureKeys,
-            setFeatureKeys
+            setFeatureKeys,
+            showDistricts,
+            setShowDistricts,
+            types,
+            setTypes
         }}>
             {children}
         </FilterContext.Provider>

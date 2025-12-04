@@ -1,11 +1,12 @@
 import {deDE, enUS} from '@mui/x-data-grid/locales';
-import {useEffect, useMemo, useState} from "react";
+import {useContext, useEffect, useMemo, useState} from "react";
 import {useTranslation} from "react-i18next";
 import DataFilter from "../../commons/filter/DataFilter";
 import DateTimeFilter from "../../commons/filter/DateTimeFilter";
 import FeatureFilter from "../../commons/filter/FeatureFilter";
 import FilterLayout from "../../commons/filter/FilterLayout";
 import ObjectClassFilter from "../../commons/filter/ObjectClassFilter";
+import {FilterContext} from '../../commons/FilterProvider';
 import ConfigurationRest from "../../services/ConfigurationRest";
 import {useDistricts} from "../hooks/useCityDistricts";
 import {useDetectionCount} from "../hooks/useDetectionCount";
@@ -24,13 +25,13 @@ const DATA_FILTERS = [
 function DetectionOverview() {
     const {t, i18n} = useTranslation();
     const locale = i18n.language == "de" ? deDE : enUS;
-    const [showDistricts, setShowDistricts] = useState(false);
+    const {showDistricts, setShowDistricts, types, setTypes} = useContext(FilterContext);
+    const is3d = types.includes("3d");
     const [viewState, setViewState] = useState({
         zoom: 15,
-        pitch: 0,
+        pitch: is3d ? 60 : 0,
         bearing: 0
     });
-    const [types, setTypes] = useState(['heatmap', 'hexagon']);
 
     const {
         detectionData
@@ -77,6 +78,10 @@ function DetectionOverview() {
         setShowDataTable(!showDataTable);
     }
 
+    function toggleDistricts() {
+        setShowDistricts(!showDistricts);
+    }
+
     return (
         <>
             <FilterLayout leftPosition={10}>
@@ -98,7 +103,6 @@ function DetectionOverview() {
                     availableFeatureKeys={Object.keys(features)}
                     selectedFeatureKeys={selectedFeatureKeys}
                     onSelectedFeatureChange={setSelectedFeatureKeys}
-                    onSelectedDistrictChange={setShowDistricts}
                 />
             </FilterLayout>
 
@@ -107,6 +111,7 @@ function DetectionOverview() {
                 handleTypes={handleTypes}
                 setViewState={setViewState}
                 showDataTable={toggleDataTable}
+                setShowDistricts={setShowDistricts}
             />
 
             <DetectionMap
