@@ -55,7 +55,7 @@ function DetectionComparison() {
                     }}
                 />
                 <ObjectClassFilter
-                    prefix='wastedata'
+                    prefix='detectiondata'
                 />
             </FilterLayout>
 

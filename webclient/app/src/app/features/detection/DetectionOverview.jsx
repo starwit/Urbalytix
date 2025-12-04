@@ -1,36 +1,36 @@
-import {useState} from "react";
+import {deDE, enUS} from '@mui/x-data-grid/locales';
+import {useEffect, useMemo, useState} from "react";
+import {useTranslation} from "react-i18next";
 import DataFilter from "../../commons/filter/DataFilter";
 import DateTimeFilter from "../../commons/filter/DateTimeFilter";
 import FeatureFilter from "../../commons/filter/FeatureFilter";
 import FilterLayout from "../../commons/filter/FilterLayout";
 import ObjectClassFilter from "../../commons/filter/ObjectClassFilter";
-import DetectionMap from './DetectionMap';
-import DetectionMapMenu from "./DetectionMapMenu";
+import ConfigurationRest from "../../services/ConfigurationRest";
 import {useDistricts} from "../hooks/useCityDistricts";
 import {useDetectionCount} from "../hooks/useDetectionCount";
 import {useFeatures} from "../hooks/useFeatures";
 import {useObjectClasses} from "../hooks/useObjectClasses";
 import {useVehicleData} from "../hooks/useVehicleData";
 import {useVehicleRoutes} from "../hooks/useVehicleRoutes";
-
-
-const VIEW_STATE = {
-    longitude: 10.785000000000000,
-    latitude: 52.41788232741599,
-    zoom: 15,
-    pitch: 60,
-    bearing: 0
-};
+import DetectionMap from './DetectionMap';
+import DetectionMapMenu from "./DetectionMapMenu";
+import DetectionTable from "./DetectionTable";
 
 const DATA_FILTERS = [
     {value: 0, label: 'selection.currentPosition'},
 ]
 
-
 function DetectionOverview() {
+    const {t, i18n} = useTranslation();
+    const locale = i18n.language == "de" ? deDE : enUS;
     const [showDistricts, setShowDistricts] = useState(false);
-    const [viewState, setViewState] = useState(VIEW_STATE);
-    const [types, setTypes] = useState(['heatmap', 'hexagon', '3d']);
+    const [viewState, setViewState] = useState({
+        zoom: 15,
+        pitch: 0,
+        bearing: 0
+    });
+    const [types, setTypes] = useState(['heatmap', 'hexagon']);
 
     const {
         detectionData
@@ -50,10 +50,31 @@ function DetectionOverview() {
     const {districts} = useDistricts({showDistricts});
     const vehicleRoutes = useVehicleRoutes();
 
+    const configurationRest = useMemo(() => new ConfigurationRest(), []);
+
+    // to reposition map center according to data table height
+    const [city, setCity] = useState('');
+    const [showDataTable, setShowDataTable] = useState(false);
+
+    useEffect(() => {
+        configurationRest.getMapCenter().then(response => {
+            setViewState(v => ({
+                ...v,
+                longitude: response.data.geometry.coordinates[0],
+                latitude: response.data.geometry.coordinates[1],
+            }));
+            setCity(response.data.properties['city']);
+        });
+    }, []);
+
     function handleTypes(event, newTypes) {
         if (newTypes.length) {
             setTypes(newTypes);
         }
+    }
+
+    function toggleDataTable() {
+        setShowDataTable(!showDataTable);
     }
 
     return (
@@ -65,7 +86,7 @@ function DetectionOverview() {
                     }}
                 />
                 <ObjectClassFilter
-                    prefix='wastedata'
+                    prefix='detectiondata'
                 />
                 <DataFilter
                     prefix='vehicle'
@@ -85,6 +106,7 @@ function DetectionOverview() {
                 types={types}
                 handleTypes={handleTypes}
                 setViewState={setViewState}
+                showDataTable={toggleDataTable}
             />
 
             <DetectionMap
@@ -101,6 +123,10 @@ function DetectionOverview() {
                 showScatterplot={types.includes("scatterplot")}
                 showCoverage={types.includes("coverage")}
                 showDistricts={showDistricts}
+            />
+            <DetectionTable
+                showDataTable={showDataTable}
+                city={city}
             />
         </>
     );

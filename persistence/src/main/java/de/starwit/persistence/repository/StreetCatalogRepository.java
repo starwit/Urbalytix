@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import de.starwit.persistence.dto.StreetDistrictDTO;
+import de.starwit.persistence.dto.StreetWithDistrictDto;
 import de.starwit.persistence.entity.StreetCatalogEntity;
 
 @Repository
@@ -21,7 +21,7 @@ public interface StreetCatalogRepository extends JpaRepository<StreetCatalogEnti
 
   @Query(value = """
         SELECT
-          new de.starwit.persistence.dto.StreetDistrictDTO(
+          new de.starwit.persistence.dto.StreetWithDistrictDto(
             s.id,
             s.city,
             d.name,
@@ -33,7 +33,7 @@ public interface StreetCatalogRepository extends JpaRepository<StreetCatalogEnti
          AND ST_Within(s.streetPath, d.districtGeometry)
         WHERE d.city = :city
       """)
-  List<StreetDistrictDTO> findStreetsByCityWithDistrict(@Param("city") String city);
+  List<StreetWithDistrictDto> findStreetsByCityWithDistrict(@Param("city") String city);
 
   @Query(value = """
       SELECT

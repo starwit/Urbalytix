@@ -59,10 +59,11 @@ const translationEnEN = {
     "heatmap.description": "The heatmap shows concentration areas of traffic decisions",
     "map.normal": "Normal mode",
     "map.heatmap": "Heatmap mode",
-    "wastedata.selection": "Collected data",
-    "wastedata.waste": "Waste",
-    "wastedata.cigarette": "Cigarettes",
-    "wastedata.": "undefined",
+    "detectiondata.selection": "Collected data",
+    "detectiondata.waste": "Waste",
+    "detectiondata.cigarette": "Cigarettes",
+    "detectiondata.heading": "Waste Type",
+    "detectiondata.": "undefined",
     "features.selection.all": "All data",
     "features.selection": "Additional Data",
     "feature.papierkorb": "Garbage Bin",
@@ -114,6 +115,9 @@ const translationEnEN = {
     "streetData.streetName": "Street Name",
     "streetData.districtName": "District Name",
     "streetData.toggleDistricts": "Show Districts",
-    "features.selection.districts": "City Districts"
+    "features.selection.districts": "City Districts",
+    "district.name": "District Name",
+    "district.councilName": "District Government",
+    "district.detections": "Detection"
 };
 export default translationEnEN;

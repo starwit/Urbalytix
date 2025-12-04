@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import de.starwit.persistence.dto.StreetDistrictDTO;
+import de.starwit.persistence.dto.StreetWithDistrictDto;
 import de.starwit.persistence.entity.StreetCatalogEntity;
 import de.starwit.service.impl.StreetCatalogService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -53,8 +53,8 @@ public class StreetCatalogController {
 
     @Operation(summary = "Get street for given city, add city district")
     @GetMapping(value = "/list/{city}", produces = "application/geo+json")
-    public List<StreetDistrictDTO> findAllByCityWithDistrict(@PathVariable("city") String city) {
-        List<StreetDistrictDTO> streets = this.streetCatalogService.findByCityWithDistrict(city);
+    public List<StreetWithDistrictDto> findAllByCityWithDistrict(@PathVariable("city") String city) {
+        List<StreetWithDistrictDto> streets = this.streetCatalogService.findByCityWithDistrict(city);
         return streets;
     }
 

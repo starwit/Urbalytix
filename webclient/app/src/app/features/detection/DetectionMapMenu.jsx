@@ -6,12 +6,17 @@ import {useTranslation} from "react-i18next";
 import MapMenuLayout from '../../commons/mapMenu/MapMenuLayout';
 import NavigationMapMenu from '../../commons/mapMenu/NavigationMapMenu';
 import StyledToggleButton from '../../commons/mapMenu/StyledToggleButton';
+import {Box, ToggleButtonGroup} from '@mui/material';
+import TocIcon from '@mui/icons-material/Toc';
+import {useState} from 'react';
 
 
 
 function DetectionMapMenu(props) {
-    const {types, handleTypes, setViewState} = props;
+    const {types, handleTypes, setViewState, showDataTable} = props;
     const {t} = useTranslation();
+
+    const [tableToogle, setTableToggle] = useState(['']);
 
     return (
         <>
@@ -34,6 +39,19 @@ function DetectionMapMenu(props) {
                     <RouteIcon />
                 </StyledToggleButton>
             </MapMenuLayout>
+            <Box size='small'
+                sx={{
+                    position: 'fixed',
+                    right: 10,
+                    bottom: 60,
+                    zIndex: 1,
+                    gap: 1
+                }}
+            >
+                <StyledToggleButton title={t('map.showtable')} value="tableOn" aria-label="datatable" onClick={showDataTable}>
+                    <TocIcon />
+                </StyledToggleButton>
+            </Box>
         </>
     );
 }

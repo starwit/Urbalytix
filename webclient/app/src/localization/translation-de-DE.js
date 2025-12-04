@@ -59,10 +59,11 @@ const translationDeDE = {
     "heatmap.description": "Die Wärmekarte zeigt Konzentrationsbereiche von KI-Entscheidungen",
     "map.normal": "Normalmodus",
     "map.heatmap": "Heatmap-Modus",
-    "wastedata.selection": "Messdaten",
-    "wastedata.waste": "Abfall",
-    "wastedata.cigarette": "Zigaretten",
-    "wastedata.": "Sonstiges",
+    "detectiondata.selection": "Messdaten",
+    "detectiondata.waste": "Abfall",
+    "detectiondata.cigarette": "Zigaretten",
+    "detectiondata.heading": "Abfallmenge",
+    "detectiondata.": "Sonstiges",
     "features.selection.all": "Alle Daten",
     "features.selection": "Weitere Daten",
     "feature.papierkorb": "Papierkorb",
@@ -114,6 +115,9 @@ const translationDeDE = {
     "streetData.streetName": " Straßenname",
     "streetData.districtName": "Bezirksname",
     "streetData.toggleDistricts": "Zeige Stadtteile",
-    "features.selection.districts": "Stadtbezirke"
+    "features.selection.districts": "Stadtbezirke",
+    "district.name": "Stadtteilname",
+    "district.councilName": "Ortsrat",
+    "district.detections": "Detektionen"
 };
 export default translationDeDE;
