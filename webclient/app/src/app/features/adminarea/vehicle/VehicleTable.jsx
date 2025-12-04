@@ -86,13 +86,17 @@ function VehicleTable(props) {
 
             const tmpVehicleData = vehicleData;
             tmpVehicleData.forEach(vehicle => {
-                console.log(vehicle.id + " " + props.vehicleId);
                 if (vehicle.id === props.vehicleId) {
                     vehicle.isSelected = e.target.checked;
                 }
             });
-            console.log(tmpVehicleData);
             setVehicleData(tmpVehicleData);
+            var streamKey = props.row.streamKey;
+            if (selectedVehicleData.includes(streamKey)) {
+                onSelectedVehicleDataChange(selectedVehicleData.filter(s => s !== streamKey));
+            } else {
+                onSelectedVehicleDataChange([...selectedVehicleData, streamKey]);
+            }
         }
 
         return <Checkbox
@@ -103,8 +107,8 @@ function VehicleTable(props) {
 
     useEffect(() => {
         loadVehicleData();
-        const interval = setInterval(loadVehicleData, 2000);
-        return () => clearInterval(interval);
+        //const interval = setInterval(loadVehicleData, 2000);
+        //return () => clearInterval(interval);
     }, []);
 
     function loadVehicleData() {
@@ -112,24 +116,12 @@ function VehicleTable(props) {
             if (response.data == null) {
                 return;
             }
+
             response.data.forEach(vehicle => {
                 vehicle["isSelected"] = false;
             });
             setVehicleData(response.data);
         });
-    }
-
-    function handleStreetRowClick(params) {
-        if (params.row.streamKey === null) {
-            return;
-        } else {
-            // check if key is already present
-            if (selectedVehicleData.includes(params.row.streamKey)) {
-                onSelectedVehicleDataChange(selectedVehicleData.filter(s => s !== params.row.streamKey));
-            } else {
-                onSelectedVehicleDataChange([...selectedVehicleData, params.row.streamKey]);
-            }
-        }
     }
 
     return (
@@ -140,7 +132,6 @@ function VehicleTable(props) {
                 columns={columns}
                 resizeable={true}
                 editable={false}
-                onRowClick={handleStreetRowClick}
                 showToolbar
                 density="compact"
                 rowSelectionModel={rowSelectionModel}
