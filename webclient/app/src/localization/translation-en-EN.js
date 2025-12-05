@@ -86,6 +86,7 @@ const translationEnEN = {
     "vehicledata.views.table": "Overview",
     "vehicledata.selectvehicle": "Available Vehicles",
     "vehicledata.selectweek": "Select Week",
+    "vehicledata.showRoutes": "Show Route",
     "map.latitude": "Latitude",
     "map.longitude": "Longitude",
     "map.detectedObjects": "Detected Objects",
