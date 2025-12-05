@@ -7,6 +7,7 @@ import {MAP_VIEW} from './BaseMapConfig';
 function VehicleRouteMap(props) {
     const {
         viewState,
+        onViewStateChange,
         routes = [],
         districts,
         showDistricts = false
@@ -30,9 +31,10 @@ function VehicleRouteMap(props) {
         <>
             <DeckGL
                 layers={layers}
+                onViewStateChange={onViewStateChange}
                 views={MAP_VIEW}
                 initialViewState={viewState}
-                controller={{dragRotate: false}}
+                controller={true}
             />
         </>
     );

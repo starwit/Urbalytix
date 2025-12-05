@@ -18,13 +18,14 @@ function Vehicles() {
     const {t, i18n} = useTranslation();
     const locale = i18n.language == "de" ? deDE : enUS
     const {showDistricts, setShowDistricts, types, setTypes} = useContext(FilterContext);
+    const is3d = types.includes("3d");
     const vehicleDataRest = useMemo(() => new VehicleDataRest(), []);
     const vehicleRoutesRest = useMemo(() => new VehicleRoutesRest(), []);
     const configurationRest = useMemo(() => new ConfigurationRest(), []);
     const [city, setCity] = useState('');
     const [viewState, setViewState] = useState({
-        zoom: 12,
-        pitch: 0,
+        zoom: 15,
+        pitch: is3d ? 60 : 0,
         bearing: 0
     });
     const [vehicleData, setVehicleData] = useState([]);
@@ -125,21 +126,21 @@ function Vehicles() {
     return (
         <>
             <FilterLayout leftPosition={10}>
-                <DateTimeFilter
-                />
+                <DateTimeFilter />
             </FilterLayout>
-            <VehicleRouteMap
-                viewState={viewState}
-                routes={routes}
-                showDistricts={showDistricts}
-                districts={districts}
-            />
             <VehicleMapMenu
                 types={types}
                 handleTypes={handleTypes}
                 setViewState={setViewState}
                 showDataTable={toggleDataTable}
                 setShowDistricts={setShowDistricts}
+            />
+            <VehicleRouteMap
+                viewState={viewState}
+                onViewStateChange={({viewState}) => setViewState(viewState)}
+                routes={routes}
+                showDistricts={showDistricts}
+                districts={districts}
             />
             <StreetTableLayout>
                 <VehicleTable
