@@ -13,7 +13,7 @@ function VehicleRouteMap(props) {
         showDistricts = false
     } = props;
 
-    const layers = [
+    var layers = [
         MapLayerFactory.createBaseMapLayer(),
     ];
 

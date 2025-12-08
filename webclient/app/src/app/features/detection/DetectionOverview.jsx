@@ -78,10 +78,6 @@ function DetectionOverview() {
         setShowDataTable(!showDataTable);
     }
 
-    function toggleDistricts() {
-        setShowDistricts(!showDistricts);
-    }
-
     return (
         <>
             <FilterLayout leftPosition={10}>
