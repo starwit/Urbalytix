@@ -24,6 +24,8 @@ function Vehicles() {
     const configurationRest = useMemo(() => new ConfigurationRest(), []);
     const [city, setCity] = useState('');
     const [viewState, setViewState] = useState({
+        longitude: 10.785000000000000,
+        latitude: 52.41788232741599,
         zoom: 15,
         pitch: is3d ? 60 : 0,
         bearing: 0
