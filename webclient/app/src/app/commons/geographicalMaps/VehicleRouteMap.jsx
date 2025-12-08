@@ -15,11 +15,8 @@ function VehicleRouteMap(props) {
 
     var layers = [
         MapLayerFactory.createBaseMapLayer(),
+        MapLayerFactory.createDistrictLayer(districts, showDistricts)
     ];
-
-    if (showDistricts) {
-        layers.push(MapLayerFactory.createDistrictLayer(districts));
-    }
 
     for (const vehicle in routes) {
         if (routes[vehicle] && routes[vehicle].length > 0) {

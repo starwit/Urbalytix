@@ -53,7 +53,7 @@ export class MapLayerFactory {
             filled: false,
             pointType: 'circle+text',
             pickable: true,
-            visible: {showLayer},
+            visible: showLayer,
             getLineColor: f => {
                 const hex = f.properties.color;
                 return hex ? hex.match(/[0-9a-f]{2}/g).map(x => parseInt(x, 16)) : [0, 0, 0];
@@ -176,14 +176,13 @@ export class MapLayerFactory {
         });
     }
 
-    static createHexagonLayer(data, showLayer, options = {}) {
+    static createHexagonLayer(data, options = {}) {
         return new HexagonLayer({
             id: 'hexagon-layer',
             data: data,
             radius: 3,
             elevationScale: 0.1,
             opacity: 0.4,
-            visible: {showLayer},
             extruded: true,
             pickable: true,
             getTooltip: true,

@@ -39,8 +39,6 @@ function DetectionMap(props) {
         positionIcon = positionImage,
         showPosition = false,
         showScatterplot = false,
-        showHeatmap = false,
-        showHexagons = false,
         showCoverage = false
     } = props;
     const {t} = useTranslation();
@@ -116,30 +114,23 @@ function DetectionMap(props) {
 
     const layers = [
         MapLayerFactory.createBaseMapLayer(),
+        MapLayerFactory.createDistrictLayer(districts, showDistricts),
+        MapLayerFactory.createHexagonLayer(detectionData, {
+            id: 'HexagonLayer',
+            visible: types.includes("hexagon"),
+        }),
+        MapLayerFactory.createHeatmapDetectionLayer(detectionData, HEATMAP_COLOR_RANGES.redScale, {
+            id: 'HeatmapLayer',
+            visible: types.includes("heatmap"),
+        }),
+        MapLayerFactory.createScatterplotLayer(detectionData, 'className', {
+            id: 'ScatterplotLayer',
+            visible: types.includes("scatterplot"),
+        }),
         ...Object.entries(features).map(([objectType, featureData], index) =>
             MapLayerFactory.createIconLayer(featureData, objectType, index, ICON_MAPPING, featureIcon))
     ];
 
-    layers.push(MapLayerFactory.createDistrictLayer(districts, showDistricts));
-    layers.push(MapLayerFactory.createHexagonLayer(detectionData, types.includes("hexagon"), {
-        id: 'HexagonLayer',
-    }));
-    /*
-        if (showHexagons) {
-            layers.push(MapLayerFactory.createHexagonLayer(detectionData, {
-                id: 'HexagonLayer',
-            }));
-        }*/
-    if (showHeatmap) {
-        layers.push(MapLayerFactory.createHeatmapDetectionLayer(detectionData, HEATMAP_COLOR_RANGES.redScale, {
-            id: 'HeatmapLayer',
-        }));
-    }
-    if (showScatterplot) {
-        layers.push(MapLayerFactory.createScatterplotLayer(detectionData, 'className', {
-            id: 'ScatterplotLayer',
-        }));
-    }
     if (showPosition) {
         layers.push(MapLayerFactory.createPositionLayer(positionData, ICON_MAPPING, positionIcon));
     }
