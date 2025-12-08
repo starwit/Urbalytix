@@ -1,7 +1,7 @@
 import DeckGL from "@deck.gl/react";
 import {useMemo} from "react";
-import {MapLayerFactory} from './MapLayerFactory';
-import {MAP_VIEW} from './BaseMapConfig';
+import {MapLayerFactory} from '../../../commons/geographicalMaps/MapLayerFactory';
+import {MAP_VIEW} from '../../../commons/geographicalMaps/BaseMapConfig';
 
 
 function VehicleRouteMap(props) {

@@ -20,7 +20,7 @@ function VehicleTable(props) {
 
     const columns = [
         {
-            field: "actions2",
+            field: "actions",
             type: "actions",
             headerName: t("vehicledata.showRoutes"),
             sortable: false,
@@ -152,9 +152,6 @@ function VehicleTable(props) {
                 />
             </>
         );
-    }
-    else {
-        <></>
     }
 }
 

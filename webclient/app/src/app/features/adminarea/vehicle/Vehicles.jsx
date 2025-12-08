@@ -2,7 +2,7 @@ import {deDE, enUS} from '@mui/x-data-grid/locales';
 import {useContext, useEffect, useMemo, useState} from "react";
 import {useTranslation} from "react-i18next";
 
-import VehicleRouteMap from "../../../commons/geographicalMaps/VehicleRouteMap";
+import VehicleRouteMap from "./VehicleRouteMap";
 import VehicleDataRest from '../../../services/VehicleDataRest';
 import VehicleRoutesRest from '../../../services/VehicleRoutesRest';
 import ConfigurationRest from "../../../services/ConfigurationRest";

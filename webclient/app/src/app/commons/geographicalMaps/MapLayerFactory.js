@@ -47,7 +47,7 @@ export class MapLayerFactory {
 
     static createDistrictLayer(data, showLayer) {
         return new GeoJsonLayer({
-            id: 'District-GeoJsonLayer2',
+            id: 'District-GeoJsonLayer',
             data: data,
             stroked: true,
             filled: false,
@@ -65,7 +65,7 @@ export class MapLayerFactory {
     }
 
 
-    static createMaskingLayers(data) {
+    static createMaskingLayers(data, showLayer) {
         return [
             new ScatterplotLayer({
                 id: 'coverage-mask',
@@ -73,6 +73,7 @@ export class MapLayerFactory {
                 data: data,
                 getPosition: d => d.location ? d.location : [d.longitude, d.latitude],
                 operation: 'mask',
+                visible: showLayer
             }),
             new PolygonLayer({
                 id: 'coverage-layer',
@@ -93,6 +94,7 @@ export class MapLayerFactory {
                 maskInverted: true,
                 parameters: {depthTest: false},
                 extensions: [new MaskExtension()],
+                visible: showLayer
             }),
         ];
     }
@@ -132,7 +134,7 @@ export class MapLayerFactory {
         });
     }
 
-    static createPositionLayer(positionData, iconMapping, icon) {
+    static createPositionLayer(positionData, iconMapping, icon, showLayer) {
         return new IconLayer({
             id: `IconLayer-vehicle-positions`,
             data: positionData,
@@ -142,7 +144,8 @@ export class MapLayerFactory {
             getSize: 40,
             iconAtlas: icon,
             iconMapping: iconMapping,
-            pickable: true
+            pickable: true,
+            visible: showLayer
         });
     }
 

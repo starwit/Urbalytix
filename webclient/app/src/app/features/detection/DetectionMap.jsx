@@ -38,7 +38,6 @@ function DetectionMap(props) {
         positionData = [],
         positionIcon = positionImage,
         showPosition = false,
-        showScatterplot = false,
         showCoverage = false
     } = props;
     const {t} = useTranslation();
@@ -127,16 +126,11 @@ function DetectionMap(props) {
             id: 'ScatterplotLayer',
             visible: types.includes("scatterplot"),
         }),
+        MapLayerFactory.createMaskingLayers(vehicleRoutes, showCoverage),
+        MapLayerFactory.createPositionLayer(positionData, ICON_MAPPING, positionIcon, showPosition),
         ...Object.entries(features).map(([objectType, featureData], index) =>
             MapLayerFactory.createIconLayer(featureData, objectType, index, ICON_MAPPING, featureIcon))
     ];
-
-    if (showPosition) {
-        layers.push(MapLayerFactory.createPositionLayer(positionData, ICON_MAPPING, positionIcon));
-    }
-    if (showCoverage) {
-        layers.push(...MapLayerFactory.createMaskingLayers(vehicleRoutes));
-    }
 
     return (
         <>
