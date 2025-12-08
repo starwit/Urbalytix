@@ -2,6 +2,12 @@
 
 Changelog of Urbalytix.
 
+## Current Version ()
+
+### Features
+
+-  align map buttons, Merge pull request #86 from starwit/feature/ab#1986-move-district-button ([c8608](https://github.com/starwit/Urbalytix/commit/c860856f30c31ff) Anett Hübner)  
+
 ## refs/tags/0.4.1 (2025-11-27)
 
 ### Features

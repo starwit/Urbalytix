@@ -28,6 +28,8 @@ function DetectionOverview() {
     const {showDistricts, setShowDistricts, types, setTypes} = useContext(FilterContext);
     const is3d = types.includes("3d");
     const [viewState, setViewState] = useState({
+        longitude: 10.785000000000000,
+        latitude: 52.41788232741599,
         zoom: 15,
         pitch: is3d ? 60 : 0,
         bearing: 0
@@ -76,10 +78,6 @@ function DetectionOverview() {
 
     function toggleDataTable() {
         setShowDataTable(!showDataTable);
-    }
-
-    function toggleDistricts() {
-        setShowDistricts(!showDistricts);
     }
 
     return (

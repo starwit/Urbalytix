@@ -9,8 +9,6 @@ import MapMenuLayout from '../../commons/mapMenu/MapMenuLayout';
 import NavigationMapMenu from '../../commons/mapMenu/NavigationMapMenu';
 import StyledToggleButton from '../../commons/mapMenu/StyledToggleButton';
 
-
-
 function DetectionMapMenu(props) {
     const {types, handleTypes, setViewState, showDataTable, setShowDistricts} = props;
     const {t} = useTranslation();
