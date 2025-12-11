@@ -11,7 +11,7 @@ import DateTimeFilter from '../../../commons/filter/DateTimeFilter';
 import FilterLayout from '../../../commons/filter/FilterLayout';
 import {FilterContext} from '../../../commons/FilterProvider';
 import VehicleTable from './VehicleTable';
-import StreetTableLayout from '../streetcatalog/StreetTableLayout';
+import DataTableLayout from '../../../commons/DataTableLayout';
 import VehicleMapMenu from './VehicleMapMenu';
 
 function Vehicles() {
@@ -144,13 +144,13 @@ function Vehicles() {
                 showDistricts={showDistricts}
                 districts={districts}
             />
-            <StreetTableLayout>
+            <DataTableLayout>
                 <VehicleTable
                     showDataTable={showDataTable}
                     selectedVehicleData={selectedVehicleData}
                     onSelectedVehicleDataChange={setSelectedVehicleData}
                 />
-            </StreetTableLayout>
+            </DataTableLayout>
         </>
     );
 }

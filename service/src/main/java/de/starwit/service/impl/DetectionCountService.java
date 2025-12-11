@@ -18,7 +18,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import de.starwit.persistence.dto.DistrictWithDetectionCountDto;
+import de.starwit.persistence.dto.StreetWithDistrictDto;
+import de.starwit.persistence.dto.StreetsWithDetectionCountDto;
 import de.starwit.persistence.entity.DetectionCountEntity;
+import de.starwit.persistence.entity.StreetCatalogEntity;
 import de.starwit.persistence.repository.CityDistrictRepository;
 import de.starwit.persistence.repository.DetectionCountRepository;
 import de.starwit.persistence.repository.StreetCatalogRepository;
@@ -102,8 +105,25 @@ public class DetectionCountService implements ServiceInterface<DetectionCountEnt
         return entities;
     }
 
-    public List<DetectionCountEntity> getDataByStreetName(String streetName) {
-        Geometry street = streetCatalogRepository.findStreet(streetName);
+    public List<StreetsWithDetectionCountDto> getDataForStreetsByDistrictAndTimeframe(ZonedDateTime startTime,
+            ZonedDateTime endTime, long districtId) {
+        List<StreetsWithDetectionCountDto> result = new ArrayList<>();
+        String districtName = districtRepository.findById(districtId).get().getName();
+        List<StreetCatalogEntity> streets = streetCatalogRepository.findByCityDistrictId("Wolfsburg", districtId);
+        log.info("Found " + streets.size() + " streets for district " + districtId);
+        for (StreetCatalogEntity street : streets) {
+            Geometry streetHull = streetCatalogRepository.findStreetHull(street.getId());
+            int wasteCount = repository.countByGeometry(streetHull, startTime, endTime);
+            StreetsWithDetectionCountDto streetDto = new StreetsWithDetectionCountDto(street.getId(),
+                    street.getStreetName(), districtName, wasteCount);
+
+            result.add(streetDto);
+        }
+        return result;
+    }
+
+    public List<DetectionCountEntity> getDataByStreetName(long streetId) {
+        Geometry street = streetCatalogRepository.findStreetHull(streetId);
         if (street == null) {
             return java.util.Collections.emptyList();
         }

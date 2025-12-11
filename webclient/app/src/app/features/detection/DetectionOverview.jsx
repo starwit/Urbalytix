@@ -16,7 +16,8 @@ import {useVehicleData} from "../hooks/useVehicleData";
 import {useVehicleRoutes} from "../hooks/useVehicleRoutes";
 import DetectionMap from './DetectionMap';
 import DetectionMapMenu from "./DetectionMapMenu";
-import DetectionTable from "./DetectionTable";
+import DetectionDistrictTable from "./DetectionDistrictTable";
+import DetectionStreetTable from "./DetectionStreetTable";
 
 const DATA_FILTERS = [
     {value: 0, label: 'selection.currentPosition'},
@@ -58,6 +59,8 @@ function DetectionOverview() {
     // to reposition map center according to data table height
     const [city, setCity] = useState('');
     const [showDataTable, setShowDataTable] = useState(false);
+    const [showStreetData, setShowStreetData] = useState(false);
+    const [districtId, setDistrictId] = useState(1);
 
     useEffect(() => {
         configurationRest.getMapCenter().then(response => {
@@ -78,6 +81,11 @@ function DetectionOverview() {
 
     function toggleDataTable() {
         setShowDataTable(!showDataTable);
+    }
+
+    function handleDistrictDetailsClick(params) {
+        setDistrictId(params.id);
+        setShowStreetData(true);
     }
 
     return (
@@ -127,10 +135,24 @@ function DetectionOverview() {
                 showCoverage={types.includes("coverage")}
                 showDistricts={showDistricts}
             />
-            <DetectionTable
-                showDataTable={showDataTable}
-                city={city}
-            />
+            {showDataTable ? (
+                showStreetData ? (
+                    <DetectionStreetTable
+                        showDataTable={showDataTable}
+                        districtId={districtId}
+                        city={city}
+                        handleBackClick={setShowStreetData}
+                    />
+                ) : (
+                    <DetectionDistrictTable
+                        showDataTable={showDataTable}
+                        city={city}
+                        handleDistrictDetailsClick={handleDistrictDetailsClick}
+                    />
+                )
+            ) : (
+                <></>
+            )}
         </>
     );
 }

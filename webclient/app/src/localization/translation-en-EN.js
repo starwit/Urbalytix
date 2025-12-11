@@ -63,6 +63,7 @@ const translationEnEN = {
     "detectiondata.waste": "Waste",
     "detectiondata.cigarette": "Cigarettes",
     "detectiondata.heading": "Waste Type",
+    "detectiondata.sum": "Waste Total",
     "detectiondata.": "undefined",
     "features.selection.all": "All data",
     "features.selection": "Additional Data",
@@ -120,6 +121,7 @@ const translationEnEN = {
     "features.selection.districts": "City Districts",
     "district.name": "District Name",
     "district.councilName": "District Government",
-    "district.detections": "Detection"
+    "district.detections": "Detection",
+    "district.showdetails": "Show District Details"
 };
 export default translationEnEN;
