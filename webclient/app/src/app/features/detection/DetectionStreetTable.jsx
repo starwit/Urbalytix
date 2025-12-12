@@ -7,10 +7,10 @@ import DetectionCountRest from "../../services/DetectionCountRest";
 import DataTableLayout from "../../commons/DataTableLayout";
 import ManageSearchIcon from '@mui/icons-material/ManageSearch';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import {Breadcrumbs, IconButton, Link, Tooltip} from "@mui/material";
+import {Breadcrumbs, IconButton, Link, Stack, Tooltip, Typography} from "@mui/material";
 
 function DetectionDistrictTable(props) {
-    const {showDataTable, handleBackClick = () => { }, city, districtId} = props;
+    const {showDataTable, handleBackClick = () => { }, city, districtId, districtName} = props;
     const {t, i18n} = useTranslation();
     const locale = i18n.language == "de" ? deDE : enUS;
 
@@ -26,7 +26,7 @@ function DetectionDistrictTable(props) {
         },
         {
             field: "totalCount",
-            headerName: t("detectiondata.heading"),
+            headerName: t("detectiondata.sum"),
             flex: 0.5
         }
     ];
@@ -48,9 +48,15 @@ function DetectionDistrictTable(props) {
 
     return (
         <DataTableLayout>
-            <IconButton>
-                <ArrowBackIcon onClick={handleClick} />
-            </IconButton>
+            <Stack direction="row" alignItems="center">
+                <IconButton>
+                    <ArrowBackIcon onClick={handleClick} />
+                </IconButton>
+                <Breadcrumbs aria-label="breadcrumb">
+                    <Typography color="text.primary" >{city}</Typography>
+                    <Typography color="text.primary">{districtName}</Typography>
+                </Breadcrumbs>
+            </Stack>
             <DataGrid
                 localeText={locale.components.MuiDataGrid.defaultProps.localeText}
                 rows={streetCatalog}

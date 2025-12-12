@@ -18,8 +18,6 @@ import DetectionMap from './DetectionMap';
 import DetectionMapMenu from "./DetectionMapMenu";
 import DetectionDistrictTable from "./DetectionDistrictTable";
 import DetectionStreetTable from "./DetectionStreetTable";
-import {IconButton} from '@mui/material';
-import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const DATA_FILTERS = [
     {value: 0, label: 'selection.currentPosition'},
@@ -63,6 +61,7 @@ function DetectionOverview() {
     const [showDataTable, setShowDataTable] = useState(false);
     const [showStreetData, setShowStreetData] = useState(false);
     const [districtId, setDistrictId] = useState(1);
+    const [districtName, setDistrictName] = useState('');
 
     useEffect(() => {
         configurationRest.getMapCenter().then(response => {
@@ -87,6 +86,7 @@ function DetectionOverview() {
 
     function handleDistrictDetailsClick(params) {
         setDistrictId(params.id);
+        setDistrictName(params.districtName);
         setShowStreetData(true);
     }
 
@@ -146,6 +146,7 @@ function DetectionOverview() {
                     <DetectionStreetTable
                         showDataTable={showDataTable}
                         districtId={districtId}
+                        districtName={districtName}
                         city={city}
                         handleBackClick={handleBackClick}
                     />
