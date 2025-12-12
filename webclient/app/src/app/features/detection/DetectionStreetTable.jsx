@@ -6,10 +6,11 @@ import {FilterContext} from "../../commons/FilterProvider";
 import DetectionCountRest from "../../services/DetectionCountRest";
 import DataTableLayout from "../../commons/DataTableLayout";
 import ManageSearchIcon from '@mui/icons-material/ManageSearch';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import {Breadcrumbs, IconButton, Link, Tooltip} from "@mui/material";
 
 function DetectionDistrictTable(props) {
-    const {showDataTable, handleDistrictRowClick = () => { }, city, districtId} = props;
+    const {showDataTable, handleBackClick = () => { }, city, districtId} = props;
     const {t, i18n} = useTranslation();
     const locale = i18n.language == "de" ? deDE : enUS;
 
@@ -41,17 +42,15 @@ function DetectionDistrictTable(props) {
         }
     }, [showDataTable, startDate]);
 
-    function handleBackClick() {
-        console.log("handleBackClick");
-        handleDistrictRowClick(true);
+    function handleClick() {
+        handleBackClick(true);
     }
 
     return (
         <DataTableLayout>
-            <Breadcrumbs>
-                <Link underline="hover" color="inherit" onClick={handleBackClick}>Wolfsburg</Link>
-                <Link underline="hover" color="inherit" >{districtId}</Link>
-            </Breadcrumbs>
+            <IconButton>
+                <ArrowBackIcon onClick={handleClick} />
+            </IconButton>
             <DataGrid
                 localeText={locale.components.MuiDataGrid.defaultProps.localeText}
                 rows={streetCatalog}

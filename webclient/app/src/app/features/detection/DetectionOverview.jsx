@@ -18,6 +18,8 @@ import DetectionMap from './DetectionMap';
 import DetectionMapMenu from "./DetectionMapMenu";
 import DetectionDistrictTable from "./DetectionDistrictTable";
 import DetectionStreetTable from "./DetectionStreetTable";
+import {IconButton} from '@mui/material';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 const DATA_FILTERS = [
     {value: 0, label: 'selection.currentPosition'},
@@ -88,6 +90,10 @@ function DetectionOverview() {
         setShowStreetData(true);
     }
 
+    function handleBackClick() {
+        setShowStreetData(false);
+    }
+
     return (
         <>
             <FilterLayout leftPosition={10}>
@@ -141,7 +147,7 @@ function DetectionOverview() {
                         showDataTable={showDataTable}
                         districtId={districtId}
                         city={city}
-                        handleBackClick={setShowStreetData}
+                        handleBackClick={handleBackClick}
                     />
                 ) : (
                     <DetectionDistrictTable
