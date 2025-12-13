@@ -4,6 +4,8 @@ import featureImage from "../../assets/icons/recycling.png";
 import positionImage from "../../assets/icons/vehicle.png";
 import {HEATMAP_COLOR_RANGES, MAP_VIEW} from '../../commons/geographicalMaps/BaseMapConfig';
 import {MapLayerFactory} from '../../commons/geographicalMaps/MapLayerFactory';
+import {useContext} from "react";
+import {FilterContext} from '../../commons/FilterProvider';
 
 const ICON_MAPPING = {
     "marker": {
@@ -36,13 +38,11 @@ function DetectionMap(props) {
         positionData = [],
         positionIcon = positionImage,
         showPosition = false,
-        showScatterplot = false,
-        showHeatmap = false,
-        showHexagons = false,
-        showCoverage = false,
-        showDistricts = false
+        showCoverage = false
     } = props;
     const {t} = useTranslation();
+
+    const {showDistricts, types} = useContext(FilterContext);
 
     function getTooltip({object, layer}) {
         if (!object) {
@@ -113,33 +113,24 @@ function DetectionMap(props) {
 
     const layers = [
         MapLayerFactory.createBaseMapLayer(),
+        MapLayerFactory.createDistrictLayer(districts, showDistricts),
+        MapLayerFactory.createHexagonLayer(detectionData, {
+            id: 'HexagonLayer',
+            visible: types.includes("hexagon"),
+        }),
+        MapLayerFactory.createHeatmapDetectionLayer(detectionData, HEATMAP_COLOR_RANGES.redScale, {
+            id: 'HeatmapLayer',
+            visible: types.includes("heatmap"),
+        }),
+        MapLayerFactory.createScatterplotLayer(detectionData, 'className', {
+            id: 'ScatterplotLayer',
+            visible: types.includes("scatterplot"),
+        }),
+        MapLayerFactory.createMaskingLayers(vehicleRoutes, showCoverage),
+        MapLayerFactory.createPositionLayer(positionData, ICON_MAPPING, positionIcon, showPosition),
         ...Object.entries(features).map(([objectType, featureData], index) =>
             MapLayerFactory.createIconLayer(featureData, objectType, index, ICON_MAPPING, featureIcon))
     ];
-    if (showDistricts) {
-        layers.push(MapLayerFactory.createDistrictLayer(districts));
-    }
-    if (showHexagons) {
-        layers.push(MapLayerFactory.createHexagonLayer(detectionData, {
-            id: 'HexagonLayer',
-        }));
-    }
-    if (showHeatmap) {
-        layers.push(MapLayerFactory.createHeatmapDetectionLayer(detectionData, HEATMAP_COLOR_RANGES.redScale, {
-            id: 'HeatmapLayer',
-        }));
-    }
-    if (showScatterplot) {
-        layers.push(MapLayerFactory.createScatterplotLayer(detectionData, 'className', {
-            id: 'ScatterplotLayer',
-        }));
-    }
-    if (showPosition) {
-        layers.push(MapLayerFactory.createPositionLayer(positionData, ICON_MAPPING, positionIcon));
-    }
-    if (showCoverage) {
-        layers.push(...MapLayerFactory.createMaskingLayers(vehicleRoutes));
-    }
 
     return (
         <>

@@ -1,5 +1,5 @@
 import {useEffect, useState, useMemo} from "react";
-import {Paper, Tooltip, Typography} from "@mui/material";
+import {Checkbox, Tooltip} from "@mui/material";
 import {DataGrid} from "@mui/x-data-grid";
 import {useTranslation} from "react-i18next";
 import {deDE, enUS} from '@mui/x-data-grid/locales';
@@ -7,15 +7,26 @@ import VehicleIcon from '@mui/icons-material/LocalShipping';
 
 import VehicleDataRest from '../../../services/VehicleDataRest';
 
-function VehicleTable() {
-
+function VehicleTable(props) {
+    const {showDataTable, selectedVehicleData, onSelectedVehicleDataChange} = props;
     const {t, i18n} = useTranslation();
     const locale = i18n.language == "de" ? deDE : enUS
+    const [rowSelectionModel, setRowSelectionModel] = useState({
+        type: 'include',
+        ids: new Set()
+    });
     const vehicleDataRest = useMemo(() => new VehicleDataRest(), []);
     const [vehicleData, setVehicleData] = useState([]);
 
     const columns = [
-        {field: "id", headerName: "ID", width: 90},
+        {
+            field: "actions",
+            type: "actions",
+            headerName: t("vehicledata.showRoutes"),
+            sortable: false,
+            width: 160,
+            renderCell: params => <MyRenderCheckBox isSelected={params.row.isSelected} vehicleId={params.row.id} row={params.row} />
+        },
         {
             field: "name",
             headerName: t("vehicledata.name"),
@@ -67,10 +78,37 @@ function VehicleTable() {
         }
     ];
 
+    function MyRenderCheckBox(props) {
+        const [checked, setChecked] = useState(props.isSelected);
+
+        function handleChange(e) {
+            setChecked(e.target.checked);
+
+            const tmpVehicleData = vehicleData;
+            tmpVehicleData.forEach(vehicle => {
+                if (vehicle.id === props.vehicleId) {
+                    vehicle.isSelected = e.target.checked;
+                }
+            });
+            setVehicleData(tmpVehicleData);
+            var streamKey = props.row.streamKey;
+            if (selectedVehicleData.includes(streamKey)) {
+                onSelectedVehicleDataChange(selectedVehicleData.filter(s => s !== streamKey));
+            } else {
+                onSelectedVehicleDataChange([...selectedVehicleData, streamKey]);
+            }
+        }
+
+        return <Checkbox
+            checked={checked}
+            onChange={handleChange}
+        />;
+    }
+
     useEffect(() => {
         loadVehicleData();
-        const interval = setInterval(loadVehicleData, 2000);
-        return () => clearInterval(interval);
+        //const interval = setInterval(loadVehicleData, 2000);
+        //return () => clearInterval(interval);
     }, []);
 
     function loadVehicleData() {
@@ -78,21 +116,27 @@ function VehicleTable() {
             if (response.data == null) {
                 return;
             }
+
+            response.data.forEach(vehicle => {
+                vehicle["isSelected"] = false;
+            });
             setVehicleData(response.data);
         });
     }
 
-    return (
-        <>
-            <Typography variant="h2" gutterBottom sx={{flex: 1}}>
-                {t("vehicledata.heading")}
-            </Typography>
-            <Paper sx={{padding: 2}}>
+    if (showDataTable) {
+        return (
+            <>
                 <DataGrid
                     localeText={locale.components.MuiDataGrid.defaultProps.localeText}
                     rows={vehicleData}
                     columns={columns}
                     resizeable={true}
+                    editable={false}
+                    showToolbar
+                    density="compact"
+                    rowSelectionModel={rowSelectionModel}
+                    onRowSelectionModelChange={(newModel) => setRowSelectionModel(newModel)}
                     initialState={{
                         pagination: {
                             paginationModel: {
@@ -100,15 +144,15 @@ function VehicleTable() {
                             }
                         },
                         sorting: {
-                            sortModel: [{field: "id", sort: "asc"}]
+                            sortModel: [{field: "name", sort: "asc"}]
                         }
                     }}
                     pageSizeOptions={[10]}
                     disableRowSelectionOnClick
                 />
-            </Paper>
-        </>
-    );
+            </>
+        );
+    }
 }
 
 export default VehicleTable;

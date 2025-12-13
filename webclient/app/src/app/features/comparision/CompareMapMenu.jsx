@@ -7,7 +7,7 @@ import NavigationMapMenu from '../../commons/mapMenu/NavigationMapMenu';
 import StyledToggleButton from '../../commons/mapMenu/StyledToggleButton';
 
 function CompareMapMenu(props) {
-    const {types, handleTypes, setViewState} = props;
+    const {types, handleTypes, setViewState, setShowDistricts} = props;
     const {t} = useTranslation();
 
     return (
@@ -16,19 +16,18 @@ function CompareMapMenu(props) {
                 value={types}
                 onChange={handleTypes}
             >
-                <NavigationMapMenu setViewState={setViewState} />
+                <NavigationMapMenu setViewState={setViewState} setShowDistricts={setShowDistricts} />
 
-                <StyledToggleButton value="hexcompare" aria-label="hexcompare" title={t('map.hexcompare')}>
+                <StyledToggleButton value="hexagon" aria-label="hexagon" title={t('map.hexcompare')}>
                     <HexagonIcon />
                 </StyledToggleButton>
                 <StyledToggleButton value="coverage" aria-label="coverage" title={t('map.coverageweek')}>
                     <RouteIcon />
                 </StyledToggleButton>
             </MapMenuLayout>
-
             <Paper sx={{
                 position: 'fixed',
-                top: 310,
+                top: 360,
                 right: 10,
                 zIndex: 1,
                 padding: 1
@@ -42,6 +41,8 @@ function CompareMapMenu(props) {
                 </Box>
 
             </Paper>
+
+
         </>
     );
 }

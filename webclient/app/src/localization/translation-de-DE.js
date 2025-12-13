@@ -59,10 +59,11 @@ const translationDeDE = {
     "heatmap.description": "Die Wärmekarte zeigt Konzentrationsbereiche von KI-Entscheidungen",
     "map.normal": "Normalmodus",
     "map.heatmap": "Heatmap-Modus",
-    "wastedata.selection": "Messdaten",
-    "wastedata.waste": "Abfall",
-    "wastedata.cigarette": "Zigaretten",
-    "wastedata.": "Sonstiges",
+    "detectiondata.selection": "Messdaten",
+    "detectiondata.waste": "Abfall",
+    "detectiondata.cigarette": "Zigaretten",
+    "detectiondata.heading": "Abfallmenge",
+    "detectiondata.": "Sonstiges",
     "features.selection.all": "Alle Daten",
     "features.selection": "Weitere Daten",
     "feature.papierkorb": "Papierkorb",
@@ -85,6 +86,7 @@ const translationDeDE = {
     "vehicledata.views.table": "Überblick",
     "vehicledata.selectvehicle": "Fahrzeuge",
     "vehicledata.selectweek": "Woche auswählen",
+    "vehicledata.showRoutes": "Route zeigen",
     "map.latitude": "Breitengrad",
     "map.longitude": "Längengrad",
     "map.detectedObjects": "Erkannte Objekte",
@@ -100,6 +102,7 @@ const translationDeDE = {
     "map.detectioncount": "GPS-Punkte",
     "map.3d": "3D/2D",
     "map.nav": "Karte nach Norden ausrichten",
+    "map.districts": "Stadtteile",
     "map.legend": "Legende",
     "legend.selected": "ausgewählte Woche",
     "legend.before": "vorherige Woche",
@@ -114,6 +117,9 @@ const translationDeDE = {
     "streetData.streetName": " Straßenname",
     "streetData.districtName": "Bezirksname",
     "streetData.toggleDistricts": "Zeige Stadtteile",
-    "features.selection.districts": "Stadtbezirke"
+    "features.selection.districts": "Stadtbezirke",
+    "district.name": "Stadtteilname",
+    "district.councilName": "Ortsrat",
+    "district.detections": "Detektionen"
 };
 export default translationDeDE;

@@ -3,6 +3,7 @@ package de.starwit.service.impl;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.locationtech.jts.geom.Coordinate;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import de.starwit.persistence.dto.DistrictWithDetectionCountDto;
 import de.starwit.persistence.entity.DetectionCountEntity;
 import de.starwit.persistence.repository.DetectionCountRepository;
 import de.starwit.persistence.repository.StreetCatalogRepository;
@@ -73,6 +75,12 @@ public class DetectionCountService implements ServiceInterface<DetectionCountEnt
 
     public List<DetectionCountEntity> getDataFromTimeFrame(ZonedDateTime startTime, ZonedDateTime endTime) {
         List<DetectionCountEntity> entities = repository.findByDetectionTimeBetween(startTime, endTime);
+        return entities;
+    }
+
+    public List<DistrictWithDetectionCountDto> getDataByDistrictAndTimeframe(ZonedDateTime startTime,
+            ZonedDateTime endTime) {
+        List<DistrictWithDetectionCountDto> entities = repository.findByDistrictInTimeframe(startTime, endTime);
         return entities;
     }
 

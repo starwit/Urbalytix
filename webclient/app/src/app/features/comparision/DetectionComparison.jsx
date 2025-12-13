@@ -10,19 +10,19 @@ import {useDetectionCount} from "../hooks/useDetectionCount";
 import {useDetectionCountDiff} from "../hooks/useDetectionCountDiff";
 import {useObjectClasses} from "../hooks/useObjectClasses";
 import {useVehicleRoutes} from '../hooks/useVehicleRoutes';
-
-const VIEW_STATE = {
-    longitude: 10.785000000000000,
-    latitude: 52.41788232741599,
-    zoom: 15,
-    pitch: 60,
-    bearing: 0
-};
-
+import {useDistricts} from "../hooks/useCityDistricts";
 
 function DetectionComparison() {
-    const [viewState, setViewState] = useState(VIEW_STATE);
-    const {date} = useContext(FilterContext);
+    const {date, showDistricts, setShowDistricts, types, setTypes} = useContext(FilterContext);
+    const is3d = types.includes("3d");
+    const [viewState, setViewState] = useState({
+        longitude: 10.785000000000000,
+        latitude: 52.41788232741599,
+        zoom: 15,
+        pitch: is3d ? 60 : 0,
+        bearing: 0
+    });
+
     const [startCompDate, setStartCompDate] = useState(date.subtract(1, 'week').startOf('week'));
     const [endCompDate, setEndCompDate] = useState(date.subtract(1, 'week').endOf('week'));
     const {t} = useTranslation();
@@ -31,9 +31,9 @@ function DetectionComparison() {
         detectionData
     } = useDetectionCount();
     const handleObjectClasses = useObjectClasses();
-    const [types, setTypes] = useState(['hexcompare', '3d']);
     const {detectioncomparisonData} = useDetectionCountDiff(startCompDate, endCompDate);
     const vehicleRoutes = useVehicleRoutes();
+    const {districts} = useDistricts({showDistricts});
 
     useEffect(() => {
         setStartCompDate(date.subtract(1, 'week').startOf('week'));
@@ -55,7 +55,7 @@ function DetectionComparison() {
                     }}
                 />
                 <ObjectClassFilter
-                    prefix='wastedata'
+                    prefix='detectiondata'
                 />
             </FilterLayout>
 
@@ -63,6 +63,7 @@ function DetectionComparison() {
                 types={types}
                 handleTypes={handleTypes}
                 setViewState={setViewState}
+                setShowDistricts={setShowDistricts}
             />
 
             <DetectionCompareMap
@@ -70,9 +71,11 @@ function DetectionComparison() {
                 onViewStateChange={({viewState}) => setViewState(viewState)}
                 detectionData={detectionData}
                 detectioncomparisonData={detectioncomparisonData}
+                districts={districts}
                 vehicleRoutes={vehicleRoutes}
-                showHexagons={types.includes("hexcompare")}
+                showHexagons={types.includes("hexagon")}
                 showCoverage={types.includes("coverage")}
+                showDistricts={showDistricts}
             />
         </>
     );

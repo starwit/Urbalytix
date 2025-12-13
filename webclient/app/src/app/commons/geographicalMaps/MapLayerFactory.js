@@ -5,6 +5,7 @@ import {BitmapLayer, GeoJsonLayer, GridCellLayer, IconLayer, PolygonLayer, Scatt
 import {TILE_LAYER_CONFIG} from './BaseMapConfig';
 
 export class MapLayerFactory {
+
     static createBaseMapLayer() {
         return new TileLayer({
             ...TILE_LAYER_CONFIG,
@@ -44,7 +45,7 @@ export class MapLayerFactory {
         });
     }
 
-    static createDistrictLayer(data) {
+    static createDistrictLayer(data, showLayer) {
         return new GeoJsonLayer({
             id: 'District-GeoJsonLayer',
             data: data,
@@ -52,6 +53,7 @@ export class MapLayerFactory {
             filled: false,
             pointType: 'circle+text',
             pickable: true,
+            visible: showLayer,
             getLineColor: f => {
                 const hex = f.properties.color;
                 return hex ? hex.match(/[0-9a-f]{2}/g).map(x => parseInt(x, 16)) : [0, 0, 0];
@@ -62,7 +64,8 @@ export class MapLayerFactory {
         });
     }
 
-    static createMaskingLayers(data) {
+
+    static createMaskingLayers(data, showLayer) {
         return [
             new ScatterplotLayer({
                 id: 'coverage-mask',
@@ -70,6 +73,7 @@ export class MapLayerFactory {
                 data: data,
                 getPosition: d => d.location ? d.location : [d.longitude, d.latitude],
                 operation: 'mask',
+                visible: showLayer
             }),
             new PolygonLayer({
                 id: 'coverage-layer',
@@ -90,6 +94,7 @@ export class MapLayerFactory {
                 maskInverted: true,
                 parameters: {depthTest: false},
                 extensions: [new MaskExtension()],
+                visible: showLayer
             }),
         ];
     }
@@ -129,7 +134,7 @@ export class MapLayerFactory {
         });
     }
 
-    static createPositionLayer(positionData, iconMapping, icon) {
+    static createPositionLayer(positionData, iconMapping, icon, showLayer) {
         return new IconLayer({
             id: `IconLayer-vehicle-positions`,
             data: positionData,
@@ -139,7 +144,8 @@ export class MapLayerFactory {
             getSize: 40,
             iconAtlas: icon,
             iconMapping: iconMapping,
-            pickable: true
+            pickable: true,
+            visible: showLayer
         });
     }
 
