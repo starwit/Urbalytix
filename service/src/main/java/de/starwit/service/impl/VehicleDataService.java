@@ -1,5 +1,6 @@
 package de.starwit.service.impl;
 
+import java.text.DecimalFormat;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -62,8 +63,8 @@ public class VehicleDataService implements ServiceInterface<VehicleDataEntity, V
             log.debug("Vehicle " + vehicleId + " on " + zdt + " length: " + length);
             for (var dto : result) {
                 if (dto.getId() == vehicleId) {
-                    dto.getDistances().put(zdt, length);
-                    dto.getCleaningDistances().put(zdt, length);
+                    dto.getDistances().put(zdt, Math.round(length * 100.0) / 100.0);
+                    dto.getCleaningDistances().put(zdt, Math.round(length * 100.0) / 100.0);
                 }
             }
         }

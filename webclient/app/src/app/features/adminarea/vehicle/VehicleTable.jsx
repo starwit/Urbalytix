@@ -6,6 +6,7 @@ import {deDE, enUS} from '@mui/x-data-grid/locales';
 import VehicleIcon from '@mui/icons-material/LocalShipping';
 import VehicleDataRest from '../../../services/VehicleDataRest';
 import {FilterContext} from "../../../commons/FilterProvider";
+import dayjs from 'dayjs';
 
 function VehicleTable(props) {
     const {showDataTable, selectedVehicleData, onSelectedVehicleDataChange} = props;
@@ -25,44 +26,45 @@ function VehicleTable(props) {
             type: "actions",
             headerName: t("vehicledata.showRoutes"),
             sortable: false,
-            width: 160,
+            width: 110,
             renderCell: params => <MyRenderCheckBox isSelected={params.row.isSelected} vehicleId={params.row.id} row={params.row} />
         },
         {
             field: "name",
             headerName: t("vehicledata.name"),
-            flex: 0.5,
+            flex: 0.15,
             editable: false
         },
         {
             field: "description",
             headerName: t("vehicledata.description"),
-            flex: 0.7,
+            flex: 0.35,
             editable: false,
         },
         {
             field: "location",
             headerName: t("vehicledata.location"),
-            flex: 0.4,
+            flex: 0.35,
             editable: false
         },
         {
             field: "lastUpdate",
             headerName: t("vehicledata.lastupdate"),
-            flex: 0.5,
+            flex: 0.2,
             editable: false
         },
         {
             field: "distances",
-            headerName: t("vehicledata.lastupdate"),
+            headerName: t("vehicledata.distance"),
             editable: false,
+            flex: 0.5,
             renderCell: vehicle => {
                 return (
-                    <Stack direction="oolumn" spacing={0}>
+                    <Stack direction="row" spacing={1}>
                         {Object.entries(vehicle.row.distances).map(([day, value]) => (
                             <>
-                                <Typography>{day}</Typography>
-                                <Typography>{value}</Typography>
+                                {dayjs(day).format('MM-DD')}:
+                                {value}
                             </>
                         ))}
                     </Stack>
@@ -72,7 +74,7 @@ function VehicleTable(props) {
         {
             field: "status",
             headerName: t("vehicledata.status"),
-            flex: 0.4,
+            flex: 0.08,
             editable: false,
             renderCell: vehicle => {
                 return (
@@ -115,11 +117,11 @@ function VehicleTable(props) {
         loadVehicleData();
         //const interval = setInterval(loadVehicleData, 2000);
         //return () => clearInterval(interval);
-    }, []);
+    }, [startDate, endDate]);
 
     function loadVehicleData() {
         vehicleDataRest.findAllWithStatistics(startDate.toJSON(), endDate.toJSON()).then(response => {
-            console.log(response);
+            console.log(response.data);
             if (response.data == null) {
                 return;
             }

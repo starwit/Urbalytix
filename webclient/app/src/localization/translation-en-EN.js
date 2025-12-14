@@ -79,6 +79,7 @@ const translationEnEN = {
     "vehicledata.latitude": "Latitude",
     "vehicledata.longitude": "Longitude",
     "vehicledata.location": "Position",
+    "vehicledata.distance": "Distance traveled",
     "vehicledata.lastupdate": "Last Update",
     "vehicle.selection.currentposition": "Vehicle Position",
     "vehicledata.heading": "Vehicle Data",
