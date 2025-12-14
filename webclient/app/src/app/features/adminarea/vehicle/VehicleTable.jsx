@@ -1,11 +1,11 @@
-import {useEffect, useState, useMemo} from "react";
-import {Checkbox, Tooltip} from "@mui/material";
+import {useEffect, useState, useMemo, useContext} from "react";
+import {Checkbox, Stack, Tooltip, Typography} from "@mui/material";
 import {DataGrid} from "@mui/x-data-grid";
 import {useTranslation} from "react-i18next";
 import {deDE, enUS} from '@mui/x-data-grid/locales';
 import VehicleIcon from '@mui/icons-material/LocalShipping';
-
 import VehicleDataRest from '../../../services/VehicleDataRest';
+import {FilterContext} from "../../../commons/FilterProvider";
 
 function VehicleTable(props) {
     const {showDataTable, selectedVehicleData, onSelectedVehicleDataChange} = props;
@@ -17,6 +17,7 @@ function VehicleTable(props) {
     });
     const vehicleDataRest = useMemo(() => new VehicleDataRest(), []);
     const [vehicleData, setVehicleData] = useState([]);
+    const {startDate, endDate} = useContext(FilterContext);
 
     const columns = [
         {
@@ -50,6 +51,23 @@ function VehicleTable(props) {
             headerName: t("vehicledata.lastupdate"),
             flex: 0.5,
             editable: false
+        },
+        {
+            field: "distances",
+            headerName: t("vehicledata.lastupdate"),
+            editable: false,
+            renderCell: vehicle => {
+                return (
+                    <Stack direction="oolumn" spacing={0}>
+                        {Object.entries(vehicle.row.distances).map(([day, value]) => (
+                            <>
+                                <Typography>{day}</Typography>
+                                <Typography>{value}</Typography>
+                            </>
+                        ))}
+                    </Stack>
+                );
+            }
         },
         {
             field: "status",
@@ -100,7 +118,8 @@ function VehicleTable(props) {
     }, []);
 
     function loadVehicleData() {
-        vehicleDataRest.findAllFormatted().then(response => {
+        vehicleDataRest.findAllWithStatistics(startDate.toJSON(), endDate.toJSON()).then(response => {
+            console.log(response);
             if (response.data == null) {
                 return;
             }
