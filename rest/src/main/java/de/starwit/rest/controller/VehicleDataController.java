@@ -1,5 +1,6 @@
 package de.starwit.rest.controller;
 
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import de.starwit.persistence.entity.VehicleDataEntity;
 import de.starwit.persistence.exception.NotificationException;
 import de.starwit.rest.exception.NotificationDto;
+import de.starwit.service.dto.VehicleStatisticsDTO;
 import de.starwit.service.impl.VehicleDataService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.persistence.EntityNotFoundException;
@@ -38,6 +40,13 @@ public class VehicleDataController {
     @GetMapping
     public List<VehicleDataEntity> findAll() {
         return this.vehicleDataService.findAll();
+    }
+
+    @Operation(summary = "Get all vehicles with statistics")
+    @GetMapping("/statistics/{start}/{end}")
+    public List<VehicleStatisticsDTO> findAllWithStatistics(@PathVariable("start") ZonedDateTime startTime,
+            @PathVariable("end") ZonedDateTime endTime) {
+        return this.vehicleDataService.findAllWithDistances(startTime, endTime);
     }
 
     @Operation(summary = "Get action with id")

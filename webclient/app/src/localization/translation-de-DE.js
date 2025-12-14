@@ -78,6 +78,7 @@ const translationDeDE = {
     "vehicledata.description": "Beschreibung",
     "vehicledata.latitude": "Breitengrad",
     "vehicledata.longitude": "Längengrad",
+    "vehicledata.location": "Position",
     "vehicledata.lastupdate": "Letzte Aktualisierung",
     "vehicle.selection.currentposition": "Aktuelle Position",
     "vehicledata.heading": "Fahrzeugdaten",

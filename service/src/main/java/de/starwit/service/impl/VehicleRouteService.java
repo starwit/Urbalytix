@@ -1,6 +1,7 @@
 package de.starwit.service.impl;
 
 import java.time.DayOfWeek;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -18,12 +19,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import de.starwit.persistence.dto.MilagePerWeekDto;
-import de.starwit.persistence.dto.MilagePerWeekView;
 import de.starwit.persistence.entity.VehicleDataEntity;
 import de.starwit.persistence.entity.VehicleRouteEntity;
 import de.starwit.persistence.entity.WeekYearAvailability;
-import de.starwit.persistence.repository.NativeQueryRepository;
 import de.starwit.persistence.repository.VehicleDataRepository;
 import de.starwit.persistence.repository.VehicleRoutesRepository;
 
@@ -37,9 +35,6 @@ public class VehicleRouteService implements ServiceInterface<VehicleRouteEntity,
 
     @Autowired
     VehicleDataRepository vehicleRepository;
-
-    @Autowired
-    NativeQueryRepository nativeQueryRepository;
 
     @Override
     public VehicleRoutesRepository getRepository() {
@@ -111,16 +106,21 @@ public class VehicleRouteService implements ServiceInterface<VehicleRouteEntity,
         return result;
     }
 
-    public List<MilagePerWeekDto> getMilagePerWeek(int year, int week) {
-        return nativeQueryRepository.getRoutesLengthPerDayinWeekYear(week, year);
-    }
+    public Map<ZonedDateTime, Double> getLengthByVehicleAndTimeFrame(Long vehicleId, ZonedDateTime startTime,
+            ZonedDateTime endTime) {
 
-    public List<MilagePerWeekDto> getMilagePerMultipleWeek(int year, int startWeek, int endWeek) {
-        List<MilagePerWeekDto> result = new LinkedList<>();
-        for (int week = startWeek; week <= endWeek; week++) {
-            result.addAll(nativeQueryRepository.getRoutesLengthPerDayinWeekYear(week, year));
+        Map<ZonedDateTime, Double> result = new HashMap<>();
+        var distances = repository.getLenghtByVehicleAndTimeFrame(vehicleId, startTime, endTime);
+        log.info("Distance: {}", distances);
+        if (distances.isEmpty()) {
+            return Map.of();
+        }
+        for (Object[] row : distances) {
+            Instant instant = (java.time.Instant) row[0];
+            ZonedDateTime zdt = instant.atZone(ZoneId.of("Europe/Berlin"));
+            Double length = ((Number) row[1]).doubleValue();
+            result.put(zdt, length);
         }
         return result;
     }
-
 }

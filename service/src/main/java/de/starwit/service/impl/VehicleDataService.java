@@ -3,6 +3,8 @@ package de.starwit.service.impl;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
@@ -17,13 +19,15 @@ import de.starwit.persistence.entity.VehicleRouteEntity;
 import de.starwit.persistence.repository.VehicleDataRepository;
 import de.starwit.persistence.repository.VehicleRoutesRepository;
 import de.starwit.visionapi.Sae.PositionMessage;
+import de.starwit.service.dto.VehicleStatisticsDTO;
 
 @Service
 public class VehicleDataService implements ServiceInterface<VehicleDataEntity, VehicleDataRepository> {
 
     private Logger log = LoggerFactory.getLogger(this.getClass());
 
-    ZoneId timeZone = ZoneId.of("America/New_York");
+    // TODO get from configuration
+    ZoneId timeZone = ZoneId.of("Europe/Berlin");
 
     @Autowired
     private VehicleDataRepository repository;
@@ -37,6 +41,35 @@ public class VehicleDataService implements ServiceInterface<VehicleDataEntity, V
     @Override
     public VehicleDataRepository getRepository() {
         return repository;
+    }
+
+    public List<VehicleStatisticsDTO> findAllWithDistances(ZonedDateTime startTime, ZonedDateTime endTime) {
+        List<VehicleStatisticsDTO> result = new ArrayList<>();
+        var vehicles = repository.findAll();
+        log.debug("Calculating distances for " + vehicles.size() + " vehicles");
+        for (var vehicle : vehicles) {
+            var dto = new VehicleStatisticsDTO(vehicle);
+            result.add(dto);
+        }
+
+        var distances = routesRepository.getLenghtForAllVehiclesAndTimeFrame(startTime, endTime);
+
+        for (Object[] row : distances) {
+            Long vehicleId = ((Long) row[0]).longValue();
+            Instant instant = (java.time.Instant) row[1];
+            ZonedDateTime zdt = instant.atZone(timeZone);
+            Double length = ((Number) row[2]).doubleValue();
+            log.debug("Vehicle " + vehicleId + " on " + zdt + " length: " + length);
+            for (var dto : result) {
+                if (dto.getId() == vehicleId) {
+                    dto.getDistances().put(zdt, length);
+                    dto.getCleaningDistances().put(zdt, length);
+                }
+            }
+        }
+
+        return result;
+
     }
 
     public void insertOrUpdatePosition(String streamKey, PositionMessage positionMessage) {

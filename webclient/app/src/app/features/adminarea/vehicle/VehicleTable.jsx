@@ -34,26 +34,14 @@ function VehicleTable(props) {
             editable: false
         },
         {
-            field: "streamKey",
-            headerName: t("vehicledata.streamkey"),
-            flex: 0.4,
-            editable: false
-        },
-        {
             field: "description",
             headerName: t("vehicledata.description"),
             flex: 0.7,
             editable: false,
         },
         {
-            field: "latitude",
-            headerName: t("vehicledata.latitude"),
-            flex: 0.4,
-            editable: false
-        },
-        {
-            field: "longitude",
-            headerName: t("vehicledata.longitude"),
+            field: "location",
+            headerName: t("vehicledata.location"),
             flex: 0.4,
             editable: false
         },
