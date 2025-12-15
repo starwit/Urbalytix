@@ -16,6 +16,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import de.starwit.persistence.dto.DistrictWithDetectionCountDto;
+import de.starwit.persistence.dto.StreetWithDistrictDto;
 import de.starwit.persistence.entity.DetectionCountEntity;
 import de.starwit.persistence.repository.DetectionCountRepository;
 import de.starwit.persistence.repository.StreetCatalogRepository;
@@ -24,6 +25,8 @@ import de.starwit.visionapi.Analytics.DetectionCountMessage;
 
 @Service
 public class DetectionCountService implements ServiceInterface<DetectionCountEntity, DetectionCountRepository> {
+
+    ZoneId timeZone = ZoneId.of("Europe/Berlin");
 
     @Autowired
     private DetectionCountRepository repository;
@@ -91,6 +94,29 @@ public class DetectionCountService implements ServiceInterface<DetectionCountEnt
         }
         List<DetectionCountEntity> entities = repository.findByStreet(street);
         return entities;
+    }
+
+    public List<StreetWithDistrictDto> findLastDetectionDatePerStreet(String city) {
+        List<StreetWithDistrictDto> streets = new ArrayList<>();
+
+        DetectionCountEntity entity = repository.findTopByOrderByDetectionTimeDesc();
+        ZonedDateTime since = ZonedDateTime.now().minusDays(7);
+        if (entity != null) {
+            since = entity.getDetectionTime().minusDays(14);
+        }
+
+        List<Object[]> lastDetections = repository.findLastDetectionDatePerStreet(since, city);
+        for (Object[] row : lastDetections) {
+            ZonedDateTime zdt = null;
+            if (row[2] != null) {
+                Instant instant = (java.time.Instant) row[2];
+                zdt = instant.atZone(timeZone);
+            }
+            streets.add(
+                    new StreetWithDistrictDto((long) row[0], city, (String) row[1], zdt));
+        }
+
+        return streets;
     }
 
 }

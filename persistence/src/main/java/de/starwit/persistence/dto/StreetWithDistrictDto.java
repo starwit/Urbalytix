@@ -1,5 +1,13 @@
 package de.starwit.persistence.dto;
 
+import java.time.ZonedDateTime;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import de.starwit.persistence.serializer.ZonedDateTimeDeserializer;
+import de.starwit.persistence.serializer.ZonedDateTimeSerializer;
+
 public class StreetWithDistrictDto {
 
     private long id;
@@ -7,11 +15,23 @@ public class StreetWithDistrictDto {
     private String districtName;
     private String streetName;
 
+    @JsonSerialize(using = ZonedDateTimeSerializer.class)
+    @JsonDeserialize(using = ZonedDateTimeDeserializer.class)
+    private ZonedDateTime lastCleaning;
+
     public StreetWithDistrictDto(long id, String city, String districtName, String streetName) {
         this.id = id;
         this.city = city;
         this.districtName = districtName;
         this.streetName = streetName;
+    }
+
+    public StreetWithDistrictDto(long id, String city, String streetName,
+            ZonedDateTime lastCleaning) {
+        this.id = id;
+        this.city = city;
+        this.streetName = streetName;
+        this.lastCleaning = lastCleaning;
     }
 
     public long getId() {
@@ -44,5 +64,13 @@ public class StreetWithDistrictDto {
 
     public void setStreetName(String streetName) {
         this.streetName = streetName;
+    }
+
+    public ZonedDateTime getLastCleaning() {
+        return lastCleaning;
+    }
+
+    public void setLastCleaning(ZonedDateTime lastCleaning) {
+        this.lastCleaning = lastCleaning;
     }
 }

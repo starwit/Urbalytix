@@ -19,6 +19,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.starwit.persistence.dto.StreetWithDistrictDto;
 import de.starwit.persistence.entity.StreetCatalogEntity;
+import de.starwit.service.impl.DetectionCountService;
 import de.starwit.service.impl.StreetCatalogService;
 import io.swagger.v3.oas.annotations.Operation;
 
@@ -30,6 +31,9 @@ public class StreetCatalogController {
 
     @Autowired
     private StreetCatalogService streetCatalogService;
+
+    @Autowired
+    private DetectionCountService detectionCountService;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -55,6 +59,25 @@ public class StreetCatalogController {
     @GetMapping(value = "/list/{city}", produces = "application/geo+json")
     public List<StreetWithDistrictDto> findAllByCityWithDistrict(@PathVariable("city") String city) {
         List<StreetWithDistrictDto> streets = this.streetCatalogService.findByCityWithDistrict(city);
+        return streets;
+    }
+
+    @Operation(summary = "Get street list with last cleaning date")
+    @GetMapping(value = "/cleaning/{city}", produces = "application/json")
+    public List<StreetWithDistrictDto> findAllStreetsWithLastDetectionDate(@PathVariable("city") String city) {
+        List<StreetWithDistrictDto> streetsWithDistricts = this.streetCatalogService.findByCityWithDistrict(city);
+        List<StreetWithDistrictDto> streets = this.detectionCountService.findLastDetectionDatePerStreet(city);
+
+        for (StreetWithDistrictDto dto : streetsWithDistricts) {
+            if (dto.getLastCleaning() != null) {
+                for (StreetWithDistrictDto street : streets) {
+                    if (street.getId() == dto.getId()) {
+                        street.setLastCleaning(dto.getLastCleaning());
+                    }
+                }
+            }
+        }
+
         return streets;
     }
 
