@@ -80,6 +80,7 @@ const translationDeDE = {
     "vehicledata.longitude": "Längengrad",
     "vehicledata.location": "Position",
     "vehicledata.distance": "Fahrstrecke",
+    "vehicledata.distanceCleaning": "Reinigungsanteil",
     "vehicledata.lastupdate": "Letzte Aktualisierung",
     "vehicle.selection.currentposition": "Aktuelle Position",
     "vehicledata.heading": "Fahrzeugdaten",

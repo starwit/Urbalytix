@@ -42,34 +42,22 @@ function VehicleTable(props) {
             editable: false,
         },
         {
-            field: "location",
-            headerName: t("vehicledata.location"),
-            flex: 0.35,
-            editable: false
-        },
-        {
             field: "lastUpdate",
             headerName: t("vehicledata.lastupdate"),
             flex: 0.2,
             editable: false
         },
         {
-            field: "distances",
+            field: "distanceTotal",
             headerName: t("vehicledata.distance"),
             editable: false,
-            flex: 0.5,
-            renderCell: vehicle => {
-                return (
-                    <Stack direction="row" spacing={1}>
-                        {Object.entries(vehicle.row.distances).map(([day, value]) => (
-                            <>
-                                {dayjs(day).format('MM-DD')}:
-                                {value}
-                            </>
-                        ))}
-                    </Stack>
-                );
-            }
+            flex: 0.2
+        },
+        {
+            field: "distanceCleaning",
+            headerName: t("vehicledata.distanceCleaning"),
+            editable: false,
+            flex: 0.2
         },
         {
             field: "status",
@@ -119,15 +107,18 @@ function VehicleTable(props) {
         //return () => clearInterval(interval);
     }, [startDate, endDate]);
 
+    const sumValues = obj => Object.values(obj).reduce((a, b) => a + b, 0);
+
     function loadVehicleData() {
         vehicleDataRest.findAllWithStatistics(startDate.toJSON(), endDate.toJSON()).then(response => {
-            console.log(response.data);
             if (response.data == null) {
                 return;
             }
-
             response.data.forEach(vehicle => {
                 vehicle["isSelected"] = false;
+                // sum daily distances
+                vehicle["distanceTotal"] = Math.round(sumValues(vehicle["distances"]) / 1000) + ' km';
+                vehicle["distanceCleaning"] = Math.round(sumValues(vehicle["cleaningDistances"]) / 1000) + ' km';
             });
             setVehicleData(response.data);
         });

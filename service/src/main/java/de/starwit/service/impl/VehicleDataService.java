@@ -64,7 +64,7 @@ public class VehicleDataService implements ServiceInterface<VehicleDataEntity, V
             for (var dto : result) {
                 if (dto.getId() == vehicleId) {
                     dto.getDistances().put(zdt, Math.round(length * 100.0) / 100.0);
-                    dto.getCleaningDistances().put(zdt, Math.round(length * 100.0) / 100.0);
+                    dto.getCleaningDistances().put(zdt, (Math.round(length * 100.0) / 100.0) * 0.8);
                 }
             }
         }
