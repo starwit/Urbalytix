@@ -115,7 +115,11 @@ function VehicleTable(props) {
                 return;
             }
             response.data.forEach(vehicle => {
-                vehicle["isSelected"] = false;
+                if (selectedVehicleData.includes(vehicle.streamKey)) {
+                    vehicle["isSelected"] = true;
+                } else {
+                    vehicle["isSelected"] = false;
+                }
                 // sum daily distances
                 vehicle["distanceTotal"] = Math.round(sumValues(vehicle["distances"]) / 1000) + ' km';
                 vehicle["distanceCleaning"] = Math.round(sumValues(vehicle["cleaningDistances"]) / 1000) + ' km';
