@@ -50,7 +50,6 @@ public class VehicleRouteController {
     public List<VehicleRouteEntity> findAllPerVehicleAndCalendarWeek(@PathVariable String name,
             @PathVariable("year") int year,
             @PathVariable("week") int week) {
-
         return this.vehicleRouteService.findByVehicleAndCalendarWeek(name, year, week);
     }
 
@@ -58,6 +57,14 @@ public class VehicleRouteController {
     @GetMapping(value = "/timeframes")
     public Map<Integer, List<Integer>> getAvailableTimeFrames() {
         return vehicleRouteService.getAvailableTimeFrames();
+    }
+
+    @Operation(summary = "Get route length per vehicle and time frame")
+    @GetMapping(value = "/length/{vehicleId}/{start}/{end}")
+    public Map<ZonedDateTime, Double> getLenghtByVehicleAndTimeFrame(@PathVariable Long vehicleId,
+            @PathVariable("start") ZonedDateTime startTime,
+            @PathVariable("end") ZonedDateTime endTime) {
+        return vehicleRouteService.getLengthByVehicleAndTimeFrame(vehicleId, startTime, endTime);
     }
 
 }

@@ -35,7 +35,7 @@ function Vehicles() {
     const [prevSelectedVehicleData, setPrevSelectedVehicleData] = useState([]);
     const {date} = useContext(FilterContext);
     const [routes, setRoutes] = useState([]);
-    const [showDataTable, setShowDataTable] = useState(false);
+    const [showDataTable, setShowDataTable] = useState(true);
     const {districts} = useDistricts({showDistricts});
 
     useEffect(() => {

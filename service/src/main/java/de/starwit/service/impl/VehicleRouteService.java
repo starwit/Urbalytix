@@ -1,6 +1,7 @@
 package de.starwit.service.impl;
 
 import java.time.DayOfWeek;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -105,4 +106,21 @@ public class VehicleRouteService implements ServiceInterface<VehicleRouteEntity,
         return result;
     }
 
+    public Map<ZonedDateTime, Double> getLengthByVehicleAndTimeFrame(Long vehicleId, ZonedDateTime startTime,
+            ZonedDateTime endTime) {
+
+        Map<ZonedDateTime, Double> result = new HashMap<>();
+        var distances = repository.getLengthByVehicleAndTimeFrame(vehicleId, startTime, endTime);
+        log.info("Distance: {}", distances);
+        if (distances.isEmpty()) {
+            return Map.of();
+        }
+        for (Object[] row : distances) {
+            Instant instant = (java.time.Instant) row[0];
+            ZonedDateTime zdt = instant.atZone(ZoneId.of("Europe/Berlin"));
+            Double length = ((Number) row[1]).doubleValue();
+            result.put(zdt, length);
+        }
+        return result;
+    }
 }
