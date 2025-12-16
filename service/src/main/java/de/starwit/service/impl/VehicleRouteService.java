@@ -110,7 +110,7 @@ public class VehicleRouteService implements ServiceInterface<VehicleRouteEntity,
             ZonedDateTime endTime) {
 
         Map<ZonedDateTime, Double> result = new HashMap<>();
-        var distances = repository.getLenghtByVehicleAndTimeFrame(vehicleId, startTime, endTime);
+        var distances = repository.getLengthByVehicleAndTimeFrame(vehicleId, startTime, endTime);
         log.info("Distance: {}", distances);
         if (distances.isEmpty()) {
             return Map.of();

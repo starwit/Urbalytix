@@ -53,7 +53,7 @@ public interface VehicleRoutesRepository extends JpaRepository<VehicleRouteEntit
             GROUP BY effective_day
             ORDER BY effective_day
                         """, nativeQuery = true)
-    List<Object[]> getLenghtByVehicleAndTimeFrame(Long vehicleId, ZonedDateTime startTime,
+    List<Object[]> getLengthByVehicleAndTimeFrame(Long vehicleId, ZonedDateTime startTime,
             ZonedDateTime endTime);
 
     @Query(value = """
@@ -70,7 +70,7 @@ public interface VehicleRoutesRepository extends JpaRepository<VehicleRouteEntit
             GROUP BY vehicle_id, effective_day
             ORDER BY vehicle_id, effective_day
                         """, nativeQuery = true)
-    List<Object[]> getLenghtForAllVehiclesAndTimeFrame(ZonedDateTime startTime,
+    List<Object[]> getLengthForAllVehiclesAndTimeFrame(ZonedDateTime startTime,
             ZonedDateTime endTime);
 
     @Query(value = """
