@@ -26,14 +26,6 @@ public class StreetWithDistrictDto {
         this.streetName = streetName;
     }
 
-    public StreetWithDistrictDto(long id, String city, String streetName,
-            ZonedDateTime lastCleaning) {
-        this.id = id;
-        this.city = city;
-        this.streetName = streetName;
-        this.lastCleaning = lastCleaning;
-    }
-
     public long getId() {
         return id;
     }
