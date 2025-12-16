@@ -53,7 +53,7 @@ public class VehicleDataService implements ServiceInterface<VehicleDataEntity, V
             result.add(dto);
         }
 
-        var distances = routesRepository.getLenghtForAllVehiclesAndTimeFrame(startTime, endTime);
+        var distances = routesRepository.getLengthForAllVehiclesAndTimeFrame(startTime, endTime);
 
         for (Object[] row : distances) {
             Long vehicleId = ((Long) row[0]).longValue();
