@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import de.starwit.persistence.entity.VehicleDataEntity;
 import de.starwit.persistence.exception.NotificationException;
 import de.starwit.rest.exception.NotificationDto;
-import de.starwit.service.dto.VehicleStatisticsDTO;
+import de.starwit.service.dto.VehicleStatisticsDto;
 import de.starwit.service.impl.VehicleDataService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.persistence.EntityNotFoundException;
@@ -44,7 +44,7 @@ public class VehicleDataController {
 
     @Operation(summary = "Get all vehicles with statistics")
     @GetMapping("/statistics/{start}/{end}")
-    public List<VehicleStatisticsDTO> findAllWithStatistics(@PathVariable("start") ZonedDateTime startTime,
+    public List<VehicleStatisticsDto> findAllWithStatistics(@PathVariable("start") ZonedDateTime startTime,
             @PathVariable("end") ZonedDateTime endTime) {
         return this.vehicleDataService.findAllWithDistances(startTime, endTime);
     }

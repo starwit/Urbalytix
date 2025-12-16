@@ -20,7 +20,7 @@ import de.starwit.persistence.entity.VehicleRouteEntity;
 import de.starwit.persistence.repository.VehicleDataRepository;
 import de.starwit.persistence.repository.VehicleRoutesRepository;
 import de.starwit.visionapi.Sae.PositionMessage;
-import de.starwit.service.dto.VehicleStatisticsDTO;
+import de.starwit.service.dto.VehicleStatisticsDto;
 
 @Service
 public class VehicleDataService implements ServiceInterface<VehicleDataEntity, VehicleDataRepository> {
@@ -44,16 +44,16 @@ public class VehicleDataService implements ServiceInterface<VehicleDataEntity, V
         return repository;
     }
 
-    public List<VehicleStatisticsDTO> findAllWithDistances(ZonedDateTime startTime, ZonedDateTime endTime) {
-        List<VehicleStatisticsDTO> result = new ArrayList<>();
-        var vehicles = repository.findAll();
+    public List<VehicleStatisticsDto> findAllWithDistances(ZonedDateTime startTime, ZonedDateTime endTime) {
+        List<VehicleStatisticsDto> result = new ArrayList<>();
+        List<VehicleDataEntity> vehicles = repository.findAll();
         log.debug("Calculating distances for " + vehicles.size() + " vehicles");
-        for (var vehicle : vehicles) {
-            var dto = new VehicleStatisticsDTO(vehicle);
+        for (VehicleDataEntity vehicle : vehicles) {
+            VehicleStatisticsDto dto = new VehicleStatisticsDto(vehicle);
             result.add(dto);
         }
 
-        var distances = routesRepository.getLengthForAllVehiclesAndTimeFrame(startTime, endTime);
+        List<Object[]> distances = routesRepository.getLengthForAllVehiclesAndTimeFrame(startTime, endTime);
 
         for (Object[] row : distances) {
             Long vehicleId = ((Long) row[0]).longValue();
@@ -61,7 +61,7 @@ public class VehicleDataService implements ServiceInterface<VehicleDataEntity, V
             ZonedDateTime zdt = instant.atZone(timeZone);
             Double length = ((Number) row[2]).doubleValue();
             log.debug("Vehicle " + vehicleId + " on " + zdt + " length: " + length);
-            for (var dto : result) {
+            for (VehicleStatisticsDto dto : result) {
                 if (dto.getId() == vehicleId) {
                     dto.getDistances().put(zdt, Math.round(length * 100.0) / 100.0);
                     dto.getCleaningDistances().put(zdt, (Math.round(length * 100.0) / 100.0) * 0.8);

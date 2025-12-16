@@ -13,7 +13,7 @@ import de.starwit.persistence.serializer.GeometrySerializer;
 import de.starwit.persistence.serializer.ZonedDateTimeDeserializer;
 import de.starwit.persistence.serializer.ZonedDateTimeSerializer;
 
-public class VehicleStatisticsDTO {
+public class VehicleStatisticsDto {
 
     private long id;
 
@@ -34,10 +34,10 @@ public class VehicleStatisticsDTO {
 
     Map<ZonedDateTime, Double> cleaningDistances = new java.util.HashMap<>();
 
-    public VehicleStatisticsDTO() {
+    public VehicleStatisticsDto() {
     }
 
-    public VehicleStatisticsDTO(VehicleDataEntity entity) {
+    public VehicleStatisticsDto(VehicleDataEntity entity) {
         this.id = entity.getId();
         this.name = entity.getName();
         this.streamKey = entity.getStreamKey();
