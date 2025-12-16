@@ -5,6 +5,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Geometry;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 import de.starwit.persistence.dto.DistrictWithDetectionCountDto;
 import de.starwit.persistence.dto.StreetWithDistrictDto;
 import de.starwit.persistence.dto.StreetsWithDetectionCountDto;
+import de.starwit.persistence.entity.CityDistrictEntity;
 import de.starwit.persistence.entity.DetectionCountEntity;
 import de.starwit.persistence.entity.StreetCatalogEntity;
 import de.starwit.persistence.repository.CityDistrictRepository;
@@ -108,9 +110,15 @@ public class DetectionCountService implements ServiceInterface<DetectionCountEnt
     public List<StreetsWithDetectionCountDto> getDataForStreetsByDistrictAndTimeframe(ZonedDateTime startTime,
             ZonedDateTime endTime, long districtId) {
         List<StreetsWithDetectionCountDto> result = new ArrayList<>();
-        String districtName = districtRepository.findById(districtId).get().getName();
+
+        String districtName = "";
+        Optional<CityDistrictEntity> districtEntity = districtRepository.findById(districtId);
+        if (!districtEntity.isEmpty()) {
+            districtName = districtEntity.get().getName();
+        }
+
         List<StreetCatalogEntity> streets = streetCatalogRepository.findByCityDistrictId("Wolfsburg", districtId);
-        log.info("Found " + streets.size() + " streets for district " + districtId);
+        log.debug("Found " + streets.size() + " streets for district " + districtId);
         for (StreetCatalogEntity street : streets) {
             Geometry streetHull = streetCatalogRepository.findStreetHull(street.getId());
             int wasteCount = repository.countByGeometry(streetHull, startTime, endTime);

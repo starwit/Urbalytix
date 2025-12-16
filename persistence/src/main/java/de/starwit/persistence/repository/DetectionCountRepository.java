@@ -23,7 +23,7 @@ public interface DetectionCountRepository extends JpaRepository<DetectionCountEn
     List<DetectionCountEntity> findByStreet(Geometry street);
 
     @Query(value = """
-            SELECT count(count) FROM detection_count
+            SELECT sum(count) FROM detection_count
             WHERE
                 st_contains(?1, location)
             AND detection_time >= ?2 and detection_time < ?3
