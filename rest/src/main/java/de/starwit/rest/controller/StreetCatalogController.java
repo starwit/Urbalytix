@@ -68,9 +68,9 @@ public class StreetCatalogController {
         List<StreetWithDistrictDto> streetsWithDistricts = this.streetCatalogService.findByCityWithDistrict(city);
         List<StreetWithDistrictDto> streets = this.detectionCountService.findLastDetectionDatePerStreet(city);
 
-        for (StreetWithDistrictDto dto : streetsWithDistricts) {
+        for (StreetWithDistrictDto dto : streets) {
             if (dto.getLastCleaning() != null) {
-                for (StreetWithDistrictDto street : streets) {
+                for (StreetWithDistrictDto street : streetsWithDistricts) {
                     if (street.getId() == dto.getId()) {
                         street.setLastCleaning(dto.getLastCleaning());
                     }
@@ -78,7 +78,7 @@ public class StreetCatalogController {
             }
         }
 
-        return streets;
+        return streetsWithDistricts;
     }
 
     private FeatureCollection convertToGeoJSON(List<StreetCatalogEntity> streets) {
