@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 
 import de.starwit.persistence.dto.DistrictWithDetectionCountDto;
+import de.starwit.persistence.dto.StreetsWithDetectionCountDto;
 import de.starwit.persistence.entity.DetectionCountEntity;
 import de.starwit.persistence.serializer.ZonedDateTimeDeserializer;
 import de.starwit.rest.exception.NotificationDto;
@@ -50,8 +51,8 @@ public class DetectionCountController {
     }
 
     @GetMapping(value = "/street/{street}")
-    public List<DetectionCountEntity> findByStreetName(@PathVariable("street") String streetName) {
-        List<DetectionCountEntity> entities = this.detectionCountService.getDataByStreetName(streetName);
+    public List<DetectionCountEntity> findByStreetName(@PathVariable("street") long streetId) {
+        List<DetectionCountEntity> entities = this.detectionCountService.getDataByStreetName(streetId);
         return entities;
     }
 
@@ -63,6 +64,19 @@ public class DetectionCountController {
         List<DistrictWithDetectionCountDto> districts = this.detectionCountService.getDataByDistrictAndTimeframe(
                 startTime,
                 endTime);
+        return districts;
+    }
+
+    @Operation(summary = "Get city street list for district with detections")
+    @GetMapping(value = "/districtstreet/{start}/{end}/{districtId}")
+    public List<StreetsWithDetectionCountDto> findByDistrictWithDetection(
+            @PathVariable("start") ZonedDateTime startTime,
+            @PathVariable("end") ZonedDateTime endTime,
+            @PathVariable("districtId") long districtId) {
+        List<StreetsWithDetectionCountDto> districts = this.detectionCountService
+                .getDataForStreetsByDistrictAndTimeframe(
+                        startTime,
+                        endTime, districtId);
         return districts;
     }
 

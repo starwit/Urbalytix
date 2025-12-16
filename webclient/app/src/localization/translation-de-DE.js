@@ -63,6 +63,7 @@ const translationDeDE = {
     "detectiondata.waste": "Abfall",
     "detectiondata.cigarette": "Zigaretten",
     "detectiondata.heading": "Abfallmenge",
+    "detectiondata.sum": "Summe Abfall",
     "detectiondata.": "Sonstiges",
     "features.selection.all": "Alle Daten",
     "features.selection": "Weitere Daten",
@@ -120,6 +121,7 @@ const translationDeDE = {
     "features.selection.districts": "Stadtbezirke",
     "district.name": "Stadtteilname",
     "district.councilName": "Ortsrat",
-    "district.detections": "Detektionen"
+    "district.detections": "Detektionen",
+    "district.showdetails": "Bezirksdetails anzeigen"
 };
 export default translationDeDE;

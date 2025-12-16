@@ -16,7 +16,8 @@ import {useVehicleData} from "../hooks/useVehicleData";
 import {useVehicleRoutes} from "../hooks/useVehicleRoutes";
 import DetectionMap from './DetectionMap';
 import DetectionMapMenu from "./DetectionMapMenu";
-import DetectionTable from "./DetectionTable";
+import DetectionDistrictTable from "./DetectionDistrictTable";
+import DetectionStreetTable from "./DetectionStreetTable";
 
 const DATA_FILTERS = [
     {value: 0, label: 'selection.currentPosition'},
@@ -58,6 +59,9 @@ function DetectionOverview() {
     // to reposition map center according to data table height
     const [city, setCity] = useState('');
     const [showDataTable, setShowDataTable] = useState(false);
+    const [showStreetData, setShowStreetData] = useState(false);
+    const [districtId, setDistrictId] = useState(1);
+    const [districtName, setDistrictName] = useState('');
 
     useEffect(() => {
         configurationRest.getMapCenter().then(response => {
@@ -78,6 +82,38 @@ function DetectionOverview() {
 
     function toggleDataTable() {
         setShowDataTable(!showDataTable);
+    }
+
+    function handleDistrictDetailsClick(params) {
+        setDistrictId(params.id);
+        setDistrictName(params.districtName);
+        setShowStreetData(true);
+    }
+
+    function handleBackClick() {
+        setShowStreetData(false);
+    }
+
+    function displayTable() {
+        if (showDataTable) {
+            if (showStreetData) {
+                return <DetectionStreetTable
+                    showDataTable={showDataTable}
+                    districtId={districtId}
+                    districtName={districtName}
+                    city={city}
+                    handleBackClick={handleBackClick}
+                />
+            } else {
+                return <DetectionDistrictTable
+                    showDataTable={showDataTable}
+                    city={city}
+                    handleDistrictDetailsClick={handleDistrictDetailsClick}
+                />
+            }
+        } else {
+            return <></>
+        }
     }
 
     return (
@@ -127,10 +163,7 @@ function DetectionOverview() {
                 showCoverage={types.includes("coverage")}
                 showDistricts={showDistricts}
             />
-            <DetectionTable
-                showDataTable={showDataTable}
-                city={city}
-            />
+            {displayTable()}
         </>
     );
 }

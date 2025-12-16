@@ -9,10 +9,10 @@ import {MapView} from "@deck.gl/core";
 import {MapLayerFactory} from "../../../commons/geographicalMaps/MapLayerFactory";
 import {centroid} from '@turf/turf';
 import {WebMercatorViewport} from "@deck.gl/core";
-import StreetTableLayout from "./StreetTableLayout";
 import FilterLayout from "../../../commons/filter/FilterLayout";
 import {useDistricts} from "../../hooks/useCityDistricts";
 import DistrictFilter from "../../../commons/filter/DistrictFilter";
+import DataTableLayout from "../../../commons/DataTableLayout";
 
 function StreetCatalog() {
     const {t, i18n} = useTranslation();
@@ -141,7 +141,7 @@ function StreetCatalog() {
             >
             </DeckGL>
 
-            <StreetTableLayout>
+            <DataTableLayout>
                 <DataGrid
                     ref={gridRef}
                     localeText={locale.components.MuiDataGrid.defaultProps.localeText}
@@ -164,7 +164,7 @@ function StreetCatalog() {
                     pageSizeOptions={[10]}
                     disableRowSelectionOnClick
                 />
-            </StreetTableLayout>
+            </DataTableLayout>
         </ >
     );
 }

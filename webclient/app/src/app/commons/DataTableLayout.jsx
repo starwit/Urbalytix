@@ -1,7 +1,7 @@
 import {Box} from "@mui/material";
 
 
-function StreetTableLayout(props) {
+function DataTableLayout(props) {
     const {children} = props;
 
     return (
@@ -24,4 +24,4 @@ function StreetTableLayout(props) {
     )
 }
 
-export default StreetTableLayout;
+export default DataTableLayout;
