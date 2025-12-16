@@ -1,11 +1,12 @@
-import {useEffect, useState, useMemo} from "react";
-import {Checkbox, Tooltip} from "@mui/material";
+import {useEffect, useState, useMemo, useContext} from "react";
+import {Checkbox, Stack, Tooltip, Typography} from "@mui/material";
 import {DataGrid} from "@mui/x-data-grid";
 import {useTranslation} from "react-i18next";
 import {deDE, enUS} from '@mui/x-data-grid/locales';
 import VehicleIcon from '@mui/icons-material/LocalShipping';
-
 import VehicleDataRest from '../../../services/VehicleDataRest';
+import {FilterContext} from "../../../commons/FilterProvider";
+import dayjs from 'dayjs';
 
 function VehicleTable(props) {
     const {showDataTable, selectedVehicleData, onSelectedVehicleDataChange} = props;
@@ -17,6 +18,7 @@ function VehicleTable(props) {
     });
     const vehicleDataRest = useMemo(() => new VehicleDataRest(), []);
     const [vehicleData, setVehicleData] = useState([]);
+    const {startDate, endDate} = useContext(FilterContext);
 
     const columns = [
         {
@@ -24,49 +26,43 @@ function VehicleTable(props) {
             type: "actions",
             headerName: t("vehicledata.showRoutes"),
             sortable: false,
-            width: 160,
+            width: 110,
             renderCell: params => <MyRenderCheckBox isSelected={params.row.isSelected} vehicleId={params.row.id} row={params.row} />
         },
         {
             field: "name",
             headerName: t("vehicledata.name"),
-            flex: 0.5,
-            editable: false
-        },
-        {
-            field: "streamKey",
-            headerName: t("vehicledata.streamkey"),
-            flex: 0.4,
+            flex: 0.15,
             editable: false
         },
         {
             field: "description",
             headerName: t("vehicledata.description"),
-            flex: 0.7,
+            flex: 0.35,
             editable: false,
-        },
-        {
-            field: "latitude",
-            headerName: t("vehicledata.latitude"),
-            flex: 0.4,
-            editable: false
-        },
-        {
-            field: "longitude",
-            headerName: t("vehicledata.longitude"),
-            flex: 0.4,
-            editable: false
         },
         {
             field: "lastUpdate",
             headerName: t("vehicledata.lastupdate"),
-            flex: 0.5,
+            flex: 0.2,
             editable: false
+        },
+        {
+            field: "distanceTotal",
+            headerName: t("vehicledata.distance"),
+            editable: false,
+            flex: 0.2
+        },
+        {
+            field: "distanceCleaning",
+            headerName: t("vehicledata.distanceCleaning"),
+            editable: false,
+            flex: 0.2
         },
         {
             field: "status",
             headerName: t("vehicledata.status"),
-            flex: 0.4,
+            flex: 0.08,
             editable: false,
             renderCell: vehicle => {
                 return (
@@ -109,16 +105,24 @@ function VehicleTable(props) {
         loadVehicleData();
         //const interval = setInterval(loadVehicleData, 2000);
         //return () => clearInterval(interval);
-    }, []);
+    }, [startDate, endDate]);
+
+    const sumValues = obj => Object.values(obj).reduce((a, b) => a + b, 0);
 
     function loadVehicleData() {
-        vehicleDataRest.findAllFormatted().then(response => {
+        vehicleDataRest.findAllWithStatistics(startDate.toJSON(), endDate.toJSON()).then(response => {
             if (response.data == null) {
                 return;
             }
-
             response.data.forEach(vehicle => {
-                vehicle["isSelected"] = false;
+                if (selectedVehicleData.includes(vehicle.streamKey)) {
+                    vehicle["isSelected"] = true;
+                } else {
+                    vehicle["isSelected"] = false;
+                }
+                // sum daily distances
+                vehicle["distanceTotal"] = Math.round(sumValues(vehicle["distances"]) / 1000) + ' km';
+                vehicle["distanceCleaning"] = Math.round(sumValues(vehicle["cleaningDistances"]) / 1000) + ' km';
             });
             setVehicleData(response.data);
         });

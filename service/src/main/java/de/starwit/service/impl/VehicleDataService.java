@@ -1,8 +1,11 @@
 package de.starwit.service.impl;
 
+import java.text.DecimalFormat;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
@@ -17,13 +20,15 @@ import de.starwit.persistence.entity.VehicleRouteEntity;
 import de.starwit.persistence.repository.VehicleDataRepository;
 import de.starwit.persistence.repository.VehicleRoutesRepository;
 import de.starwit.visionapi.Sae.PositionMessage;
+import de.starwit.service.dto.VehicleStatisticsDto;
 
 @Service
 public class VehicleDataService implements ServiceInterface<VehicleDataEntity, VehicleDataRepository> {
 
     private Logger log = LoggerFactory.getLogger(this.getClass());
 
-    ZoneId timeZone = ZoneId.of("America/New_York");
+    // TODO get from configuration
+    ZoneId timeZone = ZoneId.of("Europe/Berlin");
 
     @Autowired
     private VehicleDataRepository repository;
@@ -37,6 +42,35 @@ public class VehicleDataService implements ServiceInterface<VehicleDataEntity, V
     @Override
     public VehicleDataRepository getRepository() {
         return repository;
+    }
+
+    public List<VehicleStatisticsDto> findAllWithDistances(ZonedDateTime startTime, ZonedDateTime endTime) {
+        List<VehicleStatisticsDto> result = new ArrayList<>();
+        List<VehicleDataEntity> vehicles = repository.findAll();
+        log.debug("Calculating distances for " + vehicles.size() + " vehicles");
+        for (VehicleDataEntity vehicle : vehicles) {
+            VehicleStatisticsDto dto = new VehicleStatisticsDto(vehicle);
+            result.add(dto);
+        }
+
+        List<Object[]> distances = routesRepository.getLengthForAllVehiclesAndTimeFrame(startTime, endTime);
+
+        for (Object[] row : distances) {
+            Long vehicleId = ((Long) row[0]).longValue();
+            Instant instant = (java.time.Instant) row[1];
+            ZonedDateTime zdt = instant.atZone(timeZone);
+            Double length = ((Number) row[2]).doubleValue();
+            log.debug("Vehicle " + vehicleId + " on " + zdt + " length: " + length);
+            for (VehicleStatisticsDto dto : result) {
+                if (dto.getId() == vehicleId) {
+                    dto.getDistances().put(zdt, Math.round(length * 100.0) / 100.0);
+                    dto.getCleaningDistances().put(zdt, (Math.round(length * 100.0) / 100.0) * 0.8);
+                }
+            }
+        }
+
+        return result;
+
     }
 
     public void insertOrUpdatePosition(String streamKey, PositionMessage positionMessage) {

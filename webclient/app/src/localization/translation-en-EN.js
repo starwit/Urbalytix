@@ -63,6 +63,7 @@ const translationEnEN = {
     "detectiondata.waste": "Waste",
     "detectiondata.cigarette": "Cigarettes",
     "detectiondata.heading": "Waste Type",
+    "detectiondata.sum": "Waste Total",
     "detectiondata.": "undefined",
     "features.selection.all": "All data",
     "features.selection": "Additional Data",
@@ -78,6 +79,9 @@ const translationEnEN = {
     "vehicledata.description": "Description",
     "vehicledata.latitude": "Latitude",
     "vehicledata.longitude": "Longitude",
+    "vehicledata.location": "Position",
+    "vehicledata.distance": "Distance total",
+    "vehicledata.distanceCleaning": "Distance cleaning",
     "vehicledata.lastupdate": "Last Update",
     "vehicle.selection.currentposition": "Vehicle Position",
     "vehicledata.heading": "Vehicle Data",
@@ -121,6 +125,7 @@ const translationEnEN = {
     "features.selection.districts": "City Districts",
     "district.name": "District Name",
     "district.councilName": "District Government",
-    "district.detections": "Detection"
+    "district.detections": "Detection",
+    "district.showdetails": "Show District Details"
 };
 export default translationEnEN;

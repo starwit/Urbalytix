@@ -63,6 +63,7 @@ const translationDeDE = {
     "detectiondata.waste": "Abfall",
     "detectiondata.cigarette": "Zigaretten",
     "detectiondata.heading": "Abfallmenge",
+    "detectiondata.sum": "Summe Abfall",
     "detectiondata.": "Sonstiges",
     "features.selection.all": "Alle Daten",
     "features.selection": "Weitere Daten",
@@ -78,6 +79,9 @@ const translationDeDE = {
     "vehicledata.description": "Beschreibung",
     "vehicledata.latitude": "Breitengrad",
     "vehicledata.longitude": "Längengrad",
+    "vehicledata.location": "Position",
+    "vehicledata.distance": "Fahrstrecke",
+    "vehicledata.distanceCleaning": "Reinigungsanteil",
     "vehicledata.lastupdate": "Letzte Aktualisierung",
     "vehicle.selection.currentposition": "Aktuelle Position",
     "vehicledata.heading": "Fahrzeugdaten",
@@ -121,6 +125,7 @@ const translationDeDE = {
     "features.selection.districts": "Stadtbezirke",
     "district.name": "Stadtteilname",
     "district.councilName": "Ortsrat",
-    "district.detections": "Detektionen"
+    "district.detections": "Detektionen",
+    "district.showdetails": "Bezirksdetails anzeigen"
 };
 export default translationDeDE;

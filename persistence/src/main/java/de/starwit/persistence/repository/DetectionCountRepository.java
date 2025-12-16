@@ -26,6 +26,14 @@ public interface DetectionCountRepository extends JpaRepository<DetectionCountEn
     DetectionCountEntity findTopByOrderByDetectionTimeDesc();
 
     @Query(value = """
+            SELECT COALESCE(sum(count), 0) FROM detection_count
+            WHERE
+                st_contains(?1, location)
+            AND detection_time >= ?2 and detection_time < ?3
+                    """, nativeQuery = true)
+    int countByGeometry(Geometry street, ZonedDateTime startTimeStamp, ZonedDateTime endTimeStamp);
+
+    @Query(value = """
                 SELECT
                     new de.starwit.persistence.dto.DistrictWithDetectionCountDto(
                         d.id,
