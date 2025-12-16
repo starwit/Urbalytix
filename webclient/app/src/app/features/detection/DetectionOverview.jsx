@@ -94,6 +94,28 @@ function DetectionOverview() {
         setShowStreetData(false);
     }
 
+    function displayTable() {
+        if (showDataTable) {
+            if (showStreetData) {
+                return <DetectionStreetTable
+                    showDataTable={showDataTable}
+                    districtId={districtId}
+                    districtName={districtName}
+                    city={city}
+                    handleBackClick={handleBackClick}
+                />
+            } else {
+                return <DetectionDistrictTable
+                    showDataTable={showDataTable}
+                    city={city}
+                    handleDistrictDetailsClick={handleDistrictDetailsClick}
+                />
+            }
+        } else {
+            return <></>
+        }
+    }
+
     return (
         <>
             <FilterLayout leftPosition={10}>
@@ -141,25 +163,7 @@ function DetectionOverview() {
                 showCoverage={types.includes("coverage")}
                 showDistricts={showDistricts}
             />
-            {showDataTable ? (
-                showStreetData ? (
-                    <DetectionStreetTable
-                        showDataTable={showDataTable}
-                        districtId={districtId}
-                        districtName={districtName}
-                        city={city}
-                        handleBackClick={handleBackClick}
-                    />
-                ) : (
-                    <DetectionDistrictTable
-                        showDataTable={showDataTable}
-                        city={city}
-                        handleDistrictDetailsClick={handleDistrictDetailsClick}
-                    />
-                )
-            ) : (
-                <></>
-            )}
+            {displayTable()}
         </>
     );
 }

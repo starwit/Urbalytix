@@ -8,7 +8,7 @@ import DataTableLayout from "../../commons/DataTableLayout";
 import ManageSearchIcon from '@mui/icons-material/ManageSearch';
 import {IconButton, Tooltip} from "@mui/material";
 
-function DetectionTable(props) {
+function DetectionDistrictTable(props) {
     const {showDataTable, handleDistrictDetailsClick = () => { }, city} = props;
     const {t, i18n} = useTranslation();
     const locale = i18n.language == "de" ? deDE : enUS;
@@ -95,4 +95,4 @@ function DetectionTable(props) {
     );
 }
 
-export default DetectionTable;
+export default DetectionDistrictTable;

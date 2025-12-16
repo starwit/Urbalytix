@@ -9,7 +9,7 @@ import ManageSearchIcon from '@mui/icons-material/ManageSearch';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import {Breadcrumbs, IconButton, Link, Stack, Tooltip, Typography} from "@mui/material";
 
-function DetectionDistrictTable(props) {
+function DetectionSteetTable(props) {
     const {showDataTable, handleBackClick = () => { }, city, districtId, districtName} = props;
     const {t, i18n} = useTranslation();
     const locale = i18n.language == "de" ? deDE : enUS;
@@ -49,8 +49,8 @@ function DetectionDistrictTable(props) {
     return (
         <DataTableLayout>
             <Stack direction="row" alignItems="center">
-                <IconButton>
-                    <ArrowBackIcon onClick={handleClick} />
+                <IconButton onClick={handleClick}>
+                    <ArrowBackIcon />
                 </IconButton>
                 <Breadcrumbs aria-label="breadcrumb">
                     <Typography color="text.primary" >{city}</Typography>
@@ -82,4 +82,4 @@ function DetectionDistrictTable(props) {
     );
 }
 
-export default DetectionDistrictTable;
+export default DetectionSteetTable;

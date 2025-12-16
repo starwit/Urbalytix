@@ -19,7 +19,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import de.starwit.persistence.dto.DistrictWithDetectionCountDto;
-import de.starwit.persistence.dto.StreetWithDistrictDto;
 import de.starwit.persistence.dto.StreetsWithDetectionCountDto;
 import de.starwit.persistence.entity.CityDistrictEntity;
 import de.starwit.persistence.entity.DetectionCountEntity;
@@ -121,6 +120,7 @@ public class DetectionCountService implements ServiceInterface<DetectionCountEnt
         log.debug("Found " + streets.size() + " streets for district " + districtId);
         for (StreetCatalogEntity street : streets) {
             Geometry streetHull = streetCatalogRepository.findStreetHull(street.getId());
+
             int wasteCount = repository.countByGeometry(streetHull, startTime, endTime);
             StreetsWithDetectionCountDto streetDto = new StreetsWithDetectionCountDto(street.getId(),
                     street.getStreetName(), districtName, wasteCount);
