@@ -5,6 +5,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Geometry;
@@ -22,6 +23,7 @@ import de.starwit.persistence.repository.DetectionCountRepository;
 import de.starwit.persistence.repository.StreetCatalogRepository;
 import de.starwit.visionapi.Analytics.DetectionCount;
 import de.starwit.visionapi.Analytics.DetectionCountMessage;
+import java.util.HashMap;
 
 @Service
 public class DetectionCountService implements ServiceInterface<DetectionCountEntity, DetectionCountRepository> {
@@ -96,9 +98,9 @@ public class DetectionCountService implements ServiceInterface<DetectionCountEnt
         return entities;
     }
 
-    public List<StreetWithDistrictDto> findLastDetectionDatePerStreet(String city) {
-        List<StreetWithDistrictDto> streets = new ArrayList<>();
+    public Map<Long, ZonedDateTime> findLastDetectionDatePerStreet(String city) {
 
+        // get latest detection, define timespan backwards
         DetectionCountEntity entity = repository.findTopByOrderByDetectionTimeDesc();
         ZonedDateTime since = ZonedDateTime.now().minusDays(7);
         if (entity != null) {
@@ -106,17 +108,18 @@ public class DetectionCountService implements ServiceInterface<DetectionCountEnt
         }
 
         List<Object[]> lastDetections = repository.findLastDetectionDatePerStreet(since, city);
+        Map<Long, ZonedDateTime> lastDetectionsPerStreetId = new HashMap<>();
+
         for (Object[] row : lastDetections) {
             ZonedDateTime zdt = null;
             if (row[2] != null) {
                 Instant instant = (java.time.Instant) row[2];
                 zdt = instant.atZone(timeZone);
+                lastDetectionsPerStreetId.put((long) row[0], zdt);
             }
-            streets.add(
-                    new StreetWithDistrictDto((long) row[0], city, (String) row[1], zdt));
         }
 
-        return streets;
+        return lastDetectionsPerStreetId;
     }
 
 }

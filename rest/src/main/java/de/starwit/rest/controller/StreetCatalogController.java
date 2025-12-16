@@ -1,6 +1,8 @@
 package de.starwit.rest.controller;
 
+import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Map;
 
 import org.geojson.Feature;
 import org.geojson.FeatureCollection;
@@ -66,15 +68,12 @@ public class StreetCatalogController {
     @GetMapping(value = "/cleaning/{city}", produces = "application/json")
     public List<StreetWithDistrictDto> findAllStreetsWithLastDetectionDate(@PathVariable("city") String city) {
         List<StreetWithDistrictDto> streetsWithDistricts = this.streetCatalogService.findByCityWithDistrict(city);
-        List<StreetWithDistrictDto> streets = this.detectionCountService.findLastDetectionDatePerStreet(city);
+        Map<Long, ZonedDateTime> lastDetectionForStreet = this.detectionCountService
+                .findLastDetectionDatePerStreet(city);
 
-        for (StreetWithDistrictDto dto : streets) {
-            if (dto.getLastCleaning() != null) {
-                for (StreetWithDistrictDto street : streetsWithDistricts) {
-                    if (street.getId() == dto.getId()) {
-                        street.setLastCleaning(dto.getLastCleaning());
-                    }
-                }
+        for (StreetWithDistrictDto street : streetsWithDistricts) {
+            if (lastDetectionForStreet.containsKey(street.getId())) {
+                street.setLastCleaning(lastDetectionForStreet.get(street.getId()));
             }
         }
 

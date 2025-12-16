@@ -80,26 +80,4 @@ public interface DetectionCountRepository extends JpaRepository<DetectionCountEn
             """, nativeQuery = true)
     List<Object[]> findLastDetectionDatePerStreet(ZonedDateTime since, String city);
 
-    // @Query(value = """
-    // SELECT
-    // new de.starwit.persistence.dto.StreetWithDistrictDto(
-    // s.id,
-    // s.city,
-    // s.streetName
-    // MAX(dc.detection_time)
-    // )
-    // FROM StreetCatalogEntity s
-    // LEFT JOIN CityDistrictEntity d
-    // ON d.detection_time > :since
-    // AND s.city = :city
-    // AND ST_DWithin(s.street_path, d.location, 0.000015)
-    // GROUP BY
-    // sc.id, sc.city, sc.street_name
-    // ORDER BY
-    // sc.city, sc.street_name;
-
-    // """)
-    // List<StreetWithDistrictDto> findLastDetectionDatePerStreet(ZonedDateTime
-    // since, String city);
-
 }
