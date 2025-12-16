@@ -28,5 +28,4 @@ public class StreetCatalogService implements ServiceInterface<StreetCatalogEntit
         List<StreetWithDistrictDto> list = repository.findStreetsByCityWithDistrict(city);
         return list;
     }
-
 }

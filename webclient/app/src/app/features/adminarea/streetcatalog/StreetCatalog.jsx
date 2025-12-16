@@ -40,13 +40,19 @@ function StreetCatalog() {
         {
             field: "streetName",
             headerName: t("streetData.streetName"),
-            flex: 0.5,
+            flex: 0.3,
             editable: false
         },
         {
             field: "districtName",
             headerName: t("streetData.districtName"),
-            flex: 0.5,
+            flex: 0.3,
+            editable: false
+        },
+        {
+            field: "lastCleaning",
+            headerName: t("streetData.lastCleaning"),
+            flex: 0.3,
             editable: false
         }
     ];
@@ -75,7 +81,7 @@ function StreetCatalog() {
     }
 
     function loadStreetData(city) {
-        streetCatalogRest.findAllListByCity(city).then(response => {
+        streetCatalogRest.findAllWithLastCleaning(city).then(response => {
             if (response.data == null) {
                 return;
             }

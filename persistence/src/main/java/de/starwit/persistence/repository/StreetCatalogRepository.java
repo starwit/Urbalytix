@@ -32,6 +32,7 @@ public interface StreetCatalogRepository extends JpaRepository<StreetCatalogEnti
           ON s.city = d.city
          AND ST_Within(s.streetPath, d.districtGeometry)
         WHERE d.city = :city
+        ORDER BY s.id
       """)
   List<StreetWithDistrictDto> findStreetsByCityWithDistrict(@Param("city") String city);
 

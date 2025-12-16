@@ -121,6 +121,7 @@ const translationEnEN = {
     "streetData.streetName": "Street Name",
     "streetData.districtName": "District Name",
     "streetData.toggleDistricts": "Show Districts",
+    "streetData.lastCleaning": "Last Cleaning",
     "features.selection.districts": "City Districts",
     "district.name": "District Name",
     "district.councilName": "District Government",

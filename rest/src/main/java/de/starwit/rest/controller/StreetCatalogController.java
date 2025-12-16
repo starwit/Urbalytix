@@ -1,6 +1,8 @@
 package de.starwit.rest.controller;
 
+import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Map;
 
 import org.geojson.Feature;
 import org.geojson.FeatureCollection;
@@ -19,6 +21,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.starwit.persistence.dto.StreetWithDistrictDto;
 import de.starwit.persistence.entity.StreetCatalogEntity;
+import de.starwit.service.impl.DetectionCountService;
 import de.starwit.service.impl.StreetCatalogService;
 import io.swagger.v3.oas.annotations.Operation;
 
@@ -30,6 +33,9 @@ public class StreetCatalogController {
 
     @Autowired
     private StreetCatalogService streetCatalogService;
+
+    @Autowired
+    private DetectionCountService detectionCountService;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -56,6 +62,22 @@ public class StreetCatalogController {
     public List<StreetWithDistrictDto> findAllByCityWithDistrict(@PathVariable("city") String city) {
         List<StreetWithDistrictDto> streets = this.streetCatalogService.findByCityWithDistrict(city);
         return streets;
+    }
+
+    @Operation(summary = "Get street list with last cleaning date")
+    @GetMapping(value = "/cleaning/{city}", produces = "application/json")
+    public List<StreetWithDistrictDto> findAllStreetsWithLastDetectionDate(@PathVariable("city") String city) {
+        List<StreetWithDistrictDto> streetsWithDistricts = this.streetCatalogService.findByCityWithDistrict(city);
+        Map<Long, ZonedDateTime> lastDetectionForStreet = this.detectionCountService
+                .findLastDetectionDatePerStreet(city);
+
+        for (StreetWithDistrictDto street : streetsWithDistricts) {
+            if (lastDetectionForStreet.containsKey(street.getId())) {
+                street.setLastCleaning(lastDetectionForStreet.get(street.getId()));
+            }
+        }
+
+        return streetsWithDistricts;
     }
 
     private FeatureCollection convertToGeoJSON(List<StreetCatalogEntity> streets) {

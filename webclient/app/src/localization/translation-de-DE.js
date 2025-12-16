@@ -120,6 +120,7 @@ const translationDeDE = {
     "streetData.heading": "Straßenkatalog",
     "streetData.streetName": " Straßenname",
     "streetData.districtName": "Bezirksname",
+    "streetData.lastCleaning": "Letzte Reinigung",
     "streetData.toggleDistricts": "Zeige Stadtteile",
     "features.selection.districts": "Stadtbezirke",
     "district.name": "Stadtteilname",

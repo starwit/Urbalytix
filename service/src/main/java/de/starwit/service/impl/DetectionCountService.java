@@ -5,6 +5,7 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.locationtech.jts.geom.Coordinate;
@@ -19,6 +20,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import de.starwit.persistence.dto.DistrictWithDetectionCountDto;
+import de.starwit.persistence.dto.StreetWithDistrictDto;
 import de.starwit.persistence.dto.StreetsWithDetectionCountDto;
 import de.starwit.persistence.entity.CityDistrictEntity;
 import de.starwit.persistence.entity.DetectionCountEntity;
@@ -28,10 +30,12 @@ import de.starwit.persistence.repository.DetectionCountRepository;
 import de.starwit.persistence.repository.StreetCatalogRepository;
 import de.starwit.visionapi.Analytics.DetectionCount;
 import de.starwit.visionapi.Analytics.DetectionCountMessage;
+import java.util.HashMap;
 
 @Service
 public class DetectionCountService implements ServiceInterface<DetectionCountEntity, DetectionCountRepository> {
 
+    ZoneId timeZone = ZoneId.of("Europe/Berlin");
     private final static Logger log = LoggerFactory.getLogger(DetectionCountService.class);
 
     @Autowired
@@ -137,6 +141,30 @@ public class DetectionCountService implements ServiceInterface<DetectionCountEnt
         }
         List<DetectionCountEntity> entities = repository.findByStreet(street);
         return entities;
+    }
+
+    public Map<Long, ZonedDateTime> findLastDetectionDatePerStreet(String city) {
+
+        // get latest detection, define timespan backwards
+        DetectionCountEntity entity = repository.findTopByOrderByDetectionTimeDesc();
+        ZonedDateTime since = ZonedDateTime.now().minusDays(7);
+        if (entity != null) {
+            since = entity.getDetectionTime().minusDays(14);
+        }
+
+        List<Object[]> lastDetections = repository.findLastDetectionDatePerStreet(since, city);
+        Map<Long, ZonedDateTime> lastDetectionsPerStreetId = new HashMap<>();
+
+        for (Object[] row : lastDetections) {
+            ZonedDateTime zdt = null;
+            if (row[2] != null) {
+                Instant instant = (java.time.Instant) row[2];
+                zdt = instant.atZone(timeZone);
+                lastDetectionsPerStreetId.put((long) row[0], zdt);
+            }
+        }
+
+        return lastDetectionsPerStreetId;
     }
 
 }
