@@ -1,8 +1,8 @@
 package de.starwit.rest.acceptance;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.assertj.core.api.Assertions.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -10,21 +10,21 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.json.JacksonTester;
+import org.springframework.boot.test.json.Jackson2Tester;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import de.starwit.persistence.entity.AbstractEntity;
 
@@ -42,7 +42,7 @@ public abstract class AbstractControllerAcceptanceTest<ENTITY extends AbstractEn
     public void setup() {
         // create Object Mapper
         mapper = new ObjectMapper();
-        JacksonTester.initFields(this, new ObjectMapper());
+        Jackson2Tester.initFields(this, new ObjectMapper());
         mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
 
@@ -50,7 +50,7 @@ public abstract class AbstractControllerAcceptanceTest<ENTITY extends AbstractEn
 
     public abstract String getRestPath();
 
-    public abstract JacksonTester<ENTITY> getJsonTester();
+    public abstract Jackson2Tester<ENTITY> getJsonTester();
 
     @Test
     public abstract void canCreate() throws Exception;

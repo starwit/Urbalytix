@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -124,14 +126,14 @@
                 <type>maven-plugin</type>
             </dependency>
             <dependency>
-                <groupId>com.fasterxml.jackson.datatype</groupId>
-                <artifactId>jackson-datatype-jsr310</artifactId>
-                <version>2.20.1</version>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-jackson2</artifactId>
+                <version>4.0.0</version>
             </dependency>
             <dependency>
-                <groupId>de.grundid.opendatalab</groupId>
-                <artifactId>geojson-jackson</artifactId>
-                <version>3.0</version>
+                <groupId>com.fasterxml.jackson.datatype</groupId>
+                <artifactId>jackson-datatype-jsr310</artifactId>
+                <version>2.19.0</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.httpcomponents.client5</groupId>
@@ -161,7 +163,7 @@
             <dependency>
                 <groupId>de.grundid.opendatalab</groupId>
                 <artifactId>geojson-jackson</artifactId>
-                <version>3.0</version>
+                <version>1.14</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -180,6 +182,24 @@
                     <configuration>
                         <skip>true</skip>
                     </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.openrewrite.maven</groupId>
+                    <artifactId>rewrite-maven-plugin</artifactId>
+                    <version>6.26.0</version>
+                    <configuration>
+                        <exportDatatables>true</exportDatatables>
+                        <activeRecipes>
+                            <recipe>org.openrewrite.java.jackson.UpgradeJackson_2_3</recipe>
+                        </activeRecipes>
+                    </configuration>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.openrewrite.recipe</groupId>
+                            <artifactId>rewrite-jackson</artifactId>
+                            <version>1.13.0</version>
+                        </dependency>
+                    </dependencies>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
@@ -206,11 +226,15 @@
                             <phase>prepare-package</phase>
                             <configuration>
                                 <target>
-                                    <concat destfile="${project.build.outputDirectory}/static/info.txt">
-                                        <fileset file="${project.build.outputDirectory}/META-INF/build-info.properties" />
-                                        <fileset file="${project.build.outputDirectory}/git.properties" />
+                                    <concat
+                                        destfile="${project.build.outputDirectory}/static/info.txt">
+                                        <fileset
+                                            file="${project.build.outputDirectory}/META-INF/build-info.properties" />
+                                        <fileset
+                                            file="${project.build.outputDirectory}/git.properties" />
                                         <filterchain>
-                                            <filterreader classname="org.apache.tools.ant.filters.LineContains">
+                                            <filterreader
+                                                classname="org.apache.tools.ant.filters.LineContains">
                                                 <param type="negate" value="true" />
                                                 <param type="contains" value="#" />
                                             </filterreader>

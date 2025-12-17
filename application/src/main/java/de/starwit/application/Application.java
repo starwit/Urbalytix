@@ -16,9 +16,7 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
         "de.starwit.service",
         "de.starwit.persistence",
         "de.starwit.application.config"
-}, exclude = {
-        org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration.class,
-        org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration.class })
+})
 public class Application {
 
     public static void main(String[] args) {
@@ -41,7 +39,7 @@ public class Application {
     public RestTemplate restTemplate() {
         RestTemplate restTemplate = new RestTemplate();
         HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
-        requestFactory.setConnectTimeout(3000);
+        requestFactory.setConnectionRequestTimeout(3000);
 
         restTemplate.setRequestFactory(requestFactory);
         return restTemplate;
