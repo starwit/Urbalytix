@@ -66,10 +66,6 @@
             <groupId>de.starwit</groupId>
             <artifactId>vision-api</artifactId>
         </dependency>
-        <dependency>
-            <groupId>io.lettuce</groupId>
-            <artifactId>lettuce-core</artifactId>
-        </dependency>
     </dependencies>
 
 </project>

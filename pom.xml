@@ -32,7 +32,6 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <spring-boot-version>4.0.0</spring-boot-version>
         <vision-api.version>3.5.2</vision-api.version>
-        <lettuce.version>7.2.1.RELEASE</lettuce.version>
         <openapi-version>3.0.0</openapi-version>
         <java.version>21</java.version>
     </properties>
@@ -108,11 +107,6 @@
                 <groupId>de.starwit</groupId>
                 <artifactId>vision-api</artifactId>
                 <version>${vision-api.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>io.lettuce</groupId>
-                <artifactId>lettuce-core</artifactId>
-                <version>${lettuce.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>

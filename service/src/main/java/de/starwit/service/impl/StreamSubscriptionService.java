@@ -14,7 +14,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.connection.stream.MapRecord;
 import org.springframework.data.redis.connection.stream.ReadOffset;
 import org.springframework.data.redis.connection.stream.StreamOffset;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.data.redis.stream.StreamListener;
 import org.springframework.data.redis.stream.StreamMessageListenerContainer;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,7 @@ public class StreamSubscriptionService {
     private Logger log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired(required = false)
-    private RedisTemplate<String, ?> redisTemplate;
+    private StringRedisTemplate redisTemplate;
 
     @Value("${spring.data.redis.active:false}")
     private Boolean activateRedis;
@@ -74,28 +75,23 @@ public class StreamSubscriptionService {
 
         rescanStreams(keysPerStream);
 
-        for (String key : keysPerStream.get(streamPrefixAggregator)) {
-            String streamName = streamPrefixAggregator + ":" + key;
-            if (!subscribedStreams.contains(streamName)) {
-                log.debug("Subscribing to " + streamName);
-                StreamOffset<String> streamOffset = StreamOffset.create(streamName, ReadOffset.latest());
-                streamMessageListenerContainer.receive(streamOffset, detectionCountMessageListener);
-                subscribedStreams.add(streamName);
-            }
-        }
+        String streamPrefix = streamPrefixAggregator;
+        subscribeToStream(streamPrefix);
 
-        for (String key : keysPerStream.get(streamPrefixPositionSource)) {
-            String streamName = streamPrefixPositionSource + ":" + key;
-            if (!subscribedStreams.contains(streamName)) {
-                log.debug("Subscribing to " + streamName);
-                StreamOffset<String> streamOffset = StreamOffset.create(streamName, ReadOffset.latest());
-                streamMessageListenerContainer.receive(streamOffset, positionMessageListener);
-                subscribedStreams.add(streamName);
-            }
-        }
+        streamPrefix = streamPrefixPositionSource;
+        subscribeToStream(streamPrefix);
 
-        for (String key : keysPerStream.get(streamPrefixDetection)) {
-            String streamName = streamPrefixDetection + ":" + key;
+        streamPrefix = streamPrefixDetection;
+        subscribeToStream(streamPrefix);
+
+        if (!streamMessageListenerContainer.isRunning()) {
+            streamMessageListenerContainer.start();
+        }
+    }
+
+    private void subscribeToStream(String streamPrefix) {
+        for (String key : keysPerStream.get(streamPrefix)) {
+            String streamName = streamPrefix + ":" + key;
             if (!subscribedStreams.contains(streamName)) {
                 log.debug("Subscribing to " + streamName);
                 StreamOffset<String> streamOffset = StreamOffset.create(streamName, ReadOffset.latest());
@@ -103,10 +99,16 @@ public class StreamSubscriptionService {
                 subscribedStreams.add(streamName);
             }
         }
+    }
 
-        if (!streamMessageListenerContainer.isRunning()) {
-            streamMessageListenerContainer.start();
-        }
+    public void connectToStream(String streamName,
+            StreamListener<String, MapRecord<String, String, String>> listener) {
+        if (streamMessageListenerContainer == null || activateRedis == false)
+            return;
+
+        StreamOffset<String> streamOffset = StreamOffset.create(streamName, ReadOffset.latest());
+        streamMessageListenerContainer.receive(streamOffset, listener);
+        subscribedStreams.add(streamName);
     }
 
     public void rescanStreams(Map<String, List<String>> keysPerStream) {

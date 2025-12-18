@@ -12,7 +12,7 @@ import org.springframework.data.redis.connection.lettuce.LettuceClientConfigurat
 import org.springframework.data.redis.connection.lettuce.LettuceConnectionFactory;
 import org.springframework.data.redis.connection.lettuce.LettucePoolingClientConfiguration;
 import org.springframework.data.redis.connection.stream.MapRecord;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 import org.springframework.data.redis.stream.StreamMessageListenerContainer;
 import org.springframework.scheduling.annotation.EnableScheduling;
@@ -58,18 +58,18 @@ public class ServiceConfiguration {
 
     @Bean
     @ConditionalOnProperty(value = "spring.data.redis.active", havingValue = "true", matchIfMissing = false)
-    StreamMessageListenerContainer<String, MapRecord<String, String, String>> streamMessageListenerContainer() {
-        return StreamMessageListenerContainer.create(lettuceConnectionFactory());
-    }
-
-    @Bean
-    @ConditionalOnProperty(value = "spring.data.redis.active", havingValue = "true", matchIfMissing = false)
-    public RedisTemplate<String, String> redisTemplate(RedisConnectionFactory connectionFactory) {
-        RedisTemplate<String, String> template = new RedisTemplate<>();
+    public StringRedisTemplate redisTemplate(RedisConnectionFactory connectionFactory) {
+        StringRedisTemplate template = new StringRedisTemplate();
         template.setConnectionFactory(connectionFactory);
         template.setKeySerializer(new StringRedisSerializer());
         template.setValueSerializer(new StringRedisSerializer());
         return template;
+    }
+
+    @Bean
+    @ConditionalOnProperty(value = "spring.data.redis.active", havingValue = "true", matchIfMissing = false)
+    StreamMessageListenerContainer<String, MapRecord<String, String, String>> streamMessageListenerContainer() {
+        return StreamMessageListenerContainer.create(lettuceConnectionFactory());
     }
 
     @Bean
