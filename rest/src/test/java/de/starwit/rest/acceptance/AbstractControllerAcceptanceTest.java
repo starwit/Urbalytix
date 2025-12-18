@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.json.Jackson2Tester;
+import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -23,10 +23,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import de.starwit.persistence.entity.AbstractEntity;
+import tools.jackson.databind.json.JsonMapper;
 
 public abstract class AbstractControllerAcceptanceTest<ENTITY extends AbstractEntity<Long>> {
 
@@ -36,21 +34,19 @@ public abstract class AbstractControllerAcceptanceTest<ENTITY extends AbstractEn
     protected MockMvc mvc;
 
     @Autowired
-    protected ObjectMapper mapper;
+    protected JsonMapper mapper;
 
     @BeforeEach
     public void setup() {
-        // create Object Mapper
-        mapper = new ObjectMapper();
-        Jackson2Tester.initFields(this, new ObjectMapper());
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+        mapper = new JsonMapper();
+        JacksonTester.initFields(this, mapper);
     }
 
     public abstract Class<ENTITY> getEntityClass();
 
     public abstract String getRestPath();
 
-    public abstract Jackson2Tester<ENTITY> getJsonTester();
+    public abstract JacksonTester<ENTITY> getJsonTester();
 
     @Test
     public abstract void canCreate() throws Exception;
@@ -70,7 +66,7 @@ public abstract class AbstractControllerAcceptanceTest<ENTITY extends AbstractEn
             File file = new File(res.getFile());
             ENTITY entity = mapper.readValue(file, getEntityClass());
             return entity;
-        } catch (IOException e) {
+        } catch (Exception e) {
             LOG.error("JSON mapper failed", e);
             throw new Exception("JSON mapper failed");
         }
@@ -90,7 +86,7 @@ public abstract class AbstractControllerAcceptanceTest<ENTITY extends AbstractEn
                 }
             }
             return contentBuilder.toString();
-        } catch (IOException e) {
+        } catch (Exception e) {
             LOG.error("JSON mapper failed", e);
             throw new Exception("JSON mapper failed");
         }

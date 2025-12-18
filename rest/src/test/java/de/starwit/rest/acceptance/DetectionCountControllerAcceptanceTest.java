@@ -8,7 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.json.Jackson2Tester;
+import org.springframework.boot.test.json.JacksonTester;
 import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -24,7 +24,7 @@ public class DetectionCountControllerAcceptanceTest extends AbstractControllerAc
         final static Logger LOG = LoggerFactory.getLogger(DetectionCountControllerAcceptanceTest.class);
         private static final String restpath = "/api/detection-count/";
 
-        private Jackson2Tester<DetectionCountEntity> jsonTester;
+        private JacksonTester<DetectionCountEntity> jsonTester;
 
         @Override
         public Class<DetectionCountEntity> getEntityClass() {
@@ -37,7 +37,7 @@ public class DetectionCountControllerAcceptanceTest extends AbstractControllerAc
         }
 
         @Override
-        public Jackson2Tester<DetectionCountEntity> getJsonTester() {
+        public JacksonTester<DetectionCountEntity> getJsonTester() {
                 return jsonTester;
         }
 
