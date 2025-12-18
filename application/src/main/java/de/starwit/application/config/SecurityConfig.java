@@ -196,8 +196,8 @@ final class SpaCsrfTokenRequestHandler extends CsrfTokenRequestAttributeHandler 
 final class CsrfCookieFilter extends OncePerRequestFilter {
 
     @Override
-    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
-            @NonNull FilterChain filterChain)
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+            FilterChain filterChain)
             throws ServletException, IOException {
         CsrfToken csrfToken = (CsrfToken) request.getAttribute("_csrf");
         // Render the token value to a cookie by causing the deferred token to be loaded
