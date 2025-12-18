@@ -22,11 +22,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
 import de.starwit.persistence.entity.VehicleDataEntity;
 import de.starwit.persistence.exception.NotificationException;
-import de.starwit.persistence.serializer.GeometrySerializer;
 import de.starwit.rest.exception.NotificationDto;
 import de.starwit.service.dto.VehicleStatisticsDto;
 import de.starwit.service.impl.VehicleDataService;

@@ -5,13 +5,7 @@ import java.util.Map;
 
 import org.locationtech.jts.geom.Point;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
 import de.starwit.persistence.entity.VehicleDataEntity;
-import de.starwit.persistence.serializer.GeometrySerializer;
-import de.starwit.persistence.serializer.ZonedDateTimeDeserializer;
-import de.starwit.persistence.serializer.ZonedDateTimeSerializer;
 
 public class VehicleStatisticsDto {
 
@@ -23,11 +17,8 @@ public class VehicleStatisticsDto {
 
     private String description;
 
-    @JsonSerialize(using = GeometrySerializer.class)
     private Point location;
 
-    @JsonSerialize(using = ZonedDateTimeSerializer.class)
-    @JsonDeserialize(using = ZonedDateTimeDeserializer.class)
     private ZonedDateTime lastUpdate;
 
     Map<ZonedDateTime, Double> distances = new java.util.HashMap<>();

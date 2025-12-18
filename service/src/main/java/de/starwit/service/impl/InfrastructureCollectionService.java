@@ -12,8 +12,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 
 /**
  * This service is supposed to collect various data from community
@@ -63,7 +63,7 @@ public class InfrastructureCollectionService {
                 fc.setFeatures(featureList);
             }
 
-        } catch (JsonProcessingException e) {
+        } catch (JacksonException e) {
             log.error("Parsing trash bin data failed " + e.getMessage());
         }
         return fc;

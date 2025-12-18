@@ -1,14 +1,13 @@
 package de.starwit.persistence.converter;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import jakarta.persistence.AttributeConverter;
-import jakarta.persistence.Converter;
-
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import jakarta.persistence.AttributeConverter;
+import jakarta.persistence.Converter;
+import tools.jackson.core.JacksonException;
+import tools.jackson.core.type.TypeReference;
+import tools.jackson.databind.ObjectMapper;
 
 @Converter
 public class StringMapConverter implements AttributeConverter<Map<String, String>, String> {
@@ -21,7 +20,7 @@ public class StringMapConverter implements AttributeConverter<Map<String, String
         }
         try {
             return objectMapper.writeValueAsString(attribute);
-        } catch (JsonProcessingException e) {
+        } catch (JacksonException e) {
             throw new RuntimeException("Error converting map to JSON", e);
         }
     }
@@ -34,7 +33,7 @@ public class StringMapConverter implements AttributeConverter<Map<String, String
         try {
             return objectMapper.readValue(dbData, new TypeReference<Map<String, String>>() {
             });
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new RuntimeException("Error converting JSON to map", e);
         }
     }
