@@ -3,10 +3,6 @@ package de.starwit.rest.controller;
 import java.time.ZonedDateTime;
 import java.util.List;
 
-import org.locationtech.jts.geom.Coordinate;
-import org.locationtech.jts.geom.GeometryFactory;
-import org.locationtech.jts.geom.Point;
-import org.locationtech.jts.geom.PrecisionModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,15 +41,6 @@ public class VehicleDataController {
     public List<VehicleDataEntity> findAll() {
         List<VehicleDataEntity> list = this.vehicleDataService.findAll();
         return list;
-    }
-
-    @GetMapping("/test")
-    public Point test() {
-        GeometryFactory gf = new GeometryFactory(new PrecisionModel(), 4326);
-        Point point = gf.createPoint(new Coordinate(12.49, 41.89));
-        Double lat = point.getY();
-        Double lon = point.getX();
-        return point;
     }
 
     @Operation(summary = "Get all vehicles with statistics")

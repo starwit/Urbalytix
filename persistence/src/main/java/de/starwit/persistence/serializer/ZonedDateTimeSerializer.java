@@ -31,7 +31,7 @@ public class ZonedDateTimeSerializer {
 
         @Override
         public ZonedDateTime deserialize(JsonParser jsonParser, DeserializationContext ctxt) {
-            return ZonedDateTime.parse(jsonParser.getText());
+            return ZonedDateTime.parse(jsonParser.getString());
         }
     }
 }

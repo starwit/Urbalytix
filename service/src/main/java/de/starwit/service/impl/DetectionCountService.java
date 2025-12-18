@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -20,7 +21,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import de.starwit.persistence.dto.DistrictWithDetectionCountDto;
-import de.starwit.persistence.dto.StreetWithDistrictDto;
 import de.starwit.persistence.dto.StreetsWithDetectionCountDto;
 import de.starwit.persistence.entity.CityDistrictEntity;
 import de.starwit.persistence.entity.DetectionCountEntity;
@@ -30,7 +30,6 @@ import de.starwit.persistence.repository.DetectionCountRepository;
 import de.starwit.persistence.repository.StreetCatalogRepository;
 import de.starwit.visionapi.Analytics.DetectionCount;
 import de.starwit.visionapi.Analytics.DetectionCountMessage;
-import java.util.HashMap;
 
 @Service
 public class DetectionCountService implements ServiceInterface<DetectionCountEntity, DetectionCountRepository> {
