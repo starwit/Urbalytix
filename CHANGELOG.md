@@ -2,6 +2,12 @@
 
 Changelog of Urbalytix.
 
+## Current Version ()
+
+### Features
+
+-  Spring Boot 4 and Jackson 3 Migration, Merge pull request #94 from starwit/test-jackson-3 ([b4702](https://github.com/starwit/Urbalytix/commit/b4702dddbf8bc5c) Anett Hübner)  
+
 ## refs/tags/0.4.2 (2025-12-08)
 
 ### Features

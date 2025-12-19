@@ -18,7 +18,7 @@ import de.starwit.persistence.entity.CityDistrictEntity;
 import de.starwit.service.impl.CityDistrictService;
 import io.swagger.v3.oas.annotations.Operation;
 import tools.jackson.core.JacksonException;
-import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 @RestController
 @RequestMapping(path = "${rest.base-path}/city-district")
@@ -30,7 +30,7 @@ public class CityDistrictController {
     private CityDistrictService cityDistrictService;
 
     @Autowired
-    private ObjectMapper objectMapper;
+    private JsonMapper mapper;
 
     private final GeoJsonWriter geoJsonWriter = new GeoJsonWriter();
 
@@ -64,7 +64,7 @@ public class CityDistrictController {
         String geomJson = geoJsonWriter.write(cityDistrictEntity.getDistrictGeometry());
         GeoJsonObject geoJsonObject;
         try {
-            geoJsonObject = objectMapper.readValue(geomJson, GeoJsonObject.class);
+            geoJsonObject = mapper.readValue(geomJson, GeoJsonObject.class);
             feature.setGeometry(geoJsonObject);
         } catch (JacksonException e) {
             LOG.error("Can't serialize street data");

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import tools.jackson.core.JacksonException;
-import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 /**
  * This service is supposed to collect various data from community
@@ -29,7 +29,7 @@ public class InfrastructureCollectionService {
     private RestTemplate restTemplate;
 
     @Autowired
-    private ObjectMapper mapper;
+    private JsonMapper mapper;
 
     @Value("${infra.trash.endpoint}")
     private String infraTrashEndpoint;
