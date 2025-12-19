@@ -57,7 +57,7 @@ function CustomAppBar() {
                             <Divider orientation="vertical" variant="middle" flexItem />
                             <AdminMenu />
                             <Divider orientation="vertical" variant="middle" flexItem />
-                            <IconButton href="#/logout" size="large">
+                            <IconButton href="./logout" size="large">
                                 <LogoutIcon />
                             </IconButton>
                         </Stack>

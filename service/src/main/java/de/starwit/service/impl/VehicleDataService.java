@@ -1,6 +1,5 @@
 package de.starwit.service.impl;
 
-import java.text.DecimalFormat;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -19,8 +18,8 @@ import de.starwit.persistence.entity.VehicleDataEntity;
 import de.starwit.persistence.entity.VehicleRouteEntity;
 import de.starwit.persistence.repository.VehicleDataRepository;
 import de.starwit.persistence.repository.VehicleRoutesRepository;
-import de.starwit.visionapi.Sae.PositionMessage;
 import de.starwit.service.dto.VehicleStatisticsDto;
+import de.starwit.visionapi.Sae.PositionMessage;
 
 @Service
 public class VehicleDataService implements ServiceInterface<VehicleDataEntity, VehicleDataRepository> {

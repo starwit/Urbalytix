@@ -17,93 +17,93 @@ env:
   RELEASE_VERSION: ${{ github.event.inputs.release-version }}
   IMAGE_NAME: urbalytix
   DOCKERHUB_USERNAME: starwit
-  DOCKERHUB_ORG: starwitorg  
+  DOCKERHUB_ORG: starwitorg
 
 jobs:
   build:
     name: "Creating maven and github release"
     runs-on: [self-hosted, linux, X64]
-    
+
     steps:
-    - name: Install GH CLI
-      uses: dev-hanz-ops/install-gh-cli-action@v0.2.0
+      - name: Install GH CLI
+        uses: dev-hanz-ops/install-gh-cli-action@v0.2.0
 
-    - name: Set up JDK 21
-      uses: actions/setup-java@v4
-      with:
-        distribution: 'temurin'
-        java-version: 21
+      - name: Set up JDK 25
+        uses: actions/setup-java@v5
+        with:
+          distribution: "temurin"
+          java-version: 25
 
-    - name: Set up Maven
-      uses: stCarolas/setup-maven@v5
-      with:
-         maven-version: 3.9.2      
+      - name: Set up Maven
+        uses: stCarolas/setup-maven@v5
+        with:
+          maven-version: 3.9.2
 
-    - name: setup node
-      uses: actions/setup-node@v4
-      with:
-        node-version: 22 
+      - name: setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
 
-    - run: npm --version
-    - run: node --version
-    - run: mvn --version
+      - run: npm --version
+      - run: node --version
+      - run: mvn --version
 
-    - name: checkout
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: '0'
+      - name: checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: "0"
 
-    - name: Maven release pepare
-      run: | 
-        git config --global user.email "code@starwit.de"
-        git config --global user.name "Starwit"
-        if [ ! -z "${{ env.RELEASE_VERSION }}" ]
-        then
-          echo "new version manually set to ${{ env.RELEASE_VERSION }}"
-          mvn -B build-helper:parse-version versions:set -DnewVersion=${{ env.RELEASE_VERSION }}-SNAPSHOT versions:commit --settings .github/workflows/settings.xml --file pom.xml
-        fi
-        echo "mvn generate-sources --file pom.xml"
-        mvn generate-sources --file pom.xml
-        echo "git add ."
-        git add .
-        modifications=$(git status | grep "modified" || true)
-        if [ ! -z "$modifications" ]
-        then
-          echo "modifications found: $modifications"
-          git commit -m "modified changelog"
-          git push
-        fi
-        mvn -B release:clean release:prepare -Darguments="-DskipTests" --settings .github/workflows/settings.xml --file pom.xml
-        mvn -B release:clean --settings .github/workflows/settings.xml --settings .github/workflows/settings.xml --file pom.xml
-      env:
-         CI: false
-         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Maven release pepare
+        run: |
+          git config --global user.email "code@starwit.de"
+          git config --global user.name "Starwit"
+          if [ ! -z "${{ env.RELEASE_VERSION }}" ]
+          then
+            echo "new version manually set to ${{ env.RELEASE_VERSION }}"
+            mvn -B build-helper:parse-version versions:set -DnewVersion=${{ env.RELEASE_VERSION }}-SNAPSHOT versions:commit --settings .github/workflows/settings.xml --file pom.xml
+          fi
+          echo "mvn generate-sources --file pom.xml"
+          mvn generate-sources --file pom.xml
+          echo "git add ."
+          git add .
+          modifications=$(git status | grep "modified" || true)
+          if [ ! -z "$modifications" ]
+          then
+            echo "modifications found: $modifications"
+            git commit -m "modified changelog"
+            git push
+          fi
+          mvn -B release:clean release:prepare -Darguments="-DskipTests" --settings .github/workflows/settings.xml --file pom.xml
+          mvn -B release:clean --settings .github/workflows/settings.xml --settings .github/workflows/settings.xml --file pom.xml
+        env:
+          CI: false
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Get tag name
-      run: |
-        echo "TAG=$( git describe --abbrev=0 )" >> $GITHUB_ENV
+      - name: Get tag name
+        run: |
+          echo "TAG=$( git describe --abbrev=0 )" >> $GITHUB_ENV
 
-    - name: Create github release
-      run: gh release create ${{ env.TAG }} -F CHANGELOG.md
-      env:
+      - name: Create github release
+        run: gh release create ${{ env.TAG }} -F CHANGELOG.md
+        env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-    - name: Checkout tag
-      run: |
-        git checkout ${{ env.TAG }}
+      - name: Checkout tag
+        run: |
+          git checkout ${{ env.TAG }}
 
-    - name: npm install
-      run: |
-        if [ -d "webclient/app" ]; then
-          cd webclient/app
-          npm install
-        fi
+      - name: npm install
+        run: |
+          if [ -d "webclient/app" ]; then
+            cd webclient/app
+            npm install
+          fi
 
-    - name: Build with Maven
-      run: mvn clean -B package -P frontend --settings .github/workflows/settings.xml --file pom.xml
-      env:
-         CI: false
-         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build with Maven
+        run: mvn clean -B package -P frontend --settings .github/workflows/settings.xml --file pom.xml
+        env:
+          CI: false
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   publish_docker:
     name: "Build and publish docker"
@@ -111,54 +111,54 @@ jobs:
     runs-on: [self-hosted, linux, X64]
 
     steps:
-    - name: Get tag name
-      run: |
-        echo "TAG=$( git describe --abbrev=0 )" >> $GITHUB_ENV
+      - name: Get tag name
+        run: |
+          echo "TAG=$( git describe --abbrev=0 )" >> $GITHUB_ENV
 
-    - name: Login to Docker Hub
-      uses: docker/login-action@v3
-      with:
-        username: ${{ env.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
-   
-    - name: Set up Docker Buildx
-      uses: docker/setup-buildx-action@v3
-      
-    - name: Build and push
-      uses: docker/build-push-action@v5
-      with:
-        context: .
-        file: ./dockerfile
-        push: true
-        sbom: true
-        provenance: mode=max
-        tags: ${{ env.DOCKERHUB_ORG }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ env.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./dockerfile
+          push: true
+          sbom: true
+          provenance: mode=max
+          tags: ${{ env.DOCKERHUB_ORG }}/${{ env.IMAGE_NAME }}:${{ env.TAG }}
 
   publish_helm:
     name: "Publish helm chart"
     needs: build
     runs-on: [self-hosted, linux, X64]
-    
+
     steps:
-    - name: get helm
-      uses: azure/setup-helm@v4
+      - name: get helm
+        uses: azure/setup-helm@v4
 
-    - name: login to Helm registry
-      run: helm registry login registry-1.docker.io -u starwit -p ${{ secrets.DOCKERHUB_TOKEN }}
+      - name: login to Helm registry
+        run: helm registry login registry-1.docker.io -u starwit -p ${{ secrets.DOCKERHUB_TOKEN }}
 
-    - name: run helm update
-      working-directory: application/target/helm/urbalytix
-      run: helm dep update
+      - name: run helm update
+        working-directory: application/target/helm/urbalytix
+        run: helm dep update
 
-    - name: run helm package
-      working-directory: application/target/helm
-      run: helm package urbalytix
+      - name: run helm package
+        working-directory: application/target/helm
+        run: helm package urbalytix
 
-    - name: get version number
-      working-directory: application/target/helm/urbalytix
-      run: |
-        echo "HELM_VERSION=$(grep version: Chart.yaml | head -1 | awk '{print $2}')" >> $GITHUB_ENV
+      - name: get version number
+        working-directory: application/target/helm/urbalytix
+        run: |
+          echo "HELM_VERSION=$(grep version: Chart.yaml | head -1 | awk '{print $2}')" >> $GITHUB_ENV
 
-    - name: run helm push
-      working-directory: application/target/helm
-      run: helm push urbalytix-chart-${{ env.HELM_VERSION }}.tgz oci://registry-1.docker.io/starwitorg
+      - name: run helm push
+        working-directory: application/target/helm
+        run: helm push urbalytix-chart-${{ env.HELM_VERSION }}.tgz oci://registry-1.docker.io/starwitorg

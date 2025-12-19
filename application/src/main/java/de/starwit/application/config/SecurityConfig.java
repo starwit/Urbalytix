@@ -16,7 +16,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.annotation.Order;
 import org.springframework.core.convert.converter.Converter;
-import org.springframework.lang.NonNull;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -36,7 +36,7 @@ import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.security.web.csrf.CsrfTokenRequestAttributeHandler;
 import org.springframework.security.web.csrf.CsrfTokenRequestHandler;
 import org.springframework.security.web.csrf.XorCsrfTokenRequestAttributeHandler;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.servlet.util.matcher.PathPatternRequestMatcher;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -83,7 +83,8 @@ public class SecurityConfig {
                         .anyRequest().authenticated())
                 .logout(logout -> logout
                         .logoutSuccessHandler(oidcLogoutSuccessHandler())
-                        .logoutRequestMatcher(new AntPathRequestMatcher("/logout")))
+                        .logoutRequestMatcher(PathPatternRequestMatcher.withDefaults()
+                                .matcher(HttpMethod.GET, "/logout")))
                 // Maybe
                 // https://stackoverflow.com/questions/74939220/classnotfoundexception-org-springframework-security-oauth2-server-resource-web
                 .oauth2Login(Customizer.withDefaults())
@@ -194,8 +195,8 @@ final class SpaCsrfTokenRequestHandler extends CsrfTokenRequestAttributeHandler 
 final class CsrfCookieFilter extends OncePerRequestFilter {
 
     @Override
-    protected void doFilterInternal(@NonNull HttpServletRequest request, @NonNull HttpServletResponse response,
-            @NonNull FilterChain filterChain)
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
+            FilterChain filterChain)
             throws ServletException, IOException {
         CsrfToken csrfToken = (CsrfToken) request.getAttribute("_csrf");
         // Render the token value to a cookie by causing the deferred token to be loaded

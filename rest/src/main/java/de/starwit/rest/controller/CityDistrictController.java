@@ -14,12 +14,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import de.starwit.persistence.entity.CityDistrictEntity;
 import de.starwit.service.impl.CityDistrictService;
 import io.swagger.v3.oas.annotations.Operation;
+import tools.jackson.core.JacksonException;
+import tools.jackson.databind.ObjectMapper;
 
 @RestController
 @RequestMapping(path = "${rest.base-path}/city-district")
@@ -67,7 +66,7 @@ public class CityDistrictController {
         try {
             geoJsonObject = objectMapper.readValue(geomJson, GeoJsonObject.class);
             feature.setGeometry(geoJsonObject);
-        } catch (JsonProcessingException e) {
+        } catch (JacksonException e) {
             LOG.error("Can't serialize street data");
         }
 

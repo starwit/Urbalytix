@@ -11,7 +11,7 @@ public class TestConfig {
     public RestTemplate restTemplate() {
         RestTemplate restTemplate = new RestTemplate();
         HttpComponentsClientHttpRequestFactory requestFactory = new HttpComponentsClientHttpRequestFactory();
-        requestFactory.setConnectTimeout(3000);
+        requestFactory.setConnectionRequestTimeout(3000);
 
         restTemplate.setRequestFactory(requestFactory);
         return restTemplate;
