@@ -52,7 +52,7 @@
             <artifactId>hibernate-spatial</artifactId>
         </dependency>
         <dependency>
-            <groupId>de.grundid.opendatalab</groupId>
+            <groupId>de.starwit</groupId>
             <artifactId>geojson-jackson</artifactId>
         </dependency>
 

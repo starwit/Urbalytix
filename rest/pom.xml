@@ -71,7 +71,7 @@
       <artifactId>jts-io-common</artifactId>
     </dependency>
     <dependency>
-      <groupId>de.grundid.opendatalab</groupId>
+      <groupId>de.starwit</groupId>
       <artifactId>geojson-jackson</artifactId>
     </dependency>
     <dependency>
