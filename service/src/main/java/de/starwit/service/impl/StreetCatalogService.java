@@ -2,6 +2,8 @@ package de.starwit.service.impl;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +13,8 @@ import de.starwit.persistence.repository.StreetCatalogRepository;
 
 @Service
 public class StreetCatalogService implements ServiceInterface<StreetCatalogEntity, StreetCatalogRepository> {
+
+    private static final Logger LOG = LoggerFactory.getLogger(StreetCatalogService.class);
 
     @Autowired
     private StreetCatalogRepository repository;
@@ -25,7 +29,12 @@ public class StreetCatalogService implements ServiceInterface<StreetCatalogEntit
     }
 
     public List<StreetWithDistrictDto> findByCityWithDistrict(String city) {
-        List<StreetWithDistrictDto> list = repository.findStreetsByCityWithDistrict(city);
-        return list;
+        List<StreetWithDistrictDto> result = repository.findStreetsByCityWithDistrict(city);
+        return result;
+    }
+
+    public List<StreetCatalogEntity> findByCityDistrict(String city, String districtName) {
+        List<StreetCatalogEntity> result = repository.findByCityDistrict(city, districtName);
+        return result;
     }
 }

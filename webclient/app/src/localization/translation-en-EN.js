@@ -126,6 +126,7 @@ const translationEnEN = {
     "district.name": "District Name",
     "district.councilName": "District Government",
     "district.detections": "Detection",
-    "district.showdetails": "Show District Details"
+    "district.showdetails": "Show District Details",
+    "district.heading": "City Districts"
 };
 export default translationEnEN;

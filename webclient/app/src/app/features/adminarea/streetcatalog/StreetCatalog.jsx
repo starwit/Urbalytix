@@ -9,13 +9,12 @@ import {MapView} from "@deck.gl/core";
 import {MapLayerFactory} from "../../../commons/geographicalMaps/MapLayerFactory";
 import {centroid} from '@turf/turf';
 import {WebMercatorViewport} from "@deck.gl/core";
-import FilterLayout from "../../../commons/filter/FilterLayout";
 import {useDistricts} from "../../hooks/useCityDistricts";
-import DistrictFilter from "../../../commons/filter/DistrictFilter";
 import DataTableLayout from "../../../commons/DataTableLayout";
 import {FilterContext} from '../../../commons/FilterProvider';
 import MapMenuLayout from "../../../commons/mapMenu/MapMenuLayout";
 import NavigationMapMenu from "../../../commons/mapMenu/NavigationMapMenu";
+
 
 function StreetCatalog() {
     const {t, i18n} = useTranslation();
@@ -23,11 +22,13 @@ function StreetCatalog() {
     const streetCatalogRest = useMemo(() => new StreetCatalogRest(), []);
     const configurationRest = useMemo(() => new ConfigurationRest(), []);
 
+    const [city, setCity] = useState('Wolfsburg');
     const {showDistricts, setShowDistricts, types, setTypes} = useContext(FilterContext);
     const {districts} = useDistricts({showDistricts: true});
 
     const [streetData, setStreetData] = useState([]);
     const [selectedStreet, setSelectedStreet] = useState([]);
+    const [selectedDistrictStreets, setSelectedDistrictStreets] = useState([]);
 
     const is3d = types.includes("3d");
     const [viewState, setViewState] = useState({
@@ -82,6 +83,7 @@ function StreetCatalog() {
                 bearing: 0
             });
             loadStreetData(response.data.properties['city']);
+            setCity(response.data.properties['city']);
         });
     }
 
@@ -98,8 +100,9 @@ function StreetCatalog() {
 
     const layers = [
         MapLayerFactory.createBaseMapLayer(),
-        MapLayerFactory.createGeoJsonLayer(selectedStreet),
-        MapLayerFactory.createDistrictLayer(districts, showDistricts, false)
+        MapLayerFactory.createGeoJsonLayer(selectedStreet, 'singleStreet'),
+        MapLayerFactory.createDistrictLayer(districts, showDistricts, true, handleDistrictDetailsClick),
+        MapLayerFactory.createGeoJsonLayer(selectedDistrictStreets, 'districtStreets')
     ];
 
     function handleStreetRowClick(params) {
@@ -135,6 +138,20 @@ function StreetCatalog() {
         })
     }
 
+    function handleDistrictDetailsClick(data) {
+        streetCatalogRest.findAllListByCityAndDistrict(city, data.districtName).then(response => {
+            if (response.data == null) {
+                return;
+            }
+            setSelectedDistrictStreets(response.data);
+        });
+    }
+
+    function handleShowDistricts(newValue) {
+        setSelectedDistrictStreets([]);
+        setShowDistricts(newValue);
+    }
+
     function handleTypes(event, newTypes) {
         if (newTypes.length) {
             setTypes(newTypes);
@@ -147,7 +164,7 @@ function StreetCatalog() {
                 value={types}
                 onChange={handleTypes}
             >
-                <NavigationMapMenu setViewState={setViewState} setShowDistricts={setShowDistricts} />
+                <NavigationMapMenu setViewState={setViewState} setShowDistricts={handleShowDistricts} />
             </MapMenuLayout>
 
             <DeckGL

@@ -23,9 +23,9 @@ export class MapLayerFactory {
         });
     }
 
-    static createGeoJsonLayer(data) {
+    static createGeoJsonLayer(data, name) {
         return new GeoJsonLayer({
-            id: 'GeoJsonLayer',
+            id: 'GeoJsonLayer-' + name,
             data: data,
             stroked: false,
             filled: true,

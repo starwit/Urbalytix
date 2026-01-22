@@ -42,4 +42,10 @@ public class StreetCatalogEntity extends AbstractEntity<Long> {
     public void setStreetPath(Geometry streetPath) {
         this.streetPath = streetPath;
     }
+
+    @Override
+    public String toString() {
+        return "StreetCatalogEntity [id=\" + id + \", streetName=" + streetName + ", streetPath="
+                + streetPath + "city=" + city + "]";
+    }
 }

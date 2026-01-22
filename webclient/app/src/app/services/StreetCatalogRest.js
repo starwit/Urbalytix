@@ -18,6 +18,10 @@ class StreetCatalogRest extends CrudRest {
         return axios.get(this.baseUrl + "/list/" + city);
     }
 
+    findAllListByCityAndDistrict(city, district) {
+        return axios.get(this.baseUrl + "/list/district/" + city + "/" + district);
+    }
+
     findAllWithLastCleaning(city) {
         return axios.get(this.baseUrl + "/cleaning/" + city);
     }

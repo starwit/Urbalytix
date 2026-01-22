@@ -38,8 +38,8 @@ public interface StreetCatalogRepository extends JpaRepository<StreetCatalogEnti
 
   @Query(value = """
       SELECT
-          s.id AS street_id,
-          s.city AS street_city,
+          s.id AS id,
+          s.city AS city,
           s.street_name,
           s.street_path
       FROM street_catalog s

@@ -126,6 +126,7 @@ const translationDeDE = {
     "district.name": "Stadtteilname",
     "district.councilName": "Ortsrat",
     "district.detections": "Detektionen",
-    "district.showdetails": "Bezirksdetails anzeigen"
+    "district.showdetails": "Bezirksdetails anzeigen",
+    "district.heading": "Stadtteile"
 };
 export default translationDeDE;

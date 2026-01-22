@@ -63,6 +63,14 @@ public class StreetCatalogController {
         return streets;
     }
 
+    @Operation(summary = "Get street for given city and city district")
+    @GetMapping(value = "/list/district/{city}/{district}", produces = "application/geo+json")
+    public FeatureCollection findAllByCityAndDistrict(@PathVariable("city") String city,
+            @PathVariable("district") String district) {
+        List<StreetCatalogEntity> streets = this.streetCatalogService.findByCityDistrict(city, district);
+        return convertToGeoJSON(streets);
+    }
+
     @Operation(summary = "Get street list with last cleaning date")
     @GetMapping(value = "/cleaning/{city}", produces = "application/json")
     public List<StreetWithDistrictDto> findAllStreetsWithLastDetectionDate(@PathVariable("city") String city) {
