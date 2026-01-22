@@ -2,6 +2,8 @@ import DeckGL from "@deck.gl/react";
 import {useTranslation} from "react-i18next";
 import {MAP_VIEW} from '../../commons/geographicalMaps/BaseMapConfig';
 import {MapLayerFactory} from '../../commons/geographicalMaps/MapLayerFactory';
+import {useContext} from "react";
+import {FilterContext} from '../../commons/FilterProvider';
 
 function DetectionCompareMap(props) {
     const {
@@ -12,10 +14,10 @@ function DetectionCompareMap(props) {
         districts = [],
         vehicleRoutes = [],
         showCoverage = false,
-        showHexagons = false,
-        showDistricts = false
+        showHexagons = false
     } = props;
     const {t} = useTranslation();
+    const {showDistricts} = useContext(FilterContext);
 
     function getTooltip({object, layer}) {
         if (!object) {
@@ -64,13 +66,11 @@ function DetectionCompareMap(props) {
     }
 
     const layers = [
-        MapLayerFactory.createBaseMapLayer()
+        MapLayerFactory.createBaseMapLayer(),
+        MapLayerFactory.createDistrictLayer(districts, showDistricts, false, () => { })
     ];
     if (showCoverage) {
         layers.push(...MapLayerFactory.createMaskingLayers(vehicleRoutes));
-    }
-    if (showDistricts) {
-        layers.push(MapLayerFactory.createDistrictLayer(districts));
     }
     if (showHexagons) {
         layers.push(MapLayerFactory.createcomparisonLayers(detectionData, detectioncomparisonData));

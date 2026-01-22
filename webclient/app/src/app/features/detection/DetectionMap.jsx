@@ -35,6 +35,8 @@ function DetectionMap(props) {
         features = [],
         featureIcon = featureImage,
         districts = [],
+        districtClick = () => {
+        },
         positionData = [],
         positionIcon = positionImage,
         showPosition = false,
@@ -113,7 +115,7 @@ function DetectionMap(props) {
 
     const layers = [
         MapLayerFactory.createBaseMapLayer(),
-        MapLayerFactory.createDistrictLayer(districts, showDistricts),
+        MapLayerFactory.createDistrictLayer(districts, showDistricts, true, districtClick),
         MapLayerFactory.createHexagonLayer(detectionData, {
             id: 'HexagonLayer',
             visible: types.includes("hexagon"),
