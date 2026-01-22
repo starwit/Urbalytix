@@ -4,6 +4,7 @@ import {DatePicker} from '@mui/x-date-pickers/DatePicker';
 import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
 import {PickersDay} from '@mui/x-date-pickers/PickersDay';
 import dayjs from 'dayjs';
+import 'dayjs/locale/de';
 import isBetweenPlugin from 'dayjs/plugin/isBetween';
 import {useContext, useEffect, useState} from 'react';
 import {FilterContext} from '../FilterProvider';
@@ -33,11 +34,11 @@ const CustomPickersDay = styled(PickersDay, {
             },
         }),
     }),
-    ...(day.day() === 0 && {
+    ...(day.day() === 1 && {
         borderTopLeftRadius: '50%',
         borderBottomLeftRadius: '50%',
     }),
-    ...(day.day() === 6 && {
+    ...(day.day() === 0 && {
         borderTopRightRadius: '50%',
         borderBottomRightRadius: '50%',
     }),
@@ -94,7 +95,7 @@ export default function DateRangePicker(props) {
     }
 
     return (
-        <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale='de'>
             <DatePicker
                 value={date}
                 onChange={handleDateChange}
