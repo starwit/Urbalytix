@@ -45,14 +45,22 @@ export class MapLayerFactory {
         });
     }
 
-    static createDistrictLayer(data, showLayer) {
+    static createDistrictLayer(data, showLayer, filled = false, districtClick) {
         return new GeoJsonLayer({
             id: 'District-GeoJsonLayer',
             data: data,
             stroked: true,
-            filled: false,
+            filled: filled,
+            getFillColor: [100, 100, 100, 60],
             pointType: 'circle+text',
             pickable: true,
+            onClick: info => {
+                if (!info.object) return;
+
+                const properties = info.object.properties;
+
+                districtClick({'id': properties.id, 'districtName': properties.district_name});
+            },
             visible: showLayer,
             getLineColor: f => {
                 const hex = f.properties.color;

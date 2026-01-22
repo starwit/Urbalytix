@@ -40,7 +40,7 @@ function DetectionSteetTable(props) {
                 setStreetCatalog(response.data);
             })
         }
-    }, [showDataTable, startDate]);
+    }, [showDataTable, startDate, districtId]);
 
     function handleClick() {
         handleBackClick(true);

@@ -85,9 +85,15 @@ function DetectionOverview() {
     }
 
     function handleDistrictDetailsClick(params) {
-        setDistrictId(params.id);
-        setDistrictName(params.districtName);
-        setShowStreetData(true);
+        if (districtId === params.id) {
+            return;
+        } else {
+            setShowStreetData(false);
+            handleBackClick();
+            setDistrictId(params.id);
+            setDistrictName(params.districtName);
+            setShowStreetData(true);
+        }
     }
 
     function handleBackClick() {
@@ -155,6 +161,7 @@ function DetectionOverview() {
                 vehicleRoutes={vehicleRoutes}
                 features={selectedFeatures}
                 districts={districts}
+                districtClick={handleDistrictDetailsClick}
                 positionData={vehicleData}
                 showPosition={selectedFilterLabels.includes("selection.currentPosition")}
                 showHeatmap={types.includes("heatmap")}

@@ -1,4 +1,4 @@
-import {useEffect, useState, useMemo, useRef} from "react";
+import {useEffect, useState, useMemo, useRef, useContext} from "react";
 import StreetCatalogRest from "../../../services/StreetCatalogRest";
 import ConfigurationRest from "../../../services/ConfigurationRest";
 import {useTranslation} from "react-i18next";
@@ -13,6 +13,9 @@ import FilterLayout from "../../../commons/filter/FilterLayout";
 import {useDistricts} from "../../hooks/useCityDistricts";
 import DistrictFilter from "../../../commons/filter/DistrictFilter";
 import DataTableLayout from "../../../commons/DataTableLayout";
+import {FilterContext} from '../../../commons/FilterProvider';
+import MapMenuLayout from "../../../commons/mapMenu/MapMenuLayout";
+import NavigationMapMenu from "../../../commons/mapMenu/NavigationMapMenu";
 
 function StreetCatalog() {
     const {t, i18n} = useTranslation();
@@ -20,16 +23,18 @@ function StreetCatalog() {
     const streetCatalogRest = useMemo(() => new StreetCatalogRest(), []);
     const configurationRest = useMemo(() => new ConfigurationRest(), []);
 
-    const [showDistricts, setShowDistricts] = useState(false);
+    const {showDistricts, setShowDistricts, types, setTypes} = useContext(FilterContext);
     const {districts} = useDistricts({showDistricts: true});
 
     const [streetData, setStreetData] = useState([]);
     const [selectedStreet, setSelectedStreet] = useState([]);
+
+    const is3d = types.includes("3d");
     const [viewState, setViewState] = useState({
         longitude: 10.779998775029739,
         latitude: 52.41988232741599,
         zoom: 10,
-        pitch: 0,
+        pitch: is3d ? 60 : 0,
         bearing: 0
     });
     const gridRef = useState(null);
@@ -93,11 +98,9 @@ function StreetCatalog() {
 
     const layers = [
         MapLayerFactory.createBaseMapLayer(),
-        MapLayerFactory.createGeoJsonLayer(selectedStreet)
+        MapLayerFactory.createGeoJsonLayer(selectedStreet),
+        MapLayerFactory.createDistrictLayer(districts, showDistricts, false)
     ];
-    if (showDistricts) {
-        layers.push(MapLayerFactory.createDistrictLayer(districts));
-    }
 
     function handleStreetRowClick(params) {
         streetCatalogRest.findById(params.row.id).then(response => {
@@ -132,13 +135,21 @@ function StreetCatalog() {
         })
     }
 
+    function handleTypes(event, newTypes) {
+        if (newTypes.length) {
+            setTypes(newTypes);
+        }
+    }
+
     return (
         <>
-            <FilterLayout leftPosition={10}>
-                <DistrictFilter
-                    onShowDistrictChange={setShowDistricts}
-                />
-            </FilterLayout>
+            <MapMenuLayout
+                value={types}
+                onChange={handleTypes}
+            >
+                <NavigationMapMenu setViewState={setViewState} setShowDistricts={setShowDistricts} />
+            </MapMenuLayout>
+
             <DeckGL
                 layers={layers}
                 views={MAP_VIEW}
@@ -167,7 +178,7 @@ function StreetCatalog() {
                             sortModel: [{field: "name", sort: "asc"}]
                         }
                     }}
-                    pageSizeOptions={[10]}
+                    pageSizeOptions={[5, 10]}
                     disableRowSelectionOnClick
                 />
             </DataTableLayout>
