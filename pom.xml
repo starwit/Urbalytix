@@ -6,7 +6,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>4.0.0</version>
+        <version>4.0.1</version>
     </parent>
 
     <groupId>de.starwit</groupId>
@@ -142,7 +142,7 @@
             <dependency>
                 <groupId>org.orbisgis</groupId>
                 <artifactId>h2gis</artifactId>
-                <version>2.2.3</version>
+                <version>2.2.4</version>
             </dependency>
             <dependency>
                 <groupId>org.locationtech.jts.io</groupId>
