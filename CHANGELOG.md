@@ -2,7 +2,7 @@
 
 Changelog of Urbalytix.
 
-## Current Version ()
+## refs/tags/1.0.0 (2025-12-19)
 
 ### Features
 
