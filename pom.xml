@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -28,9 +30,9 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <spring-boot-version>4.0.0</spring-boot-version>
+        <spring-boot-version>4.0.1</spring-boot-version>
         <vision-api.version>3.5.2</vision-api.version>
-        <openapi-version>3.0.0</openapi-version>
+        <openapi-version>3.0.1</openapi-version>
         <java.version>25</java.version>
     </properties>
 
@@ -73,7 +75,7 @@
             <dependency>
                 <groupId>org.postgresql</groupId>
                 <artifactId>postgresql</artifactId>
-                <version>42.7.8</version>
+                <version>42.7.9</version>
                 <scope>runtime</scope>
             </dependency>
             <dependency>
@@ -109,7 +111,7 @@
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-pool2</artifactId>
-                <version>2.13.0</version>
+                <version>2.13.1</version>
             </dependency>
             <dependency>
                 <groupId>org.codehaus.mojo</groupId>
@@ -125,7 +127,7 @@
             <dependency>
                 <groupId>org.apache.httpcomponents.client5</groupId>
                 <artifactId>httpclient5</artifactId>
-                <version>5.5.1</version>
+                <version>5.6</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
@@ -195,11 +197,15 @@
                             <phase>prepare-package</phase>
                             <configuration>
                                 <target>
-                                    <concat destfile="${project.build.outputDirectory}/static/info.txt">
-                                        <fileset file="${project.build.outputDirectory}/META-INF/build-info.properties" />
-                                        <fileset file="${project.build.outputDirectory}/git.properties" />
+                                    <concat
+                                        destfile="${project.build.outputDirectory}/static/info.txt">
+                                        <fileset
+                                            file="${project.build.outputDirectory}/META-INF/build-info.properties" />
+                                        <fileset
+                                            file="${project.build.outputDirectory}/git.properties" />
                                         <filterchain>
-                                            <filterreader classname="org.apache.tools.ant.filters.LineContains">
+                                            <filterreader
+                                                classname="org.apache.tools.ant.filters.LineContains">
                                                 <param type="negate" value="true" />
                                                 <param type="contains" value="#" />
                                             </filterreader>
