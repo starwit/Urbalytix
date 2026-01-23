@@ -12,17 +12,15 @@ import {FilterContext} from '../FilterProvider';
 dayjs.extend(isBetweenPlugin);
 
 const CustomPickersDay = styled(PickersDay, {
-    shouldForwardProp: (prop) => prop !== 'isSelected' && prop !== 'isHovered',
-})(({theme, isSelected, isHovered, day}) => ({
+    shouldForwardProp: (prop) =>
+        prop !== 'isSelected' &&
+        prop !== 'isHovered' &&
+        prop !== 'isInRange' &&
+        prop !== 'isRangeStart' &&
+        prop !== 'isRangeEnd',
+})(({theme, isSelected, isHovered, isInRange, isRangeStart, isRangeEnd}) => ({
     borderRadius: 0,
-    ...(isSelected && {
-        backgroundColor: theme.palette.primary.main,
-        color: theme.palette.primary.contrastText,
-        '&:hover, &:focus': {
-            backgroundColor: theme.palette.primary.main,
-        },
-    }),
-    ...(isHovered && {
+    ...(isInRange && {
         backgroundColor: theme.palette.primary.light,
         '&:hover, &:focus': {
             backgroundColor: theme.palette.primary.light,
@@ -34,26 +32,39 @@ const CustomPickersDay = styled(PickersDay, {
             },
         }),
     }),
-    ...(day.day() === 1 && {
+    ...((isSelected || isRangeStart || isRangeEnd) && {
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.primary.contrastText,
+        '&:hover, &:focus': {
+            backgroundColor: theme.palette.primary.main,
+        },
+    }),
+    ...(isHovered && {
+        backgroundColor: theme.palette.primary.light,
+        '&:hover, &:focus': {
+            backgroundColor: theme.palette.primary.light,
+        },
+    }),
+    ...(isRangeStart && {
         borderTopLeftRadius: '50%',
         borderBottomLeftRadius: '50%',
     }),
-    ...(day.day() === 0 && {
+    ...(isRangeEnd && {
         borderTopRightRadius: '50%',
         borderBottomRightRadius: '50%',
     }),
 }));
 
-const isInSameWeek = (dayA, dayB) => {
-    if (dayB == null) {
-        return false;
-    }
-
-    return dayA.isSame(dayB, 'week');
-};
-
 function Day(props) {
-    const {day, selectedDay, hoveredDay, ...other} = props;
+    const {day, startDate, endDate, hoveredDay, ...other} = props;
+
+    const isInRange = startDate && endDate && day.isBetween(startDate, endDate, 'day', '[]');
+    const isRangeStart = startDate && day.isSame(startDate, 'day');
+    const isRangeEnd = endDate && day.isSame(endDate, 'day');
+
+    // Hover preview for range selection when only start date is selected
+    const isHoveredInRange = startDate && !endDate && hoveredDay &&
+        day.isBetween(startDate, hoveredDay, 'day', '[]');
 
     return (
         <CustomPickersDay
@@ -62,49 +73,80 @@ function Day(props) {
             sx={{px: 2.5}}
             disableMargin
             selected={false}
-            isSelected={isInSameWeek(day, selectedDay)}
-            isHovered={isInSameWeek(day, hoveredDay)}
+            isSelected={isRangeStart || isRangeEnd}
+            isInRange={isInRange || isHoveredInRange}
+            isRangeStart={isRangeStart}
+            isRangeEnd={isRangeEnd}
+            isHovered={isHoveredInRange && !isInRange}
         />
     );
 }
 
 export default function DateRangePicker(props) {
-    const {startDate, endDate, setStartDate, setEndDate, date, setDate} = useContext(FilterContext);
+    const {startDate, endDate, setStartDate, setEndDate} = useContext(FilterContext);
     const {additionalLogic = () => { }} = props;
     const [hoveredDay, setHoveredDay] = useState(null);
+    const [tempStartDate, setTempStartDate] = useState(null);
+    const [isSelecting, setIsSelecting] = useState(false);
+    const [open, setOpen] = useState(false);
 
-    // Note: This effect runs on mount and will execute when components are re-rendered after route changes.
     useEffect(() => {
         additionalLogic(startDate, endDate, false);
-    }, [])
+    }, []);
+
+    function commitDates(startDate, endDate) {
+        setStartDate(startDate);
+        setEndDate(endDate);
+    }
 
     function handleDateChange(newValue) {
-        if (dayjs(date).isSame(newValue, 'week')) {
-            return;
-        }
-        const curDate = dayjs(newValue).startOf('week');
-        const curEndDate = curDate.endOf('week');
+        const selectedDate = dayjs(newValue);
 
-        setDate(curDate);
-        setStartDate(curDate);
-        setEndDate(curEndDate);
-        if (additionalLogic) {
-            additionalLogic(curDate, curEndDate, true);
-        }
+        if (!tempStartDate) {
+            // If no temp start date or starting a new range, store temp start
+            setTempStartDate(selectedDate.startOf('day'));
+            setIsSelecting(true);
+        } else {
+            // If temp start exists, complete the range
+            let finalStartDate, finalEndDate;
 
+            if (selectedDate.isBefore(tempStartDate)) {
+                // If selected date is before start, swap them
+                finalStartDate = selectedDate.startOf('day');
+                finalEndDate = tempStartDate.endOf('day');
+            } else {
+                finalStartDate = tempStartDate;
+                finalEndDate = selectedDate.endOf('day');
+            }
+
+            commitDates(finalStartDate, finalEndDate);
+            additionalLogic(finalStartDate, finalEndDate, true);
+
+            // Close picker after range is complete
+            setOpen(false);
+
+            // Cleanup
+            setTempStartDate(null);
+            setIsSelecting(false);
+        }
     }
 
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale='de'>
             <DatePicker
-                value={date}
+                value={tempStartDate || startDate || null}
                 onChange={handleDateChange}
+                open={open}
+                onOpen={() => setOpen(true)}
+                onClose={() => setOpen(false)}
+                closeOnSelect={false}
                 showDaysOutsideCurrentMonth
                 displayWeekNumber
                 slots={{day: Day}}
                 slotProps={{
                     day: (ownerState) => ({
-                        selectedDay: date,
+                        startDate: tempStartDate || startDate,
+                        endDate,
                         hoveredDay,
                         onPointerEnter: () => setHoveredDay(ownerState.day),
                         onPointerLeave: () => setHoveredDay(null),
