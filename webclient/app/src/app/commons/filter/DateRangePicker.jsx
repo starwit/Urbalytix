@@ -14,11 +14,10 @@ dayjs.extend(isBetweenPlugin);
 const CustomPickersDay = styled(PickersDay, {
     shouldForwardProp: (prop) =>
         prop !== 'isSelected' &&
-        prop !== 'isHovered' &&
         prop !== 'isInRange' &&
         prop !== 'isRangeStart' &&
         prop !== 'isRangeEnd',
-})(({theme, isSelected, isHovered, isInRange, isRangeStart, isRangeEnd}) => ({
+})(({theme, isSelected, isInRange, isRangeStart, isRangeEnd}) => ({
     borderRadius: 0,
     ...(isInRange && {
         backgroundColor: theme.palette.primary.light,
@@ -39,12 +38,6 @@ const CustomPickersDay = styled(PickersDay, {
             backgroundColor: theme.palette.primary.main,
         },
     }),
-    ...(isHovered && {
-        backgroundColor: theme.palette.primary.light,
-        '&:hover, &:focus': {
-            backgroundColor: theme.palette.primary.light,
-        },
-    }),
     ...(isRangeStart && {
         borderTopLeftRadius: '50%',
         borderBottomLeftRadius: '50%',
@@ -56,15 +49,11 @@ const CustomPickersDay = styled(PickersDay, {
 }));
 
 function Day(props) {
-    const {day, startDate, endDate, hoveredDay, ...other} = props;
+    const {day, startDate, endDate, ...other} = props;
 
     const isInRange = startDate && endDate && day.isBetween(startDate, endDate, 'day', '[]');
     const isRangeStart = startDate && day.isSame(startDate, 'day');
     const isRangeEnd = endDate && day.isSame(endDate, 'day');
-
-    // Hover preview for range selection when only start date is selected
-    const isHoveredInRange = startDate && !endDate && hoveredDay &&
-        day.isBetween(startDate, hoveredDay, 'day', '[]');
 
     return (
         <CustomPickersDay
@@ -74,10 +63,9 @@ function Day(props) {
             disableMargin
             selected={false}
             isSelected={isRangeStart || isRangeEnd}
-            isInRange={isInRange || isHoveredInRange}
+            isInRange={isInRange}
             isRangeStart={isRangeStart}
             isRangeEnd={isRangeEnd}
-            isHovered={isHoveredInRange && !isInRange}
         />
     );
 }
@@ -85,8 +73,10 @@ function Day(props) {
 export default function DateRangePicker(props) {
     const {startDate, endDate, setStartDate, setEndDate} = useContext(FilterContext);
     const {additionalLogic = () => { }} = props;
-    const [hoveredDay, setHoveredDay] = useState(null);
     const [tempStartDate, setTempStartDate] = useState(null);
+    const [tempEndDate, setTempEndDate] = useState(null);
+    const [displayStartDate, setDisplayStartDate] = useState(null);
+    const [displayEndDate, setDisplayEndDate] = useState(null);
     const [isSelecting, setIsSelecting] = useState(false);
     const [open, setOpen] = useState(false);
 
@@ -94,9 +84,15 @@ export default function DateRangePicker(props) {
         additionalLogic(startDate, endDate, false);
     }, []);
 
-    function commitDates(startDate, endDate) {
-        setStartDate(startDate);
-        setEndDate(endDate);
+    function commitDates() {
+        console.log('Committed', tempStartDate.toISOString(), tempEndDate.toISOString());
+        setStartDate(tempStartDate.startOf('day'));
+        setEndDate(tempEndDate.endOf('day'));
+        additionalLogic(tempStartDate, tempEndDate, true);
+
+        // Cleanup
+        setTempStartDate(null);
+        setTempEndDate(null);
     }
 
     function handleDateChange(newValue) {
@@ -104,31 +100,28 @@ export default function DateRangePicker(props) {
 
         if (!tempStartDate) {
             // If no temp start date or starting a new range, store temp start
-            setTempStartDate(selectedDate.startOf('day'));
-            setIsSelecting(true);
+            setTempStartDate(selectedDate);
+            setDisplayStartDate(selectedDate);
+            setDisplayEndDate(null);
         } else {
-            // If temp start exists, complete the range
-            let finalStartDate, finalEndDate;
-
             if (selectedDate.isBefore(tempStartDate)) {
                 // If selected date is before start, swap them
-                finalStartDate = selectedDate.startOf('day');
-                finalEndDate = tempStartDate.endOf('day');
+                setTempStartDate(selectedDate);
+                setDisplayStartDate(selectedDate);
+                setTempEndDate(tempStartDate);
+                setDisplayEndDate(tempStartDate);
             } else {
-                finalStartDate = tempStartDate;
-                finalEndDate = selectedDate.endOf('day');
+                setTempEndDate(selectedDate);
+                setDisplayEndDate(selectedDate);
             }
 
-            commitDates(finalStartDate, finalEndDate);
-            additionalLogic(finalStartDate, finalEndDate, true);
-
-            // Close picker after range is complete
-            setOpen(false);
-
-            // Cleanup
-            setTempStartDate(null);
-            setIsSelecting(false);
         }
+    }
+
+    function handleOpen() {
+        setDisplayStartDate(startDate);
+        setDisplayEndDate(endDate);
+        setOpen(true);
     }
 
     return (
@@ -137,20 +130,20 @@ export default function DateRangePicker(props) {
                 value={tempStartDate || startDate || null}
                 onChange={handleDateChange}
                 open={open}
-                onOpen={() => setOpen(true)}
+                onOpen={handleOpen}
                 onClose={() => setOpen(false)}
                 closeOnSelect={false}
+                onAccept={commitDates}
                 showDaysOutsideCurrentMonth
                 displayWeekNumber
                 slots={{day: Day}}
                 slotProps={{
-                    day: (ownerState) => ({
-                        startDate: tempStartDate || startDate,
-                        endDate,
-                        hoveredDay,
-                        onPointerEnter: () => setHoveredDay(ownerState.day),
-                        onPointerLeave: () => setHoveredDay(null),
-                    }),
+                    day: (ownerState) => {
+                        // console.log(ownerState)
+                        return {
+                            startDate: displayStartDate,
+                            endDate: displayEndDate,
+                    }},
                 }}
             />
         </LocalizationProvider>
