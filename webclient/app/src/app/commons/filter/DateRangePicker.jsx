@@ -86,27 +86,25 @@ function ButtonDateField({startDate, endDate, onClick, ...params}) {
     const endStr = endDate.toDate().toLocaleDateString(undefined, dateOptions);
     const displayValue = `${startStr} – ${endStr}`;
 
-    // This part is a hack to hide the actual input element while retaining it's params for the enclosing DatePicker to function
-    const inputRef = useRef();
-    params.inputProps = {
-        ...params.inputProps,
-        sx: {
-            display: "none"
-        },
-    };
-
     return (
         <>
-            {/* This button is the only element we want to be visible */}
+            {/* This button is the only element we want to be visible and to be interacted with */}
             <Button 
-                onClick={() => inputRef.current.click()}
+                onClick={onClick}
                 startIcon={<DateRangeIcon />}
             >{displayValue}</Button>
-            {/* This is the original text field the DatePicker needs and where we can trigger our click to open the picker */}
+
+            {/* This part is a hack to hide the actual input element while passing through it's params.
+                The enclosing date picker needs this to function and position itself properly. */}
             <TextField
                 {...params}
-                onClick={onClick} 
-                ref={inputRef}
+                slotProps={{
+                    htmlInput: {
+                        sx: {
+                            display: "none"
+                        },
+                    }
+                }}
             ></TextField>
         </>
     );
