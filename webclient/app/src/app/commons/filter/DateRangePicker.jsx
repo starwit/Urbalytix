@@ -9,9 +9,17 @@ import isBetweenPlugin from 'dayjs/plugin/isBetween';
 import {useContext, useEffect, useState} from 'react';
 import {FilterContext} from '../FilterProvider';
 import {DateTimeField} from '@mui/x-date-pickers/DateTimeField';
+import DateRangeIcon from '@mui/icons-material/DateRange';
 import {TextField, Typography, Button} from '@mui/material';
 
 dayjs.extend(isBetweenPlugin);
+
+function copyWithRandomTime(day) {
+    const hours = Math.floor(Math.random() * 24);
+    const minutes = Math.floor(Math.random() * 60);
+    const seconds = Math.floor(Math.random() * 60);
+    return day.hour(hours).minute(minutes).second(seconds);
+}
 
 const CustomPickersDay = styled(PickersDay, {
     shouldForwardProp: (prop) =>
@@ -80,15 +88,16 @@ function CustomDateField({startDate, endDate, onClick}) {
     const displayValue = `${startStr} – ${endStr}`;
 
     return (
-        <Button onClick={onClick}>{displayValue}</Button>
+        <Button onClick={onClick} startIcon={<DateRangeIcon />}>{displayValue}</Button>
     );
 }
 
 export default function DateRangePicker(props) {
     const {startDate, endDate, setStartDate, setEndDate} = useContext(FilterContext);
     const {additionalLogic = () => { }} = props;
-    const [displayStartDate, setDisplayStartDate] = useState(null);
-    const [displayEndDate, setDisplayEndDate] = useState(null);
+    const [pickerStartDate, setPickerStartDate] = useState(null);
+    const [pickerEndDate, setPickerEndDate] = useState(null);
+    const [datePickerValue, setDatePickerValue] = useState(startDate);
     const [isSelecting, setIsSelecting] = useState(false);
     const [open, setOpen] = useState(false);
 
@@ -97,43 +106,53 @@ export default function DateRangePicker(props) {
     }, []);
 
     function commitDates() {
-        console.log('Committed', displayStartDate.toISOString(), displayEndDate.toISOString());
-        setStartDate(displayStartDate.startOf('day'));
-        setEndDate(displayEndDate.endOf('day'));
-        additionalLogic(displayStartDate, displayEndDate, true);
+        const rangeStart = pickerStartDate.startOf('day');
+        const rangeEnd = pickerEndDate.endOf('day');
+        setStartDate(rangeStart);
+        setEndDate(rangeEnd);
+        additionalLogic(rangeStart, rangeEnd, true);
+        console.log('Committed', rangeStart.toDate().toISOString(), rangeEnd.toDate().toISOString());
     }
 
     function handleDateChange(newValue) {
+        console.log('handleDateChange', newValue)
         const selectedDate = dayjs(newValue);
 
         if (!isSelecting) {
-            // If no temp start date or starting a new range, store temp start
-            setDisplayStartDate(selectedDate);
-            setDisplayEndDate(null);
+            // If no temp start date or starting a new range, store new range start
+            setPickerStartDate(selectedDate);
+            setPickerEndDate(null);
             setIsSelecting(true);
         } else {
-            if (selectedDate.isBefore(displayStartDate)) {
+            // We were selecting on the previous input change, so we're completing the range now
+            let newStartDate = pickerStartDate;
+            let newEndDate = selectedDate;
+            
+            if (newEndDate.isBefore(newStartDate)) {
                 // If selected date is before start, swap them
-                setDisplayStartDate(selectedDate);
-                setDisplayEndDate(displayStartDate);
-            } else {
-                setDisplayEndDate(selectedDate);
+                const temp = newEndDate;
+                newEndDate = newStartDate;
+                newStartDate = temp;
             }
+
+            setPickerStartDate(newStartDate);
+            setPickerEndDate(newEndDate);
+            setDatePickerValue(copyWithRandomTime(newStartDate));
             setIsSelecting(false);
         }
     }
 
     function handleOpen() {
         setIsSelecting(false);
-        setDisplayStartDate(startDate);
-        setDisplayEndDate(endDate);
+        setPickerStartDate(startDate);
+        setPickerEndDate(endDate);
         setOpen(true);
     }
 
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale='de'>
             <DatePicker
-                value={displayStartDate}
+                value={datePickerValue}
                 onChange={handleDateChange}
                 open={open}
                 onOpen={handleOpen}
@@ -142,21 +161,21 @@ export default function DateRangePicker(props) {
                 onAccept={commitDates}
                 showDaysOutsideCurrentMonth
                 displayWeekNumber
-                // enableAccessibleFieldDOMStructure={false}
+                enableAccessibleFieldDOMStructure={false}
                 slots={{
                     day: Day,
-                    // textField: CustomDateField
+                    textField: CustomDateField
                 }}
                 slotProps={{
                     day: {
-                        startDate: displayStartDate,
-                        endDate: displayEndDate,
+                        startDate: pickerStartDate,
+                        endDate: pickerEndDate,
                     },
-                    // textField: {
-                    //     startDate,
-                    //     endDate,
-                    //     onClick: handleOpen,
-                    // }
+                    textField: {
+                        startDate,
+                        endDate,
+                        onClick: handleOpen,
+                    }
                 }}
             />
         </LocalizationProvider>
