@@ -6,7 +6,7 @@ import {PickersDay} from '@mui/x-date-pickers/PickersDay';
 import dayjs, {Dayjs} from 'dayjs';
 import 'dayjs/locale/de';
 import isBetweenPlugin from 'dayjs/plugin/isBetween';
-import {useContext, useEffect, useState} from 'react';
+import {useContext, useEffect, useRef, useState} from 'react';
 import {FilterContext} from '../FilterProvider';
 import {DateTimeField} from '@mui/x-date-pickers/DateTimeField';
 import DateRangeIcon from '@mui/icons-material/DateRange';
@@ -80,15 +80,35 @@ function Day(props) {
     );
 }
 
-function CustomDateField({startDate, endDate, onClick}) {
-
+function ButtonDateField({startDate, endDate, onClick, ...params}) {
     const dateOptions = {"year": "numeric", "month": "2-digit", "day": "2-digit"};
     const startStr = startDate.toDate().toLocaleDateString(undefined, dateOptions);
     const endStr = endDate.toDate().toLocaleDateString(undefined, dateOptions);
     const displayValue = `${startStr} – ${endStr}`;
 
+    // This part is a hack to hide the actual input element while retaining it's params for the enclosing DatePicker to function
+    const inputRef = useRef();
+    params.inputProps = {
+        ...params.inputProps,
+        sx: {
+            display: "none"
+        },
+    };
+
     return (
-        <Button onClick={onClick} startIcon={<DateRangeIcon />}>{displayValue}</Button>
+        <>
+            {/* This button is the only element we want to be visible */}
+            <Button 
+                onClick={() => inputRef.current.click()}
+                startIcon={<DateRangeIcon />}
+            >{displayValue}</Button>
+            {/* This is the original text field the DatePicker needs and where we can trigger our click to open the picker */}
+            <TextField
+                {...params}
+                onClick={onClick} 
+                ref={inputRef}
+            ></TextField>
+        </>
     );
 }
 
@@ -164,7 +184,7 @@ export default function DateRangePicker(props) {
                 enableAccessibleFieldDOMStructure={false}
                 slots={{
                     day: Day,
-                    textField: CustomDateField
+                    textField: ButtonDateField,
                 }}
                 slotProps={{
                     day: {
@@ -175,6 +195,11 @@ export default function DateRangePicker(props) {
                         startDate,
                         endDate,
                         onClick: handleOpen,
+                    },
+                    inputAdornment: {
+                        sx: {
+                            display: "none"
+                        }
                     }
                 }}
             />
