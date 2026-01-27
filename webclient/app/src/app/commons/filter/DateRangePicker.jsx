@@ -101,6 +101,7 @@ function ButtonDateField({startDate, endDate, onClick, ...params}) {
                 {...params}
                 slotProps={{
                     htmlInput: {
+                        ...params.inputProps,
                         sx: {
                             display: "none"
                         },
