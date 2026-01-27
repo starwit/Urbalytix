@@ -72,6 +72,7 @@ function Day(props) {
             sx={{px: 2.5}}
             disableMargin
             selected={false}
+            autoFocus={false}
             isSelected={isRangeStart || isRangeEnd}
             isInRange={isInRange}
             isRangeStart={isRangeStart}
