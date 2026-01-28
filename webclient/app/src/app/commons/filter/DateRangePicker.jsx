@@ -166,6 +166,9 @@ export default function DateRangePicker(props) {
         setOpen(false);
     }
 
+    const minDate = isSelecting ? pickerStartDate?.subtract(1, 'month') : null;
+    const maxDate = isSelecting ? pickerStartDate?.add(1, 'month') : null;
+
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale='de'>
             <DatePicker
@@ -177,6 +180,9 @@ export default function DateRangePicker(props) {
                 onOpen={handleOpen}
                 onClose={handleClose}
                 closeOnSelect={false}
+                minDate={minDate}
+                maxDate={maxDate}
+                disableFuture
                 showDaysOutsideCurrentMonth
                 displayWeekNumber
                 // This is necessary in order to overwrite the textField slot below
