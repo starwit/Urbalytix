@@ -122,11 +122,9 @@ export default function DateRangePicker(props) {
         setStartDate(rangeStart);
         setEndDate(rangeEnd);
         additionalLogic(rangeStart, rangeEnd, true);
-        console.log('Committed', rangeStart.toDate().toISOString(), rangeEnd.toDate().toISOString());
     }
 
     function handleDateChange(newValue) {
-        console.log('handleDateChange', newValue)
         const selectedDate = dayjs(newValue);
 
         if (!isSelecting) {
