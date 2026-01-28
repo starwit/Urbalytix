@@ -179,6 +179,7 @@ export default function DateRangePicker(props) {
                 closeOnSelect={false}
                 showDaysOutsideCurrentMonth
                 displayWeekNumber
+                // This is necessary in order to overwrite the textField slot below
                 enableAccessibleFieldDOMStructure={false}
                 slots={{
                     day: Day,
@@ -189,13 +190,13 @@ export default function DateRangePicker(props) {
                         startDate: pickerStartDate,
                         endDate: pickerEndDate,
                     },
-                    actionBar: {
-                        actions: []
-                    },
                     textField: {
                         startDate,
                         endDate,
                         onClick: handleOpen,
+                    },
+                    actionBar: {
+                        actions: []
                     },
                     inputAdornment: {
                         sx: {
