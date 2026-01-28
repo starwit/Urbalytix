@@ -87,7 +87,7 @@ function ButtonDateField({startDate, endDate, onClick, ...params}) {
                 startIcon={<DateRangeIcon />}
             >{displayValue}</Button>
 
-            {/* This part is a hack to hide the actual input element while passing through it's params.
+            {/* This part is a hack to hide the actual input element while passing through its params.
                 The enclosing date picker needs this to function and position itself properly. */}
             <TextField
                 {...params}
