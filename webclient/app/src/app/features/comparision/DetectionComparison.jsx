@@ -13,7 +13,7 @@ import {useVehicleRoutes} from '../hooks/useVehicleRoutes';
 import {useDistricts} from "../hooks/useCityDistricts";
 
 function DetectionComparison() {
-    const {date, showDistricts, setShowDistricts, types, setTypes} = useContext(FilterContext);
+    const {showDistricts, setShowDistricts, types, setTypes, startDate, endDate, setStartDate, setEndDate} = useContext(FilterContext);
     const is3d = types.includes("3d");
     const [viewState, setViewState] = useState({
         longitude: 10.785000000000000,
@@ -23,8 +23,8 @@ function DetectionComparison() {
         bearing: 0
     });
 
-    const [startCompDate, setStartCompDate] = useState(date.subtract(1, 'week').startOf('week'));
-    const [endCompDate, setEndCompDate] = useState(date.subtract(1, 'week').endOf('week'));
+    const [startCompDate, setStartCompDate] = useState(startDate.subtract(1, 'week'));
+    const [endCompDate, setEndCompDate] = useState(endDate.subtract(1, 'week'));
     const {t} = useTranslation();
 
     const {
@@ -36,9 +36,8 @@ function DetectionComparison() {
     const {districts} = useDistricts({showDistricts});
 
     useEffect(() => {
-        setStartCompDate(date.subtract(1, 'week').startOf('week'));
-        setEndCompDate(date.subtract(1, 'week').endOf('week'));
-    }, [date]);
+        handleObjectClasses.loadObjectClasses(startDate, endDate, true);
+    }, [startDate, endDate]);
 
     function handleTypes(event, newTypes) {
         if (newTypes.length) {
@@ -50,9 +49,16 @@ function DetectionComparison() {
         <>
             <FilterLayout leftPosition={10}>
                 <DateTimeFilter
-                    additionalLogic={(curStartDate, curEndDate, changed) => {
-                        handleObjectClasses.loadObjectClasses(curStartDate, curEndDate, changed);
-                    }}
+                    startDate={startDate}
+                    endDate={endDate}
+                    setStartDate={setStartDate}
+                    setEndDate={setEndDate}
+                />
+                <DateTimeFilter
+                    startDate={startCompDate}
+                    endDate={endCompDate}
+                    setStartDate={setStartCompDate}
+                    setEndDate={setEndCompDate}
                 />
                 <ObjectClassFilter
                     prefix='detectiondata'

@@ -108,8 +108,8 @@ const translationDeDE = {
     "map.nav": "Karte nach Norden ausrichten",
     "map.districts": "Stadtteile",
     "map.legend": "Legende",
-    "legend.selected": "ausgewählte Woche",
-    "legend.before": "vorherige Woche",
+    "legend.selected": "Auswahl (Datum oben)",
+    "legend.before": "Vergleichdaten (Datum unten)",
     /******************** to be extracted ************************* */
     "landing.wastemanagement": "Abfallmanagement",
     "landing.trafficlive": "Verkehr Live",

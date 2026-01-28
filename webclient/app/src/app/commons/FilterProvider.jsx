@@ -4,9 +4,8 @@ import dayjs from "dayjs";
 export const FilterContext = createContext();
 
 export function FilterProvider({children}) {
-    const [startDate, setStartDate] = useState(dayjs().day(1));
-    const [endDate, setEndDate] = useState(dayjs().add(1, 'week').day(0));
-    const [date, setDate] = useState(dayjs());
+    const [startDate, setStartDate] = useState(dayjs().day(1).startOf('day'));
+    const [endDate, setEndDate] = useState(dayjs().add(1, 'week').day(0).endOf('day'));
     const [showDistricts, setShowDistricts] = useState(false);
 
     const [objectClasses, setObjectClasses] = useState([]);
@@ -18,10 +17,8 @@ export function FilterProvider({children}) {
         <FilterContext.Provider value={{
             startDate,
             endDate,
-            date,
             setStartDate,
             setEndDate,
-            setDate,
             objectClasses,
             setObjectClasses,
             selectedObjectClasses,

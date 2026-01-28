@@ -5,10 +5,9 @@ import {
 import DateRangePicker from './DateRangePicker';
 
 function DateTimeFilter(props) {
-    const {additionalLogic = () => { }} = props;
     return (
         <FormControl fullWidth size="small">
-            <DateRangePicker additionalLogic={additionalLogic} />
+            <DateRangePicker {...props} />
         </FormControl>
     );
 }

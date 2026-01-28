@@ -108,8 +108,8 @@ const translationEnEN = {
     "map.nav": "Align Map to North",
     "map.districts": "Show Districts",
     "map.legend": "Legend",
-    "legend.selected": "selected week",
-    "legend.before": "week before",
+    "legend.selected": "Selection (top date)",
+    "legend.before": "Comparison data (bottom date)",
     /******************** to be extracted ************************* */
     "landing.wastemanagement": " Waste Management",
     "landing.trafficlive": " Traffic Live",

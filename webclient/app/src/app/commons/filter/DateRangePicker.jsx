@@ -8,8 +8,7 @@ import {PickersDay} from '@mui/x-date-pickers/PickersDay';
 import dayjs from 'dayjs';
 import 'dayjs/locale/de';
 import isBetweenPlugin from 'dayjs/plugin/isBetween';
-import {useContext, useEffect, useState} from 'react';
-import {FilterContext} from '../FilterProvider';
+import {useState} from 'react';
 
 dayjs.extend(isBetweenPlugin);
 
@@ -109,23 +108,22 @@ function ButtonDateField({startDate, endDate, onClick, ...params}) {
 }
 
 export default function DateRangePicker(props) {
-    const {startDate, endDate, setStartDate, setEndDate} = useContext(FilterContext);
-    const {additionalLogic = () => { }} = props;
+    const {
+        startDate, 
+        endDate, 
+        setStartDate, 
+        setEndDate,
+    } = props;
     const [pickerStartDate, setPickerStartDate] = useState(null);
     const [pickerEndDate, setPickerEndDate] = useState(null);
     const [isSelecting, setIsSelecting] = useState(false);
     const [open, setOpen] = useState(false);
-
-    useEffect(() => {
-        additionalLogic(startDate, endDate, false);
-    }, []);
 
     function commitDates() {
         const rangeStart = pickerStartDate.startOf('day');
         const rangeEnd = pickerEndDate.endOf('day');
         setStartDate(rangeStart);
         setEndDate(rangeEnd);
-        additionalLogic(rangeStart, rangeEnd, true);
     }
 
     function handleDateChange(newValue) {

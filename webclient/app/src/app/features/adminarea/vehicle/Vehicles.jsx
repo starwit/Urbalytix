@@ -17,7 +17,7 @@ import VehicleMapMenu from './VehicleMapMenu';
 function Vehicles() {
     const {t, i18n} = useTranslation();
     const locale = i18n.language == "de" ? deDE : enUS
-    const {showDistricts, setShowDistricts, types, setTypes} = useContext(FilterContext);
+    const {showDistricts, setShowDistricts, types, setTypes, startDate, endDate, setStartDate, setEndDate} = useContext(FilterContext);
     const is3d = types.includes("3d");
     const vehicleDataRest = useMemo(() => new VehicleDataRest(), []);
     const vehicleRoutesRest = useMemo(() => new VehicleRoutesRest(), []);
@@ -33,7 +33,6 @@ function Vehicles() {
     const [vehicleData, setVehicleData] = useState([]);
     const [selectedVehicleData, setSelectedVehicleData] = useState([]);
     const [prevSelectedVehicleData, setPrevSelectedVehicleData] = useState([]);
-    const {date} = useContext(FilterContext);
     const [routes, setRoutes] = useState([]);
     const [showDataTable, setShowDataTable] = useState(true);
     const {districts} = useDistricts({showDistricts});
@@ -44,7 +43,7 @@ function Vehicles() {
 
     useEffect(() => {
         reloadAllRouteData();
-    }, [date]);
+    }, [startDate, endDate]);
 
     useEffect(() => {
         reloadPartialVehicleRouteData();
@@ -103,7 +102,7 @@ function Vehicles() {
             setRoutes(tmpRoutes);
             return;
         }
-        const promises = addedVehicles.map(vehicle => vehicleRoutesRest.findAllByVehicleAndWeek(vehicle, date.year(), date.week())
+        const promises = addedVehicles.map(vehicle => vehicleRoutesRest.findAllByVehicleAndTimeframe(vehicle, startDate.toJSON(), endDate.toJSON())
             .then(response => ({vehicle, data: response.data || []}))
         );
 
@@ -128,7 +127,12 @@ function Vehicles() {
     return (
         <>
             <FilterLayout leftPosition={10}>
-                <DateTimeFilter />
+                <DateTimeFilter 
+                    startDate={startDate}
+                    endDate={endDate}
+                    setStartDate={setStartDate}
+                    setEndDate={setEndDate}
+                />
             </FilterLayout>
             <VehicleMapMenu
                 types={types}
