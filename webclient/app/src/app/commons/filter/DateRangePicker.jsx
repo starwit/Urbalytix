@@ -1,5 +1,5 @@
 import DateRangeIcon from '@mui/icons-material/DateRange';
-import {Button, TextField} from '@mui/material';
+import {Button, TextField, Input} from '@mui/material';
 import {styled} from '@mui/material/styles';
 import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
 import {DatePicker} from '@mui/x-date-pickers/DatePicker';
@@ -92,6 +92,9 @@ function ButtonDateField({startDate, endDate, onClick, ...params}) {
                 The enclosing date picker needs this to function and position itself properly. */}
             <TextField
                 {...params}
+                slots={{
+                    input: Input
+                }}
                 slotProps={{
                     htmlInput: {
                         ...params.inputProps,
