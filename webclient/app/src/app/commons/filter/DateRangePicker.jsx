@@ -74,10 +74,10 @@ function Day(props) {
 }
 
 function ButtonDateField({startDate, endDate, onClick, ...params}) {
-    const dateOptions = {"year": "numeric", "month": "2-digit", "day": "2-digit"};
+    const dateOptions = {year: "numeric", month: "2-digit", day: "2-digit"};
     const startStr = startDate.toDate().toLocaleDateString(undefined, dateOptions);
     const endStr = endDate.toDate().toLocaleDateString(undefined, dateOptions);
-    const displayValue = `${startStr} – ${endStr}`;
+    const displayValue = startStr !== endStr ? `${startStr} – ${endStr}` : startStr;
 
     return (
         <>
