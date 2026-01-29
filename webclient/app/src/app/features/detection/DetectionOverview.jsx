@@ -26,7 +26,7 @@ const DATA_FILTERS = [
 function DetectionOverview() {
     const {t, i18n} = useTranslation();
     const locale = i18n.language == "de" ? deDE : enUS;
-    const {showDistricts, setShowDistricts, types, setTypes} = useContext(FilterContext);
+    const {showDistricts, setShowDistricts, types, setTypes, startDate, endDate, setStartDate, setEndDate} = useContext(FilterContext);
     const is3d = types.includes("3d");
     const [viewState, setViewState] = useState({
         longitude: 10.785000000000000,
@@ -73,6 +73,10 @@ function DetectionOverview() {
             setCity(response.data.properties['city']);
         });
     }, []);
+
+    useEffect(() => {
+        handleObjectClasses.loadObjectClasses(startDate, endDate, true);
+    }, [startDate, endDate]);
 
     function handleTypes(event, newTypes) {
         if (newTypes.length) {
@@ -126,9 +130,10 @@ function DetectionOverview() {
         <>
             <FilterLayout leftPosition={10}>
                 <DateTimeFilter
-                    additionalLogic={(curStartDate, curEndDate, changed) => {
-                        handleObjectClasses.loadObjectClasses(curStartDate, curEndDate, changed);
-                    }}
+                    startDate={startDate}
+                    endDate={endDate}
+                    setStartDate={setStartDate}
+                    setEndDate={setEndDate}
                 />
                 <ObjectClassFilter
                     prefix='detectiondata'

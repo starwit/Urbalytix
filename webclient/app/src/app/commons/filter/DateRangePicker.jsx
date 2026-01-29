@@ -1,3 +1,5 @@
+import DateRangeIcon from '@mui/icons-material/DateRange';
+import {Button, TextField, Input} from '@mui/material';
 import {styled} from '@mui/material/styles';
 import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
 import {DatePicker} from '@mui/x-date-pickers/DatePicker';
@@ -6,24 +8,21 @@ import {PickersDay} from '@mui/x-date-pickers/PickersDay';
 import dayjs from 'dayjs';
 import 'dayjs/locale/de';
 import isBetweenPlugin from 'dayjs/plugin/isBetween';
-import {useContext, useEffect, useState} from 'react';
-import {FilterContext} from '../FilterProvider';
+import {useState} from 'react';
 
 dayjs.extend(isBetweenPlugin);
 
 const CustomPickersDay = styled(PickersDay, {
-    shouldForwardProp: (prop) => prop !== 'isSelected' && prop !== 'isHovered',
-})(({theme, isSelected, isHovered, day}) => ({
+    shouldForwardProp: (prop) =>
+        prop !== 'isSelected' &&
+        prop !== 'isInRange' &&
+        prop !== 'isRangeStart' &&
+        prop !== 'isRangeEnd',
+})(({theme, isSelected, isInRange, isRangeStart, isRangeEnd}) => ({
     borderRadius: 0,
-    ...(isSelected && {
-        backgroundColor: theme.palette.primary.main,
-        color: theme.palette.primary.contrastText,
-        '&:hover, &:focus': {
-            backgroundColor: theme.palette.primary.main,
-        },
-    }),
-    ...(isHovered && {
+    ...(isInRange && {
         backgroundColor: theme.palette.primary.light,
+        color: theme.palette.primary.contrastText,
         '&:hover, &:focus': {
             backgroundColor: theme.palette.primary.light,
         },
@@ -34,26 +33,29 @@ const CustomPickersDay = styled(PickersDay, {
             },
         }),
     }),
-    ...(day.day() === 1 && {
+    ...((isSelected || isRangeStart || isRangeEnd) && {
+        backgroundColor: theme.palette.primary.main,
+        color: theme.palette.primary.contrastText,
+        '&:hover, &:focus': {
+            backgroundColor: theme.palette.primary.main,
+        },
+    }),
+    ...(isRangeStart && {
         borderTopLeftRadius: '50%',
         borderBottomLeftRadius: '50%',
     }),
-    ...(day.day() === 0 && {
+    ...(isRangeEnd && {
         borderTopRightRadius: '50%',
         borderBottomRightRadius: '50%',
     }),
 }));
 
-const isInSameWeek = (dayA, dayB) => {
-    if (dayB == null) {
-        return false;
-    }
-
-    return dayA.isSame(dayB, 'week');
-};
-
 function Day(props) {
-    const {day, selectedDay, hoveredDay, ...other} = props;
+    const {day, startDate, endDate, ...other} = props;
+
+    const isInRange = startDate && endDate && day.isBetween(startDate, endDate, 'day', '[]');
+    const isRangeStart = startDate && day.isSame(startDate, 'day');
+    const isRangeEnd = endDate && day.isSame(endDate, 'day');
 
     return (
         <CustomPickersDay
@@ -62,53 +64,153 @@ function Day(props) {
             sx={{px: 2.5}}
             disableMargin
             selected={false}
-            isSelected={isInSameWeek(day, selectedDay)}
-            isHovered={isInSameWeek(day, hoveredDay)}
+            autoFocus={false}
+            isSelected={isRangeStart || isRangeEnd}
+            isInRange={isInRange}
+            isRangeStart={isRangeStart}
+            isRangeEnd={isRangeEnd}
         />
     );
 }
 
-export default function DateRangePicker(props) {
-    const {startDate, endDate, setStartDate, setEndDate, date, setDate} = useContext(FilterContext);
-    const {additionalLogic = () => { }} = props;
-    const [hoveredDay, setHoveredDay] = useState(null);
+function ButtonDateField({startDate, endDate, onClick, ...params}) {
+    const dateOptions = {year: "numeric", month: "2-digit", day: "2-digit"};
+    const startStr = startDate.toDate().toLocaleDateString(undefined, dateOptions);
+    const endStr = endDate.toDate().toLocaleDateString(undefined, dateOptions);
+    const displayValue = startStr !== endStr ? `${startStr} – ${endStr}` : startStr;
 
-    // Note: This effect runs on mount and will execute when components are re-rendered after route changes.
-    useEffect(() => {
-        additionalLogic(startDate, endDate, false);
-    }, [])
+    return (
+        <>
+            {/* This button is the only element we want to be visible and to be interacted with */}
+            <Button 
+                onClick={onClick}
+                startIcon={<DateRangeIcon />}
+            >{displayValue}</Button>
+
+            {/* This part is a hack to hide the actual input element while passing through its params.
+                The enclosing date picker needs this to function and position itself properly. */}
+            <TextField
+                {...params}
+                slots={{
+                    input: Input
+                }}
+                slotProps={{
+                    htmlInput: {
+                        ...params.inputProps,
+                        sx: {
+                            display: "none"
+                        },
+                    }
+                }}
+            ></TextField>
+        </>
+    );
+}
+
+export default function DateRangePicker(props) {
+    const {
+        startDate, 
+        endDate, 
+        setStartDate, 
+        setEndDate,
+    } = props;
+    const [pickerStartDate, setPickerStartDate] = useState(null);
+    const [pickerEndDate, setPickerEndDate] = useState(null);
+    const [isSelecting, setIsSelecting] = useState(false);
+    const [open, setOpen] = useState(false);
+
+    function commitDates() {
+        const rangeStart = pickerStartDate.startOf('day');
+        const rangeEnd = pickerEndDate.endOf('day');
+        setStartDate(rangeStart);
+        setEndDate(rangeEnd);
+    }
 
     function handleDateChange(newValue) {
-        if (dayjs(date).isSame(newValue, 'week')) {
-            return;
-        }
-        const curDate = dayjs(newValue).startOf('week');
-        const curEndDate = curDate.endOf('week');
+        const selectedDate = dayjs(newValue);
 
-        setDate(curDate);
-        setStartDate(curDate);
-        setEndDate(curEndDate);
-        if (additionalLogic) {
-            additionalLogic(curDate, curEndDate, true);
-        }
+        if (!isSelecting) {
+            // If no temp start date or starting a new range, store new range start
+            setPickerStartDate(selectedDate);
+            setPickerEndDate(null);
+            setIsSelecting(true);
+        } else {
+            // We were selecting on the previous input change, so we're completing the range now
+            let newStartDate = pickerStartDate;
+            let newEndDate = selectedDate;
+            
+            if (newEndDate.isBefore(newStartDate)) {
+                // If selected date is before start, swap them
+                const temp = newEndDate;
+                newEndDate = newStartDate;
+                newStartDate = temp;
+            }
 
+            setPickerStartDate(newStartDate);
+            setPickerEndDate(newEndDate);
+            setIsSelecting(false);
+        }
     }
+
+    function handleOpen() {
+        if (!open) {
+            setIsSelecting(false);
+            setPickerStartDate(startDate);
+            setPickerEndDate(endDate);
+            setOpen(true);
+        }
+    }
+
+    function handleClose() {
+        if (!isSelecting) {
+            commitDates();
+        }
+        setOpen(false);
+    }
+
+    const minDate = isSelecting ? pickerStartDate?.subtract(1, 'month') : null;
+    const maxDate = isSelecting ? pickerStartDate?.add(1, 'month') : null;
 
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs} adapterLocale='de'>
             <DatePicker
-                value={date}
+                // The value must be fixed to unset, s.t. onChange is called on every click
+                value={null}
+                referenceDate={pickerStartDate}
                 onChange={handleDateChange}
+                open={open}
+                onOpen={handleOpen}
+                onClose={handleClose}
+                closeOnSelect={false}
+                minDate={minDate}
+                maxDate={maxDate}
+                disableFuture
                 showDaysOutsideCurrentMonth
                 displayWeekNumber
-                slots={{day: Day}}
+                // This is necessary in order to overwrite the textField slot below
+                enableAccessibleFieldDOMStructure={false}
+                slots={{
+                    day: Day,
+                    textField: ButtonDateField,
+                }}
                 slotProps={{
-                    day: (ownerState) => ({
-                        selectedDay: date,
-                        hoveredDay,
-                        onPointerEnter: () => setHoveredDay(ownerState.day),
-                        onPointerLeave: () => setHoveredDay(null),
-                    }),
+                    day: {
+                        startDate: pickerStartDate,
+                        endDate: pickerEndDate,
+                    },
+                    textField: {
+                        startDate,
+                        endDate,
+                        onClick: handleOpen,
+                    },
+                    actionBar: {
+                        actions: []
+                    },
+                    inputAdornment: {
+                        sx: {
+                            display: "none"
+                        }
+                    }
                 }}
             />
         </LocalizationProvider>
