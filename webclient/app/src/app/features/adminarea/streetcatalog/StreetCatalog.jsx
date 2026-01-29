@@ -100,9 +100,9 @@ function StreetCatalog() {
 
     const layers = [
         MapLayerFactory.createBaseMapLayer(),
-        MapLayerFactory.createGeoJsonLayer(selectedStreet, 'singleStreet'),
+        MapLayerFactory.createGeoJsonLayer({data: selectedStreet, name: 'singleStreet', lineColor: [153, 88, 88, 200]}),
         MapLayerFactory.createDistrictLayer(districts, showDistricts, true, handleDistrictDetailsClick),
-        MapLayerFactory.createGeoJsonLayer(selectedDistrictStreets, 'districtStreets')
+        MapLayerFactory.createGeoJsonLayer({data: selectedDistrictStreets, name: 'districtStreets', lineColor: [73, 93, 127, 200]})
     ];
 
     function handleStreetRowClick(params) {
