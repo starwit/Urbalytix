@@ -113,21 +113,19 @@ public class DetectionCountService implements ServiceInterface<DetectionCountEnt
             ZonedDateTime endTime, long districtId) {
         List<StreetsWithDetectionCountDto> result = new ArrayList<>();
 
+        List<StreetCatalogEntity> streets = streetCatalogRepository.findAllInDistrictWithBuffer("Wolfsburg", districtId, 0.0001);
+
         String districtName = "";
         Optional<CityDistrictEntity> districtEntity = districtRepository.findById(districtId);
         if (!districtEntity.isEmpty()) {
             districtName = districtEntity.get().getName();
         }
 
-        List<StreetCatalogEntity> streets = streetCatalogRepository.findByCityDistrictId("Wolfsburg", districtId);
         log.debug("Found " + streets.size() + " streets for district " + districtId);
         for (StreetCatalogEntity street : streets) {
-            Geometry streetHull = streetCatalogRepository.findStreetHull(street.getId());
-
-            int wasteCount = repository.countByGeometry(streetHull, startTime, endTime);
+            int wasteCount = repository.countByGeometry(street.getStreetPath(), startTime, endTime);
             StreetsWithDetectionCountDto streetDto = new StreetsWithDetectionCountDto(street.getId(),
                     street.getStreetName(), districtName, wasteCount);
-
             result.add(streetDto);
         }
         return result;
