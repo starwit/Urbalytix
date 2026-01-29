@@ -20,6 +20,25 @@ public interface StreetCatalogRepository extends JpaRepository<StreetCatalogEnti
   Geometry findStreetHull(@Param("streetname") long streetId);
 
   @Query(value = """
+      SELECT
+        s.id AS id,
+        s.city AS city,
+        s.street_name,
+        ST_Buffer(ST_Intersection(s.street_path, d.district_geometry), :bufferValue) as street_path
+      FROM street_catalog s
+      JOIN city_district d
+        ON s.city = d.city
+       AND ST_Intersects(s.street_path, d.district_geometry)
+      WHERE d.city = :city
+        AND d.id = :districtId
+      """, nativeQuery = true)
+  List<StreetCatalogEntity> findAllInDistrictWithBuffer(
+    String city,
+    long districtId,
+    double bufferValue
+  );
+
+  @Query(value = """
         SELECT
           new de.starwit.persistence.dto.StreetWithDistrictDto(
             s.id,
@@ -56,11 +75,11 @@ public interface StreetCatalogRepository extends JpaRepository<StreetCatalogEnti
           s.id AS id,
           s.city AS city,
           s.street_name,
-          s.street_path
+          ST_Intersection(s.street_path, d.district_geometry) as street_path
       FROM street_catalog s
       JOIN city_district d
         ON s.city = d.city
-       AND ST_Within(s.street_path, d.district_geometry)
+       AND ST_Intersects(s.street_path, d.district_geometry)
       WHERE d.city = :city
         AND d.id = :districtId
       """, nativeQuery = true)
