@@ -127,6 +127,14 @@ const translationEnEN = {
     "district.councilName": "District Government",
     "district.detections": "Detection",
     "district.showdetails": "Show District Details",
-    "district.heading": "City Districts"
+    "district.heading": "City Districts",
+    "menu.config.config": "App Configuration",
+    "config.save": "Save",
+    "config.category.general": "General",
+    "config.category.map": "Map",
+    "config.item.location_lon": "Map default longitude",
+    "config.item.location_lat": "Map default latitude",
+    "config.item.city": "City name",
+    "config.item.defaulttimeframe": "Default time frame in days"
 };
 export default translationEnEN;

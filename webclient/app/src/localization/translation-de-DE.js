@@ -127,6 +127,14 @@ const translationDeDE = {
     "district.councilName": "Ortsrat",
     "district.detections": "Detektionen",
     "district.showdetails": "Bezirksdetails anzeigen",
-    "district.heading": "Stadtteile"
+    "district.heading": "Stadtteile",
+    "menu.config.config": "Anwendungseinstellungen",
+    "config.save": "Speichern",
+    "config.category.general": "Allgemein",
+    "config.category.map": "Karte",
+    "config.item.location_lon": "Längengrad Kartenansicht",
+    "config.item.location_lat": "Breitengrad Kartenansicht",
+    "config.item.city": "Stadtname",
+    "config.item.defaulttimeframe": "Standardzeitraum in Tagen"
 };
 export default translationDeDE;

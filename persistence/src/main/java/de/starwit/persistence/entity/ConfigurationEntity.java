@@ -40,4 +40,11 @@ public class ConfigurationEntity extends AbstractEntity<Long> {
     public void setCategory(String category) {
         this.category = category;
     }
+
+    @Override
+    public String toString() {
+        return "ConfigurationEntity [id= " + id + ", keyname=" + keyname + ", valuefield=" + valuefield + ", category="
+                + category
+                + "]";
+    }
 }
