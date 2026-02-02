@@ -23,22 +23,22 @@ export class MapLayerFactory {
         });
     }
 
-    static createGeoJsonLayer(data, name) {
+    static createGeoJsonLayer({
+        data, 
+        name, 
+        lineColor = [160, 160, 180, 200],
+        lineWidthMeters = 10,
+        lineWidthMinPixels = 5,
+    }) {
         return new GeoJsonLayer({
             id: 'GeoJsonLayer-' + name,
             data: data,
-            stroked: false,
             filled: true,
-            pointType: 'circle+text',
-            pickable: true,
 
-            getFillColor: [160, 160, 180, 200],
-            getLineColor: f => {
-                const hex = f.properties.color;
-                // convert to RGB
-                return hex ? hex.match(/[0-9a-f]{2}/g).map(x => parseInt(x, 16)) : [0, 0, 0];
-            },
-            getLineWidth: 20,
+            getLineColor: lineColor,
+            getLineWidth: lineWidthMeters,
+            lineWidthUnits: 'meters',
+            lineWidthMinPixels,
             getPointRadius: 4,
             getText: f => f.properties.name,
             getTextSize: 12
@@ -62,11 +62,9 @@ export class MapLayerFactory {
                 districtClick({'id': properties.id, 'districtName': properties.district_name});
             },
             visible: showLayer,
-            getLineColor: f => {
-                const hex = f.properties.color;
-                return hex ? hex.match(/[0-9a-f]{2}/g).map(x => parseInt(x, 16)) : [0, 0, 0];
-            },
-            getLineWidth: 10,
+            getLineColor: [0, 0, 0],
+            getLineWidth: 7,
+            lineWidthMinPixels: 1,
             getText: f => f.properties.district_name,
             getTextSize: 22
         });
