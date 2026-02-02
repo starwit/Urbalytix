@@ -32,11 +32,10 @@ public interface StreetCatalogRepository extends JpaRepository<StreetCatalogEnti
       WHERE d.city = :city
         AND d.id = :districtId
       """, nativeQuery = true)
-  List<StreetCatalogEntity> findAllInDistrictWithBuffer(
-    String city,
-    long districtId,
-    double bufferValue
-  );
+  List<StreetCatalogEntity> findAllIntersectingDistrictWithBuffer(
+      String city,
+      long districtId,
+      double bufferValue);
 
   @Query(value = """
         SELECT

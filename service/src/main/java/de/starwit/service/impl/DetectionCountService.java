@@ -113,7 +113,8 @@ public class DetectionCountService implements ServiceInterface<DetectionCountEnt
             ZonedDateTime endTime, long districtId) {
         List<StreetsWithDetectionCountDto> result = new ArrayList<>();
 
-        List<StreetCatalogEntity> streets = streetCatalogRepository.findAllInDistrictWithBuffer("Wolfsburg", districtId, 0.0001);
+        List<StreetCatalogEntity> streets = streetCatalogRepository.findAllIntersectingDistrictWithBuffer("Wolfsburg",
+                districtId, 0.0001);
 
         String districtName = "";
         Optional<CityDistrictEntity> districtEntity = districtRepository.findById(districtId);
