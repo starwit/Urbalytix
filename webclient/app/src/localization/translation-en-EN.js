@@ -132,9 +132,17 @@ const translationEnEN = {
     "config.save": "Save",
     "config.category.general": "General",
     "config.category.map": "Map",
+    "config.category.datasources": "Data Sources",
     "config.item.location_lon": "Map default longitude",
     "config.item.location_lat": "Map default latitude",
     "config.item.city": "City name",
-    "config.item.defaulttimeframe": "Default time frame in days"
+    "config.item.defaulttimeframe": "Default time frame in days",
+    "config.item.trash.url": "URL for trash bin locations",
+    "config.item.trash.token": "Access Token",
+    "config.item.wastedetection.hostname": "Hostname Waste Detection Service",
+    "config.item.wastedetection.port": "Port Waste Detection Service",
+    "config.item.wastedetection.stream.aggregator": "Aggregation stream name for Waste Detection Service",
+    "config.item.wastedetection.stream.positionsource": "Position source stream name for Waste Detection Service",
+    "config.item.wastedetection.stream.detection": "Detection stream name for Waste Detection Service"
 };
 export default translationEnEN;
