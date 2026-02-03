@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import de.starwit.persistence.entity.ConfigurationEntity;
+import de.starwit.persistence.enums.ConfigDataTypes;
 import de.starwit.persistence.repository.ConfigurationRepository;
 
 @Service
@@ -25,5 +26,49 @@ public class ConfigurationService implements ServiceInterface<ConfigurationEntit
 
     public ConfigurationEntity findByKey(String key) {
         return repository.findByKeyname(key);
+    }
+
+    @Override
+    public ConfigurationEntity saveOrUpdate(ConfigurationEntity config) throws IllegalArgumentException {
+        ConfigDataTypes type = config.getDatatype();
+        switch (type) {
+            case INTEGER:
+                try {
+                    Integer.parseInt(config.getValuefield());
+                } catch (NumberFormatException e) {
+                    throw new IllegalArgumentException(
+                            "Valuefield for key " + config.getKeyname() + " is not a valid INTEGER.");
+                }
+                break;
+            case DOUBLE:
+                try {
+                    Double.parseDouble(config.getValuefield());
+                } catch (NumberFormatException e) {
+                    throw new IllegalArgumentException(
+                            "Valuefield for key " + config.getKeyname() + " is not a valid DOUBLE.");
+                }
+                break;
+
+            case BOOLEAN:
+                if (!"true".equalsIgnoreCase(config.getValuefield())
+                        && !"false".equalsIgnoreCase(config.getValuefield())) {
+                    throw new IllegalArgumentException(
+                            "Valuefield for key " + config.getKeyname() + " is not a valid BOOLEAN.");
+                }
+                break;
+            default:
+                // String requires no special handling
+                break;
+        }
+
+        ConfigurationEntity existingConfig = repository.findByKeyname(config.getKeyname());
+        if (existingConfig != null) {
+            existingConfig.setValuefield(config.getValuefield());
+            existingConfig.setCategory(config.getCategory());
+            existingConfig.setDatatype(config.getDatatype());
+            return repository.save(existingConfig);
+        } else {
+            return repository.save(config);
+        }
     }
 }

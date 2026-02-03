@@ -7,8 +7,10 @@ import org.geojson.LngLatAlt;
 import org.geojson.Point;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,24 +30,33 @@ public class ConfigurationController {
     @Autowired
     private ConfigurationService configurationService;
 
-    @Value("${config.mapcenter.lat}")
-    private double latitude;
+    private double latitude = 52.41988232741599;
 
-    @Value("${config.mapcenter.long}")
-    private double longitude;
+    private double longitude = 10.779998775029739;
 
-    @Value("${config.mapcenter.city}")
-    private String city;
+    private String city = "Wolfsburg";
 
     @Operation(summary = "Base coordinate to center map views")
     @GetMapping(value = "/mapcenter", produces = "application/geo+json")
     public Feature getMapCenter() {
         Feature feature = new Feature();
         Point mapCenter = new Point();
+
+        var config = configurationService.getRepository().findAll();
+        for (ConfigurationEntity ce : config) {
+            if ("location_lat".equals(ce.getKeyname())) {
+                latitude = Double.parseDouble(ce.getValuefield());
+            }
+            if ("location_long".equals(ce.getKeyname())) {
+                longitude = Double.parseDouble(ce.getValuefield());
+            }
+            if ("city".equals(ce.getKeyname())) {
+                city = ce.getValuefield();
+            }
+        }
         mapCenter.setCoordinates(new LngLatAlt(longitude, latitude));
         feature.setGeometry(mapCenter);
         feature.setProperty("city", city);
-
         return feature;
     }
 
@@ -63,9 +74,15 @@ public class ConfigurationController {
 
     @Operation(summary = "Set configuration entry by key")
     @PostMapping(value = "/setbykey")
-    public ConfigurationEntity setConfigurationByKey(@RequestBody ConfigurationEntity config) {
-        LOG.info(config.toString());
-        return configurationService.saveOrUpdate(config);
+    public ResponseEntity<ConfigurationEntity> setConfigurationByKey(@RequestBody ConfigurationEntity config) {
+
+        try {
+            ConfigurationEntity result = configurationService.saveOrUpdate(config);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            LOG.error("Error setting configuration for key {}: {}", config.getKeyname(), e.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
 }

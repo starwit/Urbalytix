@@ -13,8 +13,8 @@ CREATE TABLE "configuration"
 
 INSERT INTO "configuration" ("keyname", "valuefield", "category", "datatype")
 VALUES
-    ('location_lon', '11.0', 'map', 'DOUBLE'),
-    ('location_lat', '52.1', 'map', 'DOUBLE'),
+    ('location_lon', '10.779998775029739', 'map', 'DOUBLE'),
+    ('location_lat', '52.41988232741599', 'map', 'DOUBLE'),
     ('city', 'Wolfsburg', 'general', 'STRING'),
     ('trash.token', '', 'datasources', 'STRING'),
     ('trash.url', 'https://www.was-wob.de/apiNodes', 'datasources', 'STRING'),
