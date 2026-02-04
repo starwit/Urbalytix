@@ -20,16 +20,32 @@ public class ConfigurationService implements ServiceInterface<ConfigurationEntit
         return repository;
     }
 
-    public List<ConfigurationEntity> saveOrUpdateList(List<ConfigurationEntity> configs) {
-        return repository.saveAll(configs);
-    }
-
     public ConfigurationEntity findByKey(String key) {
         return repository.findByKeyname(key);
     }
 
+    public List<ConfigurationEntity> saveOrUpdateList(List<ConfigurationEntity> configs)
+            throws IllegalArgumentException {
+        configs.forEach(this::testTypeCorrectness);
+        return repository.saveAll(configs);
+    }
+
     @Override
     public ConfigurationEntity saveOrUpdate(ConfigurationEntity config) throws IllegalArgumentException {
+        testTypeCorrectness(config);
+
+        ConfigurationEntity existingConfig = repository.findByKeyname(config.getKeyname());
+        if (existingConfig != null) {
+            existingConfig.setValuefield(config.getValuefield());
+            existingConfig.setCategory(config.getCategory());
+            existingConfig.setDatatype(config.getDatatype());
+            return repository.save(existingConfig);
+        } else {
+            return repository.save(config);
+        }
+    }
+
+    private void testTypeCorrectness(ConfigurationEntity config) throws IllegalArgumentException {
         ConfigDataTypes type = config.getDatatype();
         switch (type) {
             case INTEGER:
@@ -59,16 +75,6 @@ public class ConfigurationService implements ServiceInterface<ConfigurationEntit
             default:
                 // String requires no special handling
                 break;
-        }
-
-        ConfigurationEntity existingConfig = repository.findByKeyname(config.getKeyname());
-        if (existingConfig != null) {
-            existingConfig.setValuefield(config.getValuefield());
-            existingConfig.setCategory(config.getCategory());
-            existingConfig.setDatatype(config.getDatatype());
-            return repository.save(existingConfig);
-        } else {
-            return repository.save(config);
         }
     }
 }

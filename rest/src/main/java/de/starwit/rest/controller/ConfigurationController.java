@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -66,10 +65,16 @@ public class ConfigurationController {
         return configurationService.getRepository().findAll();
     }
 
-    @Operation(summary = "Set configuration entry by key")
+    @Operation(summary = "Set all configuration entries")
     @PostMapping(value = "/")
-    public List<ConfigurationEntity> setConfiguration(@RequestBody List<ConfigurationEntity> configs) {
-        return configurationService.saveOrUpdateList(configs);
+    public ResponseEntity<List<ConfigurationEntity>> setConfiguration(@RequestBody List<ConfigurationEntity> configs) {
+        try {
+            List<ConfigurationEntity> result = configurationService.saveOrUpdateList(configs);
+            return new ResponseEntity<>(result, HttpStatus.OK);
+        } catch (IllegalArgumentException e) {
+            LOG.error("Error setting configuration: {}", e.getMessage());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     @Operation(summary = "Set configuration entry by key")
