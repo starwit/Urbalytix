@@ -1,8 +1,9 @@
 import {HeatmapLayer, HexagonLayer, ScreenGridLayer} from "@deck.gl/aggregation-layers";
 import {MaskExtension} from "@deck.gl/extensions";
 import {TileLayer} from "@deck.gl/geo-layers";
-import {BitmapLayer, GeoJsonLayer, GridCellLayer, IconLayer, PolygonLayer, ScatterplotLayer} from "@deck.gl/layers";
+import {BitmapLayer, GeoJsonLayer, GridCellLayer, IconLayer, PolygonLayer, ScatterplotLayer, TextLayer} from "@deck.gl/layers";
 import {TILE_LAYER_CONFIG} from './BaseMapConfig';
+import centroid from '@turf/centroid';
 
 export class MapLayerFactory {
 
@@ -46,28 +47,40 @@ export class MapLayerFactory {
     }
 
     static createDistrictLayer(data, showLayer, filled = false, districtClick) {
-        return new GeoJsonLayer({
-            id: 'District-GeoJsonLayer',
-            data: data,
-            stroked: true,
-            filled: filled,
-            getFillColor: [100, 100, 100, 60],
-            pointType: 'circle+text',
-            pickable: true,
-            onClick: info => {
-                if (!info.object) return;
+        return [
+            new TextLayer({
+                id: 'District-TextLayer',
+                data: data.features,
+                getPosition: f => centroid(f.geometry).geometry.coordinates,
+                getText: f => f.properties.district_name,
+                getSize: 80,
+                getColor: [0, 0, 0],
+                visible: showLayer,
+                sizeUnits: 'meters',
+                sizeMinPixels: 5,
+                sizeMaxPixels: 50,
+                characterSet: 'auto',
+            }),
+            new GeoJsonLayer({
+                id: 'District-GeoJsonLayer',
+                data: data,
+                stroked: true,
+                filled: filled,
+                getFillColor: [100, 100, 100, 60],
+                pickable: true,
+                onClick: info => {
+                    if (!info.object) return;
 
-                const properties = info.object.properties;
+                    const properties = info.object.properties;
 
-                districtClick({'id': properties.id, 'districtName': properties.district_name});
-            },
-            visible: showLayer,
-            getLineColor: [0, 0, 0],
-            getLineWidth: 7,
-            lineWidthMinPixels: 1,
-            getText: f => f.properties.district_name,
-            getTextSize: 22
-        });
+                    districtClick({'id': properties.id, 'districtName': properties.district_name});
+                },
+                visible: showLayer,
+                getLineColor: [0, 0, 0],
+                getLineWidth: 7,
+                lineWidthMinPixels: 1,
+            })
+        ];
     }
 
 

@@ -18,7 +18,7 @@
         "@mui/x-data-grid": "8.18.0",
         "@mui/x-date-pickers": "8.18.0",
         "@mui/x-tree-view": "8.18.0",
-        "@turf/turf": "7.3.0",
+        "@turf/centroid": "7.3.3",
         "axios": "1.12.2",
         "dayjs": "1.11.19",
         "i18next": "25.6.2",

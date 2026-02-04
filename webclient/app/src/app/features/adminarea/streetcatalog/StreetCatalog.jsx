@@ -7,7 +7,7 @@ import {DataGrid} from "@mui/x-data-grid";
 import DeckGL from "@deck.gl/react";
 import {MapView} from "@deck.gl/core";
 import {MapLayerFactory} from "../../../commons/geographicalMaps/MapLayerFactory";
-import {centroid} from '@turf/turf';
+import centroid from '@turf/centroid';
 import {WebMercatorViewport} from "@deck.gl/core";
 import {useDistricts} from "../../hooks/useCityDistricts";
 import DataTableLayout from "../../../commons/DataTableLayout";
