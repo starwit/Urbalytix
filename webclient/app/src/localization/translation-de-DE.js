@@ -127,6 +127,22 @@ const translationDeDE = {
     "district.councilName": "Ortsrat",
     "district.detections": "Detektionen",
     "district.showdetails": "Bezirksdetails anzeigen",
-    "district.heading": "Stadtteile"
+    "district.heading": "Stadtteile",
+    "menu.config.config": "Anwendungseinstellungen",
+    "config.save": "Speichern",
+    "config.category.general": "Allgemein",
+    "config.category.map": "Karte",
+    "config.category.datasources": "Datenquellen",
+    "config.item.location_lon": "Längengrad Kartenansicht",
+    "config.item.location_lat": "Breitengrad Kartenansicht",
+    "config.item.city": "Stadtname",
+    "config.item.defaulttimeframe": "Standardzeitraum in Tagen",
+    "config.item.trash.url": "URL Müllbehälterstandorte",
+    "config.item.trash.token": "Zugriffstoken",
+    "config.item.wastedetection.hostname": "Hostname Abfalldetektionsservice",
+    "config.item.wastedetection.port": "Port Abfalldetektionsservice",
+    "config.item.wastedetection.stream.aggregator": "Aggregation Aboname for Abfalldetektionsservice",
+    "config.item.wastedetection.stream.positionsource": "Position Aboname for Abfalldetektionsservice",
+    "config.item.wastedetection.stream.detection": "Detection Aboname for Abfalldetektionsservice"
 };
 export default translationDeDE;

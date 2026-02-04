@@ -1,6 +1,7 @@
 import {Box, ClickAwayListener, Grow, IconButton, ListItemIcon, ListItemText, MenuItem, MenuList, Paper, Popper, Tooltip} from "@mui/material";
 import SettingsIcon from "@mui/icons-material/Settings";
 import EditRoadIcon from '@mui/icons-material/EditRoad';
+import TuneIcon from '@mui/icons-material/Tune';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import {useEffect, useRef, useState} from "react";
 import {useTranslation} from "react-i18next";
@@ -86,6 +87,10 @@ function AdminMenu(props) {
                                     <MenuItem component={Link} to={"/streetcatalog"} onClick={handleClose}>
                                         <ListItemIcon><EditRoadIcon fontSize="small" /></ListItemIcon>
                                         <ListItemText>{t("menu.config.road")}</ListItemText>
+                                    </MenuItem>
+                                    <MenuItem component={Link} to={"/configuration"} onClick={handleClose}>
+                                        <ListItemIcon><TuneIcon fontSize="small" /></ListItemIcon>
+                                        <ListItemText>{t("menu.config.config")}</ListItemText>
                                     </MenuItem>
                                 </MenuList>
                             </ClickAwayListener>
