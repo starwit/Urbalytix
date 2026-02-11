@@ -75,27 +75,22 @@ public class StreamSubscriptionService {
 
         rescanStreams(keysPerStream);
 
-        String streamPrefix = streamPrefixAggregator;
-        subscribeToStream(streamPrefix);
-
-        streamPrefix = streamPrefixPositionSource;
-        subscribeToStream(streamPrefix);
-
-        streamPrefix = streamPrefixDetection;
-        subscribeToStream(streamPrefix);
+        subscribeToStreams(streamPrefixAggregator, detectionCountMessageListener);
+        subscribeToStreams(streamPrefixPositionSource, positionMessageListener);
+        subscribeToStreams(streamPrefixDetection, detectionMessageListener);
 
         if (!streamMessageListenerContainer.isRunning()) {
             streamMessageListenerContainer.start();
         }
     }
 
-    private void subscribeToStream(String streamPrefix) {
+    private void subscribeToStreams(String streamPrefix, StreamListener<String, MapRecord<String, String, String>> listener) {
         for (String key : keysPerStream.get(streamPrefix)) {
             String streamName = streamPrefix + ":" + key;
             if (!subscribedStreams.contains(streamName)) {
                 log.debug("Subscribing to " + streamName);
                 StreamOffset<String> streamOffset = StreamOffset.create(streamName, ReadOffset.latest());
-                streamMessageListenerContainer.receive(streamOffset, detectionMessageListener);
+                streamMessageListenerContainer.receive(streamOffset, listener);
                 subscribedStreams.add(streamName);
             }
         }
