@@ -28,7 +28,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <spring-boot-version>4.0.1</spring-boot-version>
+        <spring-boot-version>4.0.2</spring-boot-version>
         <vision-api.version>3.5.2</vision-api.version>
         <openapi-version>3.0.1</openapi-version>
         <java.version>25</java.version>
@@ -73,7 +73,7 @@
             <dependency>
                 <groupId>org.postgresql</groupId>
                 <artifactId>postgresql</artifactId>
-                <version>42.7.9</version>
+                <version>42.7.10</version>
                 <scope>runtime</scope>
             </dependency>
             <dependency>
