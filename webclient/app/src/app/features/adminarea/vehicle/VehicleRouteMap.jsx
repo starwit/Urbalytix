@@ -2,7 +2,17 @@ import DeckGL from "@deck.gl/react";
 import {useMemo} from "react";
 import {MapLayerFactory} from '../../../commons/geographicalMaps/MapLayerFactory';
 import {MAP_VIEW} from '../../../commons/geographicalMaps/BaseMapConfig';
+import positionImage from "../../../assets/icons/vehicle.png";
 
+const ICON_MAPPING = {
+    "marker": {
+        "x": 0,
+        "y": 0,
+        "width": 75,
+        "height": 75,
+        "mask": true
+    },
+}
 
 function VehicleRouteMap(props) {
     const {
@@ -10,12 +20,15 @@ function VehicleRouteMap(props) {
         onViewStateChange,
         routes = [],
         districts,
-        showDistricts = false
+        showDistricts = false,
+        positionIcon = positionImage,
+        positionData = [],
     } = props;
 
     var layers = [
         MapLayerFactory.createBaseMapLayer(),
-        MapLayerFactory.createDistrictLayer(districts, showDistricts, false, () => { })
+        MapLayerFactory.createDistrictLayer(districts, showDistricts, false, () => { }),
+        MapLayerFactory.createPositionLayer(positionData, ICON_MAPPING, positionIcon, true),
     ];
 
     for (const vehicle in routes) {

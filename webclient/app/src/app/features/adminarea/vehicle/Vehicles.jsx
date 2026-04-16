@@ -13,6 +13,7 @@ import {FilterContext} from '../../../commons/FilterProvider';
 import VehicleTable from './VehicleTable';
 import DataTableLayout from '../../../commons/DataTableLayout';
 import VehicleMapMenu from './VehicleMapMenu';
+import {useVehicleData} from '../../hooks/useVehicleData';
 
 function Vehicles() {
     const {t, i18n} = useTranslation();
@@ -30,16 +31,13 @@ function Vehicles() {
         pitch: is3d ? 60 : 0,
         bearing: 0
     });
-    const [vehicleData, setVehicleData] = useState([]);
     const [selectedVehicleData, setSelectedVehicleData] = useState([]);
     const [prevSelectedVehicleData, setPrevSelectedVehicleData] = useState([]);
     const [routes, setRoutes] = useState([]);
     const [showDataTable, setShowDataTable] = useState(true);
     const {districts} = useDistricts({showDistricts});
 
-    useEffect(() => {
-        loadVehicleData();
-    }, []);
+    const vehicleData = useVehicleData(2000).sort((a, b) => a.name.localeCompare(b.name));
 
     useEffect(() => {
         reloadAllRouteData();
@@ -60,16 +58,6 @@ function Vehicles() {
             setCity(response.data.properties['city']);
         });
     }, []);
-
-    function loadVehicleData() {
-        vehicleDataRest.findAllFormatted().then(response => {
-            if (response.data == null) {
-                return;
-            }
-            const sortedData = response.data.sort((a, b) => a.name.localeCompare(b.name));
-            setVehicleData(sortedData);
-        });
-    }
 
     function reloadPartialVehicleRouteData() {
         if (selectedVehicleData.length === 0) {
@@ -147,6 +135,7 @@ function Vehicles() {
                 routes={routes}
                 showDistricts={showDistricts}
                 districts={districts}
+                positionData={vehicleData}
             />
             <DataTableLayout>
                 <VehicleTable
