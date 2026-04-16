@@ -160,7 +160,7 @@ export class MapLayerFactory {
             getColor: d => d.status === 'online' ? [100, 155, 100] : [155, 50, 50],
             getIcon: d => 'marker',
             getPosition: d => d.location ? d.location : [d.longitude, d.latitude],
-            getSize: 40,
+            getSize: 25,
             iconAtlas: icon,
             iconMapping: iconMapping,
             pickable: true,
