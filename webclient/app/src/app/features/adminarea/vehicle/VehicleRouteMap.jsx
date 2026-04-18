@@ -28,7 +28,6 @@ function VehicleRouteMap(props) {
     var layers = [
         MapLayerFactory.createBaseMapLayer(),
         MapLayerFactory.createDistrictLayer(districts, showDistricts, false, () => { }),
-        MapLayerFactory.createPositionLayer(positionData, ICON_MAPPING, positionIcon, true),
     ];
 
     for (const vehicle in routes) {
@@ -36,6 +35,8 @@ function VehicleRouteMap(props) {
             layers.push(MapLayerFactory.createRouteLayer(routes[vehicle], vehicle));
         }
     }
+
+    layers.push(MapLayerFactory.createPositionLayer(positionData, ICON_MAPPING, positionIcon, true));
 
     return (
         <>
