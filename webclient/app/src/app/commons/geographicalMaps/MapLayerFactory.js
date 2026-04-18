@@ -25,8 +25,8 @@ export class MapLayerFactory {
     }
 
     static createGeoJsonLayer({
-        data, 
-        name, 
+        data,
+        name,
         lineColor = [160, 160, 180, 200],
         lineWidthMeters = 10,
         lineWidthMinPixels = 5,
@@ -166,7 +166,10 @@ export class MapLayerFactory {
             iconAtlas: icon,
             iconMapping: iconMapping,
             pickable: true,
-            visible: showLayer
+            visible: showLayer,
+            parameters: {
+                depthTest: false
+            }
         });
     }
 
