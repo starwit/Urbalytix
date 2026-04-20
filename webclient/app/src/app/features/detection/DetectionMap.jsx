@@ -11,9 +11,8 @@ const ICON_MAPPING = {
     "marker": {
         "x": 0,
         "y": 0,
-        "width": 128,
-        "height": 128,
-        "anchorY": 128,
+        "width": 75,
+        "height": 75,
         "mask": true
     },
     "marker-warning": {
@@ -129,9 +128,9 @@ function DetectionMap(props) {
             visible: types.includes("scatterplot"),
         }),
         MapLayerFactory.createMaskingLayers(vehicleRoutes, showCoverage),
-        MapLayerFactory.createPositionLayer(positionData, ICON_MAPPING, positionIcon, showPosition),
         ...Object.entries(features).map(([objectType, featureData], index) =>
-            MapLayerFactory.createIconLayer(featureData, objectType, index, ICON_MAPPING, featureIcon))
+            MapLayerFactory.createIconLayer(featureData, objectType, index, ICON_MAPPING, featureIcon)),
+        MapLayerFactory.createPositionLayer(positionData, ICON_MAPPING, positionIcon, showPosition),
     ];
 
     return (
