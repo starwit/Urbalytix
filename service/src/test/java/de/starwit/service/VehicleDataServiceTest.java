@@ -1,6 +1,7 @@
 package de.starwit.service;
 
 import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 import org.locationtech.jts.geom.GeometryFactory;
@@ -39,11 +40,11 @@ public class VehicleDataServiceTest {
         verify(routesRepository, times(1)).save(routeCaptor.capture());
         
         VehicleRouteEntity route = routeCaptor.getValue();
-        assert route.getUpdateTimestamp().toInstant().toEpochMilli() == 0;
-        assert route.getLocation().getX() == 10.0;
-        assert route.getLocation().getY() == 52.0;
-        assert route.getSpeedKmh().doubleValue() == 50.0;
-        assert route.getHeadingDeg().doubleValue() == 90.0;
+        assertEquals(0, route.getUpdateTimestamp().toInstant().toEpochMilli());
+        assertEquals(10.0, route.getLocation().getX());
+        assertEquals(52.0, route.getLocation().getY());
+        assertEquals(50.0, route.getSpeedKmh().doubleValue());
+        assertEquals(90.0, route.getHeadingDeg().doubleValue());
     }
 
     @Test
@@ -56,11 +57,11 @@ public class VehicleDataServiceTest {
         verify(routesRepository, times(1)).save(routeCaptor.capture());
         
         VehicleRouteEntity route = routeCaptor.getValue();
-        assert route.getUpdateTimestamp().toInstant().toEpochMilli() == 0;
-        assert route.getLocation().getX() == 10.0;
-        assert route.getLocation().getY() == 52.0;
-        assert route.getSpeedKmh() == null;
-        assert route.getHeadingDeg() == null;
+        assertEquals(0, route.getUpdateTimestamp().toInstant().toEpochMilli());
+        assertEquals(10.0, route.getLocation().getX());
+        assertEquals(52.0, route.getLocation().getY());
+        assertNull(route.getSpeedKmh());
+        assertNull(route.getHeadingDeg());
     }
 
     @Test
