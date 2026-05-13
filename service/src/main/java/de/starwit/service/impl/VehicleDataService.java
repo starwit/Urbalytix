@@ -1,5 +1,6 @@
 package de.starwit.service.impl;
 
+import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -99,7 +100,7 @@ public class VehicleDataService implements ServiceInterface<VehicleDataEntity, V
                         positionMessage.getGeoCoordinate().getLatitude()));
         vehicle.setLocation(point);
 
-        Instant instant = Instant.ofEpochSecond(positionMessage.getTimestampUtcMs() / 1000);
+        Instant instant = Instant.ofEpochMilli(positionMessage.getTimestampUtcMs());
         ZonedDateTime z = ZonedDateTime.ofInstant(instant, timeZone);
         vehicle.setLastUpdate(z);
         vehicle = repository.save(vehicle);
@@ -108,6 +109,10 @@ public class VehicleDataService implements ServiceInterface<VehicleDataEntity, V
         route.setVehicleData(vehicle);
         route.setLocation(point);
         route.setUpdateTimestamp(z);
+        if (positionMessage.hasMovementVector()) {
+            route.setSpeedKmh(BigDecimal.valueOf(positionMessage.getMovementVector().getSpeedKmh()));
+            route.setHeadingDeg(BigDecimal.valueOf(positionMessage.getMovementVector().getHeadingDeg()));
+        }
         routesRepository.save(route);
     }
 
@@ -117,13 +122,11 @@ public class VehicleDataService implements ServiceInterface<VehicleDataEntity, V
             return false;
         }
 
-        // prevent too old timestamps
-        Instant instant = Instant.ofEpochSecond(message.getTimestampUtcMs() / 1000);
-        ZonedDateTime z = ZonedDateTime.ofInstant(instant, timeZone);
-        ZonedDateTime now = ZonedDateTime.now(timeZone);
-
-        if (z.getYear() < now.getYear()) {
-            return false;
+        // prevent nonsensical speed values (hint at wrongly configured filter, which also invalidates heading and coordinates)
+        if (message.hasMovementVector()) {
+            if (message.getMovementVector().getSpeedKmh() < 0 || message.getMovementVector().getSpeedKmh() > 300) {
+                return false;
+            }
         }
 
         return true;

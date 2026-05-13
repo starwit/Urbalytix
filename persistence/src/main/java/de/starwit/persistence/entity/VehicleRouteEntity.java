@@ -1,5 +1,6 @@
 package de.starwit.persistence.entity;
 
+import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 
 import org.locationtech.jts.geom.Point;
@@ -20,6 +21,12 @@ public class VehicleRouteEntity extends AbstractEntity<Long> {
     @Column(name = "update_ts")
     private ZonedDateTime updateTimestamp;
 
+    @Column(name = "speed_kmh")
+    private BigDecimal speedKmh;
+
+    @Column(name = "heading_deg")
+    private BigDecimal headingDeg;
+
     @ManyToOne
     @JoinColumn(name = "vehicle_id")
     private VehicleDataEntity vehicleData;
@@ -38,6 +45,22 @@ public class VehicleRouteEntity extends AbstractEntity<Long> {
 
     public void setUpdateTimestamp(ZonedDateTime updateTimestamp) {
         this.updateTimestamp = updateTimestamp;
+    }
+
+    public BigDecimal getSpeedKmh() {
+        return speedKmh;
+    }
+
+    public void setSpeedKmh(BigDecimal speedKmh) {
+        this.speedKmh = speedKmh;
+    }
+
+    public BigDecimal getHeadingDeg() {
+        return headingDeg;
+    }
+
+    public void setHeadingDeg(BigDecimal headingDeg) {
+        this.headingDeg = headingDeg;
     }
 
     public VehicleDataEntity getVehicleData() {
