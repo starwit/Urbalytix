@@ -113,6 +113,8 @@ public class VehicleDataService implements ServiceInterface<VehicleDataEntity, V
             route.setSpeedKmh(BigDecimal.valueOf(positionMessage.getMovementVector().getSpeedKmh()));
             route.setHeadingDeg(BigDecimal.valueOf(positionMessage.getMovementVector().getHeadingDeg()));
         }
+
+        log.debug("Saving route entry for vehicle " + vehicle.toString() + " route: " + route.toString());
         routesRepository.save(route);
     }
 
@@ -122,7 +124,8 @@ public class VehicleDataService implements ServiceInterface<VehicleDataEntity, V
             return false;
         }
 
-        // prevent nonsensical speed values (hint at wrongly configured filter, which also invalidates heading and coordinates)
+        // prevent nonsensical speed values (hint at wrongly configured filter, which
+        // also invalidates heading and coordinates)
         if (message.hasMovementVector()) {
             if (message.getMovementVector().getSpeedKmh() < 0 || message.getMovementVector().getSpeedKmh() > 300) {
                 return false;

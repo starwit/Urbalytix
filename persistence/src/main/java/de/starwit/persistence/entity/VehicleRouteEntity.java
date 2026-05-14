@@ -70,4 +70,10 @@ public class VehicleRouteEntity extends AbstractEntity<Long> {
     public void setVehicleData(VehicleDataEntity vehicleData) {
         this.vehicleData = vehicleData;
     }
+
+    @Override
+    public String toString() {
+        return "VehicleRouteEntity [id=" + id + ", location=" + location + ", updateTimestamp=" + updateTimestamp
+                + ", speedKmh=" + speedKmh + ", headingDeg=" + headingDeg + ", vehicleData=" + vehicleData + "]";
+    }
 }

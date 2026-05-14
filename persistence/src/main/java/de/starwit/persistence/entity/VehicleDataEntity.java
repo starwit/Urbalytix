@@ -66,4 +66,10 @@ public class VehicleDataEntity extends AbstractEntity<Long> {
     public void setLastUpdate(ZonedDateTime detectionTime) {
         this.lastUpdate = detectionTime;
     }
+
+    @Override
+    public String toString() {
+        return "VehicleDataEntity [name=" + name + ", streamKey=" + streamKey + ", id=" + id + ", description="
+                + description + ", location=" + location + ", lastUpdate=" + lastUpdate + "]";
+    }
 }
