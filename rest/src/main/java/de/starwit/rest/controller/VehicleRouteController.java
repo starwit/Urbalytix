@@ -4,6 +4,7 @@ import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Map;
 
+import org.geojson.FeatureCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import de.starwit.persistence.entity.VehicleRouteEntity;
+import de.starwit.persistence.projection.AggregatedVehicleRouteProjection;
+import de.starwit.service.dto.AggregatedVehicleRouteSectionDto;
 import de.starwit.service.impl.VehicleRouteService;
 import io.swagger.v3.oas.annotations.Operation;
 
@@ -37,17 +40,17 @@ public class VehicleRouteController {
         return this.vehicleRouteService.findAllByVehicle(name);
     }
 
-    @Operation(summary = "Get routes per vehicle per time frame")
-    @GetMapping(value = "/timeframe/{streamKey}/{start}/{end}")
-    public List<VehicleRouteEntity> findAllPerVehicleAndTimeframe(@PathVariable String streamKey,
+    @Operation(summary = "Get aggregatedroutes per vehicle per time frame")
+    @GetMapping(value = "/timeframe/aggregated/{streamKey}/{start}/{end}")
+    public List<AggregatedVehicleRouteSectionDto> findAllPerVehicleAndTimeframe(@PathVariable String streamKey,
             @PathVariable("start") ZonedDateTime startTime,
             @PathVariable("end") ZonedDateTime endTime) {
         return this.vehicleRouteService.findAllByVehicleAndTimeFrame(streamKey, startTime, endTime);
     }
 
-    @Operation(summary = "Get routes per vehicle and calendar week")
-    @GetMapping(value = "/calendarweek/{name}/{year}/{week}")
-    public List<VehicleRouteEntity> findAllPerVehicleAndCalendarWeek(@PathVariable String name,
+    @Operation(summary = "Get aggregated routes per vehicle and calendar week")
+    @GetMapping(value = "/calendarweek/aggregated/{name}/{year}/{week}")
+    public List<AggregatedVehicleRouteSectionDto> findAllPerVehicleAndCalendarWeek(@PathVariable String name,
             @PathVariable("year") int year,
             @PathVariable("week") int week) {
         return this.vehicleRouteService.findByVehicleAndCalendarWeek(name, year, week);
@@ -61,7 +64,7 @@ public class VehicleRouteController {
 
     @Operation(summary = "Get route length per vehicle and time frame")
     @GetMapping(value = "/length/{vehicleId}/{start}/{end}")
-    public Map<ZonedDateTime, Double> getLenghtByVehicleAndTimeFrame(@PathVariable Long vehicleId,
+    public Map<ZonedDateTime, Double> getLengthByVehicleAndTimeFrame(@PathVariable Long vehicleId,
             @PathVariable("start") ZonedDateTime startTime,
             @PathVariable("end") ZonedDateTime endTime) {
         return vehicleRouteService.getLengthByVehicleAndTimeFrame(vehicleId, startTime, endTime);

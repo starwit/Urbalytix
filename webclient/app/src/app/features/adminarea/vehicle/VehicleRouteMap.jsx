@@ -32,7 +32,9 @@ function VehicleRouteMap(props) {
 
     for (const vehicle in routes) {
         if (routes[vehicle] && routes[vehicle].length > 0) {
-            layers.push(MapLayerFactory.createRouteLayer(routes[vehicle], vehicle));
+            for (const route of routes[vehicle]) {
+                layers.push(MapLayerFactory.createRouteLayer(route, vehicle));
+            }
         }
     }
 

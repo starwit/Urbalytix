@@ -117,8 +117,8 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = { JpaSystemException.class })
     public ResponseEntity<Object> handleException(HibernateException ex) {
+        LOG.error(ex.getClass() + " " + ex.getMessage(), ex.fillInStackTrace());
         if (ex.getMessage().contains("More than one row with the given identifier was found")) {
-            LOG.info(ex.getMessage());
             NotificationDto output = new NotificationDto("error.inUse",
                     "More than one row with the given identifier was found");
             return new ResponseEntity<>(output, HttpStatus.BAD_REQUEST);
@@ -129,6 +129,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = { DataIntegrityViolationException.class })
     public ResponseEntity<Object> handleException(SQLIntegrityConstraintViolationException ex) {
+        LOG.error(ex.getClass() + " " + ex.getMessage(), ex.fillInStackTrace());
         NotificationDto output = new NotificationDto("error.sqlIntegrityConstaint",
                 "Given data is not in the right format to be saved.");
         if (ex.getMessage().contains("Duplicate entry")) {

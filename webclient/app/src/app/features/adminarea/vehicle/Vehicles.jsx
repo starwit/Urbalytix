@@ -90,7 +90,7 @@ function Vehicles() {
             setRoutes(tmpRoutes);
             return;
         }
-        const promises = addedVehicles.map(vehicle => vehicleRoutesRest.findAllByVehicleAndTimeframe(vehicle, startDate.toJSON(), endDate.toJSON())
+        const promises = addedVehicles.map(vehicle => vehicleRoutesRest.findAggregatedByVehicleAndTimeframe(vehicle, startDate.toJSON(), endDate.toJSON())
             .then(response => ({vehicle, data: response.data || []}))
         );
 

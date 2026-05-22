@@ -9,7 +9,8 @@ import org.springframework.stereotype.Repository;
 
 import de.starwit.persistence.entity.VehicleDataEntity;
 import de.starwit.persistence.entity.VehicleRouteEntity;
-import de.starwit.persistence.entity.WeekYearAvailability;
+import de.starwit.persistence.projection.AggregatedVehicleRouteProjection;
+import de.starwit.persistence.projection.WeekYearAvailabilityProjection;
 
 @Repository
 public interface VehicleRoutesRepository extends JpaRepository<VehicleRouteEntity, Long> {
@@ -17,15 +18,31 @@ public interface VehicleRoutesRepository extends JpaRepository<VehicleRouteEntit
     List<VehicleRouteEntity> findAllByVehicleData(VehicleDataEntity vehicle);
 
     @Query(value = """
-            select * from vehicleroutes
-            WHERE vehicle_id = :vehicleId
-                AND update_ts BETWEEN :startTime AND :endTime
-                AND mod(id, :scale) = 0
+            SELECT
+            	"timestamp",
+                vehicle_id as vehicleId,
+                speed_kmh_avg as speedKmhAvg,
+                num_points as numPoints,
+                ST_X(ST_TRANSFORM(geom, 4326)) AS longitude,
+                ST_Y(ST_TRANSFORM(geom, 4326)) AS latitude
+            FROM (
+                SELECT
+                    date_bin(:aggregationIntervalMs * '1 ms'::interval, r.update_ts, '1970-01-01 UTC'::timestamptz) as bucket,
+                    max(r.update_ts) as "timestamp",
+                    r.vehicle_id as vehicle_id,
+                    avg(r.speed_kmh) as speed_kmh_avg,
+                    count(*) as num_points,
+                    ST_LineInterpolatePoint(ST_MakeLine(r.location), 1) as geom
+                FROM vehicleroutes r
+                WHERE r.update_ts > :startTime AND r.update_ts < :endTime AND r.vehicle_id = :vehicleId
+                GROUP BY r.vehicle_id, bucket
+                ORDER BY bucket ASC
+            )
             """, nativeQuery = true)
-    List<VehicleRouteEntity> findAllByVehicleDataAndUpdateTimestampBetween(Long vehicleId,
+    List<AggregatedVehicleRouteProjection> findAllByVehicleDataAndUpdateTimestampBetween(Long vehicleId,
             ZonedDateTime startTime,
             ZonedDateTime endTime,
-            int scale);
+            int aggregationIntervalMs);
 
     @Query(value = """
             SELECT
@@ -36,7 +53,7 @@ public interface VehicleRoutesRepository extends JpaRepository<VehicleRouteEntit
             GROUP BY year, week
             ORDER BY year, week
             """, nativeQuery = true)
-    List<WeekYearAvailability> findAvailableWeeksAndYears();
+    List<WeekYearAvailabilityProjection> findAvailableWeeksAndYears();
 
     @Query(value = """
             SELECT effective_day,ST_Length(geography(ST_MakeLine(location ORDER BY update_ts))) AS meters
