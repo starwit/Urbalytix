@@ -96,7 +96,7 @@ function Vehicles() {
 
         Promise.all(promises).then(results => {
             results.forEach(({vehicle, data}) => {
-                tmpRoutes[vehicle] = data;
+                tmpRoutes[vehicle] = data.flatMap(d => d.sectionPoints).filter(d => d.prevLatitude !== null);
             });
             setRoutes(tmpRoutes);
         });

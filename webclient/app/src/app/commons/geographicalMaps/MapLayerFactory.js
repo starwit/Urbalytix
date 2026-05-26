@@ -321,7 +321,8 @@ export class MapLayerFactory {
         const clampedSpeed = Math.min(speed, 50);
         const blueIntensity = 255 - (clampedSpeed / 50) * 255;
         const greenIntensity = 155 - (clampedSpeed / 50) * 155;
-        return [0, greenIntensity, blueIntensity];
+        const alpha = Math.max(255 - (clampedSpeed / 50) * 255, 128);
+        return [0, greenIntensity, blueIntensity, alpha];
     }
 
     static stringToColor(text, count) {
