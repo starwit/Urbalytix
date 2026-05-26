@@ -121,6 +121,10 @@ public class VehicleRouteService implements ServiceInterface<VehicleRouteEntity,
     private List<AggregatedVehicleRouteSectionDto> splitAtGaps(List<AggregatedVehicleRouteDto> section) {
         List<AggregatedVehicleRouteSectionDto> splitSections = new ArrayList<>();
 
+        if (section.isEmpty()) {
+            return splitSections;
+        }
+
         AggregatedVehicleRouteSectionDto currentSplit = new AggregatedVehicleRouteSectionDto();
         Instant currentTimestamp = null;
         Instant prevTimestamp = section.get(0).getTimestamp();
