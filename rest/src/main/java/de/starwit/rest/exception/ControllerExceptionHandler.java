@@ -38,20 +38,20 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
     protected ResponseEntity<Object> handleHttpMessageNotReadable(HttpMessageNotReadableException ex,
             HttpHeaders headers, HttpStatusCode status, WebRequest request) {
-        LOG.error(ex.getClass() + " " + ex.getMessage(), ex.fillInStackTrace());
+        LOG.error(ex.getClass() + " " + ex.getMessage(), ex);
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(value = { Exception.class })
     public ResponseEntity<Object> handleException(Exception ex) {
-        LOG.error(ex.getClass() + " " + ex.getMessage(), ex.fillInStackTrace());
+        LOG.error(ex.getClass() + " " + ex.getMessage(), ex);
         NotificationDto output = new NotificationDto("error.internalServerError", "Internal Server Error");
         return new ResponseEntity<>(output, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
     @ExceptionHandler(value = { InvalidDefinitionException.class })
     public ResponseEntity<Object> handleInvalidDefinitionException(Exception ex) {
-        LOG.error(ex.getClass() + " " + ex.getMessage(), ex.fillInStackTrace());
+        LOG.error(ex.getClass() + " " + ex.getMessage(), ex);
         String outputString = "Invalid Definition: " + ex.getMessage() + ".";
         NotificationDto output = new NotificationDto("error.invalidDefinition", outputString);
         return new ResponseEntity<>(output, HttpStatus.BAD_REQUEST);
@@ -117,7 +117,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = { JpaSystemException.class })
     public ResponseEntity<Object> handleException(HibernateException ex) {
-        LOG.error(ex.getClass() + " " + ex.getMessage(), ex.fillInStackTrace());
+        LOG.error(ex.getClass() + " " + ex.getMessage(), ex);
         if (ex.getMessage().contains("More than one row with the given identifier was found")) {
             NotificationDto output = new NotificationDto("error.inUse",
                     "More than one row with the given identifier was found");
@@ -129,7 +129,7 @@ public class ControllerExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = { DataIntegrityViolationException.class })
     public ResponseEntity<Object> handleException(SQLIntegrityConstraintViolationException ex) {
-        LOG.error(ex.getClass() + " " + ex.getMessage(), ex.fillInStackTrace());
+        LOG.error(ex.getClass() + " " + ex.getMessage(), ex);
         NotificationDto output = new NotificationDto("error.sqlIntegrityConstaint",
                 "Given data is not in the right format to be saved.");
         if (ex.getMessage().contains("Duplicate entry")) {
