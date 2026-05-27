@@ -46,6 +46,7 @@ function VehicleRouteMap(props) {
                 views={MAP_VIEW}
                 initialViewState={viewState}
                 controller={true}
+                getTooltip={({object}) => object && `${object.timestamp}\n${object.speedKmhAvg.toFixed(2)}km/h`}
             />
         </>
     );

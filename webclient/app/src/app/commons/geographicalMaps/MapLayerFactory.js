@@ -317,12 +317,10 @@ export class MapLayerFactory {
     }
 
     static speedToColor(speed) {
-        // low speeds should be [0, 155, 255], higher speeds should be faded to black, clamped at 50 km/h
-        const clampedSpeed = Math.min(speed, 50);
-        const blueIntensity = 255 - (clampedSpeed / 50) * 255;
-        const greenIntensity = 155 - (clampedSpeed / 50) * 155;
-        const alpha = Math.max(255 - (clampedSpeed / 50) * 255, 128);
-        return [0, greenIntensity, blueIntensity, alpha];
+        const ratio = Math.min(speed, 50) / 50;
+        const r = Math.round(ratio * 255);
+        const g = Math.round(155 + ratio * 100);
+        return [r, g, 255];
     }
 
     static stringToColor(text, count) {
