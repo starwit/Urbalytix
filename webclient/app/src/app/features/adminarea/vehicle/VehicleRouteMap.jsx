@@ -46,8 +46,7 @@ function VehicleRouteMap(props) {
         positionData = [],
     } = props;
 
-    var layers = [
-        // MapLayerFactory.createBaseMapLayer(),
+    let layers = [
         MapLayerFactory.createDistrictLayer(districts, showDistricts, false, () => { }),
     ];
 
@@ -64,12 +63,12 @@ function VehicleRouteMap(props) {
             <Map
                 initialViewState={viewState}
                 mapStyle="https://tiles.openfreemap.org/styles/positron"
+                onMove={evt => onViewStateChange(evt.viewState)}
+                initialViewState={viewState}
+                {...viewState}
             >
                 <DeckGLOverlay
                     layers={layers}
-                    onViewStateChange={onViewStateChange}
-                    // views={MAP_VIEW}
-                    // controller={true}
                     getTooltip={renderTooltip}
                 />
             </Map>
