@@ -1,8 +1,8 @@
-import DeckGL from "@deck.gl/react";
-import {useMemo} from "react";
-import {MapLayerFactory} from '../../../commons/geographicalMaps/MapLayerFactory';
-import {MAP_VIEW} from '../../../commons/geographicalMaps/BaseMapConfig';
+import {MapboxOverlay} from '@deck.gl/mapbox';
+import 'maplibre-gl/dist/maplibre-gl.css';
+import {Map, useControl} from 'react-map-gl/maplibre';
 import positionImage from "../../../assets/icons/vehicle.png";
+import {MapLayerFactory} from '../../../commons/geographicalMaps/MapLayerFactory';
 
 const ICON_MAPPING = {
     "marker": {
@@ -12,6 +12,27 @@ const ICON_MAPPING = {
         "height": 75,
         "mask": true
     },
+}
+
+function DeckGLOverlay(props) {
+  const overlay = useControl(() => new MapboxOverlay(props));
+  overlay.setProps(props);
+  return null;
+}
+
+function renderTooltip({layer, object}) {
+    if (!object || !layer) {
+        return;
+    }
+
+    if (layer.id.startsWith("LineLayer-route-points")) {
+        return `${object.timestamp}\n${object.speedKmhAvg.toFixed(2)}km/h`;
+    }
+
+    if (layer.id.startsWith("IconLayer-vehicle-positions")) {
+        return `${object.name}\n${object.lastUpdate}\n${object.status}`;
+    }
+
 }
 
 function VehicleRouteMap(props) {
@@ -26,7 +47,7 @@ function VehicleRouteMap(props) {
     } = props;
 
     var layers = [
-        MapLayerFactory.createBaseMapLayer(),
+        // MapLayerFactory.createBaseMapLayer(),
         MapLayerFactory.createDistrictLayer(districts, showDistricts, false, () => { }),
     ];
 
@@ -39,16 +60,20 @@ function VehicleRouteMap(props) {
     layers.push(MapLayerFactory.createPositionLayer(positionData, ICON_MAPPING, positionIcon, true));
 
     return (
-        <>
-            <DeckGL
-                layers={layers}
-                onViewStateChange={onViewStateChange}
-                views={MAP_VIEW}
+        <div style={{width: "100vw", height: "100vh", position: "fixed", top: 0, left: 0 }}>
+            <Map
                 initialViewState={viewState}
-                controller={true}
-                getTooltip={({object}) => object && `${object.timestamp}\n${object.speedKmhAvg.toFixed(2)}km/h`}
-            />
-        </>
+                mapStyle="https://tiles.openfreemap.org/styles/positron"
+            >
+                <DeckGLOverlay
+                    layers={layers}
+                    onViewStateChange={onViewStateChange}
+                    // views={MAP_VIEW}
+                    // controller={true}
+                    getTooltip={renderTooltip}
+                />
+            </Map>
+        </div>
     );
 }
 
