@@ -1,19 +1,18 @@
-import {useEffect, useState, useMemo, useRef, useContext} from "react";
-import StreetCatalogRest from "../../../services/StreetCatalogRest";
-import ConfigurationRest from "../../../services/ConfigurationRest";
-import {useTranslation} from "react-i18next";
-import {deDE, enUS} from '@mui/x-data-grid/locales';
-import {DataGrid} from "@mui/x-data-grid";
-import DeckGL from "@deck.gl/react";
-import {MapView} from "@deck.gl/core";
-import {MapLayerFactory} from "../../../commons/geographicalMaps/MapLayerFactory";
-import centroid from '@turf/centroid';
 import {WebMercatorViewport} from "@deck.gl/core";
-import {useDistricts} from "../../hooks/useCityDistricts";
+import {DataGrid} from "@mui/x-data-grid";
+import {deDE, enUS} from '@mui/x-data-grid/locales';
+import centroid from '@turf/centroid';
+import {useContext, useEffect, useMemo, useState} from "react";
+import {useTranslation} from "react-i18next";
 import DataTableLayout from "../../../commons/DataTableLayout";
 import {FilterContext} from '../../../commons/FilterProvider';
+import BaseMap from "../../../commons/geographicalMaps/BaseMap";
+import {MapLayerFactory} from "../../../commons/geographicalMaps/MapLayerFactory";
 import MapMenuLayout from "../../../commons/mapMenu/MapMenuLayout";
 import NavigationMapMenu from "../../../commons/mapMenu/NavigationMapMenu";
+import ConfigurationRest from "../../../services/ConfigurationRest";
+import StreetCatalogRest from "../../../services/StreetCatalogRest";
+import {useDistricts} from "../../hooks/useCityDistricts";
 
 
 function StreetCatalog() {
@@ -96,10 +95,7 @@ function StreetCatalog() {
         });
     }
 
-    const MAP_VIEW = new MapView({repeat: true});
-
     const layers = [
-        MapLayerFactory.createBaseMapLayer(),
         MapLayerFactory.createGeoJsonLayer({data: selectedStreet, name: 'singleStreet', lineColor: [153, 88, 88, 200]}),
         MapLayerFactory.createDistrictLayer(districts, showDistricts, true, handleDistrictDetailsClick),
         MapLayerFactory.createGeoJsonLayer({data: selectedDistrictStreets, name: 'districtStreets', lineColor: [73, 93, 127, 200]})
@@ -167,13 +163,12 @@ function StreetCatalog() {
                 <NavigationMapMenu setViewState={setViewState} setShowDistricts={handleShowDistricts} />
             </MapMenuLayout>
 
-            <DeckGL
+            <BaseMap
                 layers={layers}
-                views={MAP_VIEW}
-                initialViewState={viewState}
-                controller={{dragRotate: false}}
+                viewState={viewState}
+                onViewStateChange={setViewState}
             >
-            </DeckGL>
+            </BaseMap>
 
             <DataTableLayout>
                 <DataGrid

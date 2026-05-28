@@ -1,11 +1,11 @@
-import DeckGL from "@deck.gl/react";
+import {useContext} from "react";
 import {useTranslation} from "react-i18next";
 import featureImage from "../../assets/icons/recycling.png";
 import positionImage from "../../assets/icons/vehicle.png";
-import {HEATMAP_COLOR_RANGES, MAP_VIEW} from '../../commons/geographicalMaps/BaseMapConfig';
-import {MapLayerFactory} from '../../commons/geographicalMaps/MapLayerFactory';
-import {useContext} from "react";
 import {FilterContext} from '../../commons/FilterProvider';
+import BaseMap from "../../commons/geographicalMaps/BaseMap";
+import {HEATMAP_COLOR_RANGES} from '../../commons/geographicalMaps/BaseMapConfig';
+import {MapLayerFactory} from '../../commons/geographicalMaps/MapLayerFactory';
 
 const ICON_MAPPING = {
     "marker": {
@@ -113,7 +113,6 @@ function DetectionMap(props) {
     }
 
     const layers = [
-        MapLayerFactory.createBaseMapLayer(),
         MapLayerFactory.createDistrictLayer(districts, showDistricts, true, districtClick),
         MapLayerFactory.createHexagonLayer(detectionData, {
             id: 'HexagonLayer',
@@ -135,13 +134,11 @@ function DetectionMap(props) {
 
     return (
         <>
-            <DeckGL
+            <BaseMap
                 layers={layers}
+                viewState={viewState}
                 onViewStateChange={onViewStateChange}
-                views={MAP_VIEW}
-                initialViewState={viewState}
-                controller={true}
-                getTooltip={({object, layer}) => getTooltip({object, layer})}
+                getTooltip={getTooltip}
             />
         </>
     );
