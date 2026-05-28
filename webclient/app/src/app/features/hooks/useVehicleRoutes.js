@@ -31,8 +31,8 @@ export function useVehicleRoutes() {
             return;
         }
 
-        const routeResponses = await Promise.all(vehicleStreamKeys.map(name => vehicleRoutesRest.findAllByVehicleAndTimeframe(name, startDate.toJSON(), endDate.toJSON())));
-        const allRoutes = routeResponses.map(r => r.data).flat();
+        const routeResponses = await Promise.all(vehicleStreamKeys.map(name => vehicleRoutesRest.findAggregatedByVehicleAndTimeframe(name, startDate.toJSON(), endDate.toJSON())));
+        const allRoutes = routeResponses.flatMap(r => r.data.flatMap(d => d.sectionPoints).filter(d => d.prevLatitude !== null));
         setVehicleRoutes(allRoutes);
 
     }

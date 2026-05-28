@@ -70,7 +70,7 @@ function DetectionCompareMap(props) {
         MapLayerFactory.createDistrictLayer(districts, showDistricts, false, () => { })
     ];
     if (showCoverage) {
-        layers.push(...MapLayerFactory.createMaskingLayers(vehicleRoutes));
+        layers.push(...MapLayerFactory.createMaskingLayers(vehicleRoutes, true));
     }
     if (showHexagons) {
         layers.push(MapLayerFactory.createcomparisonLayers(detectionData, detectioncomparisonData));
