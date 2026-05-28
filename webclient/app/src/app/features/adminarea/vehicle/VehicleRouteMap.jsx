@@ -1,7 +1,6 @@
-import {MapboxOverlay} from '@deck.gl/mapbox';
 import 'maplibre-gl/dist/maplibre-gl.css';
-import {Map, useControl} from 'react-map-gl/maplibre';
 import positionImage from "../../../assets/icons/vehicle.png";
+import BaseMap from '../../../commons/geographicalMaps/BaseMap';
 import {MapLayerFactory} from '../../../commons/geographicalMaps/MapLayerFactory';
 
 const ICON_MAPPING = {
@@ -12,12 +11,6 @@ const ICON_MAPPING = {
         "height": 75,
         "mask": true
     },
-}
-
-function DeckGLOverlay(props) {
-  const overlay = useControl(() => new MapboxOverlay(props));
-  overlay.setProps(props);
-  return null;
 }
 
 function renderTooltip({layer, object}) {
@@ -59,20 +52,12 @@ function VehicleRouteMap(props) {
     layers.push(MapLayerFactory.createPositionLayer(positionData, ICON_MAPPING, positionIcon, true));
 
     return (
-        <div style={{width: "100vw", height: "100vh", position: "fixed", top: 0, left: 0 }}>
-            <Map
-                initialViewState={viewState}
-                mapStyle="https://tiles.openfreemap.org/styles/positron"
-                onMove={evt => onViewStateChange(evt.viewState)}
-                initialViewState={viewState}
-                {...viewState}
-            >
-                <DeckGLOverlay
-                    layers={layers}
-                    getTooltip={renderTooltip}
-                />
-            </Map>
-        </div>
+        <BaseMap 
+            layers={layers}
+            viewState={viewState}
+            onViewStateChange={onViewStateChange}
+            getTooltip={renderTooltip}
+        />
     );
 }
 
