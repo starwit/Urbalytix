@@ -309,7 +309,7 @@ export class MapLayerFactory {
             getSourcePosition: d => [d.prevLongitude, d.prevLatitude],
             getTargetPosition: d => [d.longitude, d.latitude],
             getColor: d => MapLayerFactory.speedToColor(d.speedKmhAvg),
-            getWidth: 3,
+            getWidth: 2,
             widthUnits: 'meters',
             widthMinPixels: 2,
             pickable: true
