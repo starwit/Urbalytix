@@ -1,9 +1,9 @@
 import {HeatmapLayer, HexagonLayer, ScreenGridLayer} from "@deck.gl/aggregation-layers";
 import {MaskExtension} from "@deck.gl/extensions";
 import {TileLayer} from "@deck.gl/geo-layers";
-import {BitmapLayer, GeoJsonLayer, GridCellLayer, IconLayer, PolygonLayer, ScatterplotLayer, TextLayer} from "@deck.gl/layers";
-import {TILE_LAYER_CONFIG} from './BaseMapConfig';
+import {BitmapLayer, GeoJsonLayer, GridCellLayer, IconLayer, LineLayer, PolygonLayer, ScatterplotLayer, TextLayer} from "@deck.gl/layers";
 import centroid from '@turf/centroid';
+import {TILE_LAYER_CONFIG} from './BaseMapConfig';
 
 export class MapLayerFactory {
 
@@ -303,15 +303,24 @@ export class MapLayerFactory {
     }
 
     static createRouteLayer(routeData, layerID) {
-        return new ScatterplotLayer({
-            id: `ScatterplotLayer-route-points-${layerID}`,
+        return new LineLayer({
+            id: `LineLayer-route-points-${layerID}`,
             data: routeData,
-            getPosition: d => d.location ? d.location : [d.longitude, d.latitude],
-            radiusMinPixels: 2,
-            getRadius: 5,
-            getFillColor: [50, 100, 200, 150],
+            getSourcePosition: d => [d.prevLongitude, d.prevLatitude],
+            getTargetPosition: d => [d.longitude, d.latitude],
+            getColor: d => MapLayerFactory.speedToColor(d.speedKmhAvg),
+            getWidth: 2,
+            widthUnits: 'meters',
+            widthMinPixels: 2,
             pickable: true
         });
+    }
+
+    static speedToColor(speed) {
+        const ratio = Math.min(speed, 50) / 50;
+        const r = Math.round(ratio * 255);
+        const g = Math.round(155 + ratio * 100);
+        return [r, g, 255];
     }
 
     static stringToColor(text, count) {

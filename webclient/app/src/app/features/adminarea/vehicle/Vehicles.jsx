@@ -27,7 +27,7 @@ function Vehicles() {
     const [viewState, setViewState] = useState({
         longitude: 10.785000000000000,
         latitude: 52.41788232741599,
-        zoom: 15,
+        zoom: 13,
         pitch: is3d ? 60 : 0,
         bearing: 0
     });
@@ -90,13 +90,13 @@ function Vehicles() {
             setRoutes(tmpRoutes);
             return;
         }
-        const promises = addedVehicles.map(vehicle => vehicleRoutesRest.findAllByVehicleAndTimeframe(vehicle, startDate.toJSON(), endDate.toJSON())
+        const promises = addedVehicles.map(vehicle => vehicleRoutesRest.findAggregatedByVehicleAndTimeframe(vehicle, startDate.toJSON(), endDate.toJSON())
             .then(response => ({vehicle, data: response.data || []}))
         );
 
         Promise.all(promises).then(results => {
             results.forEach(({vehicle, data}) => {
-                tmpRoutes[vehicle] = data;
+                tmpRoutes[vehicle] = data.flatMap(d => d.sectionPoints).filter(d => d.prevLatitude !== null);
             });
             setRoutes(tmpRoutes);
         });

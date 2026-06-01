@@ -4,6 +4,7 @@ import {MAP_VIEW} from '../../commons/geographicalMaps/BaseMapConfig';
 import {MapLayerFactory} from '../../commons/geographicalMaps/MapLayerFactory';
 import {useContext} from "react";
 import {FilterContext} from '../../commons/FilterProvider';
+import BaseMap from "../../commons/geographicalMaps/BaseMap";
 
 function DetectionCompareMap(props) {
     const {
@@ -66,11 +67,10 @@ function DetectionCompareMap(props) {
     }
 
     const layers = [
-        MapLayerFactory.createBaseMapLayer(),
         MapLayerFactory.createDistrictLayer(districts, showDistricts, false, () => { })
     ];
     if (showCoverage) {
-        layers.push(...MapLayerFactory.createMaskingLayers(vehicleRoutes));
+        layers.push(...MapLayerFactory.createMaskingLayers(vehicleRoutes, true));
     }
     if (showHexagons) {
         layers.push(MapLayerFactory.createcomparisonLayers(detectionData, detectioncomparisonData));
@@ -80,13 +80,11 @@ function DetectionCompareMap(props) {
 
     return (
         <>
-            <DeckGL
+            <BaseMap
                 layers={layers}
-                views={MAP_VIEW}
-                initialViewState={viewState}
+                viewState={viewState}
                 onViewStateChange={onViewStateChange}
-                controller={true}
-                getTooltip={({object, layer}) => getTooltip({object, layer})}
+                getTooltip={getTooltip}
             />
         </>
     );

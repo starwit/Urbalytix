@@ -1,8 +1,7 @@
-import DeckGL from "@deck.gl/react";
-import {useMemo} from "react";
-import {MapLayerFactory} from '../../../commons/geographicalMaps/MapLayerFactory';
-import {MAP_VIEW} from '../../../commons/geographicalMaps/BaseMapConfig';
+import 'maplibre-gl/dist/maplibre-gl.css';
 import positionImage from "../../../assets/icons/vehicle.png";
+import BaseMap from '../../../commons/geographicalMaps/BaseMap';
+import {MapLayerFactory} from '../../../commons/geographicalMaps/MapLayerFactory';
 
 const ICON_MAPPING = {
     "marker": {
@@ -12,6 +11,21 @@ const ICON_MAPPING = {
         "height": 75,
         "mask": true
     },
+}
+
+function renderTooltip({layer, object}) {
+    if (!object || !layer) {
+        return;
+    }
+
+    if (layer.id.startsWith("LineLayer-route-points")) {
+        return `${object.timestamp}\n${object.speedKmhAvg.toFixed(2)}km/h`;
+    }
+
+    if (layer.id.startsWith("IconLayer-vehicle-positions")) {
+        return `${object.name}\n${object.lastUpdate}\n${object.status}`;
+    }
+
 }
 
 function VehicleRouteMap(props) {
@@ -25,8 +39,7 @@ function VehicleRouteMap(props) {
         positionData = [],
     } = props;
 
-    var layers = [
-        MapLayerFactory.createBaseMapLayer(),
+    let layers = [
         MapLayerFactory.createDistrictLayer(districts, showDistricts, false, () => { }),
     ];
 
@@ -39,15 +52,12 @@ function VehicleRouteMap(props) {
     layers.push(MapLayerFactory.createPositionLayer(positionData, ICON_MAPPING, positionIcon, true));
 
     return (
-        <>
-            <DeckGL
-                layers={layers}
-                onViewStateChange={onViewStateChange}
-                views={MAP_VIEW}
-                initialViewState={viewState}
-                controller={true}
-            />
-        </>
+        <BaseMap 
+            layers={layers}
+            viewState={viewState}
+            onViewStateChange={onViewStateChange}
+            getTooltip={renderTooltip}
+        />
     );
 }
 

@@ -32,6 +32,9 @@ spring:
       positionsource: positionsource
     rest:
       detection-strategy: annotated
+    vehicle-routes:
+      aggregationIntervalMs: 2000
+      sectionMaxGapMs: 4000
   jpa:
     hibernate:
       naming:

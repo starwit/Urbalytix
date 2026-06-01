@@ -7,7 +7,9 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.time.temporal.IsoFields;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,14 +23,22 @@ import org.springframework.stereotype.Service;
 
 import de.starwit.persistence.entity.VehicleDataEntity;
 import de.starwit.persistence.entity.VehicleRouteEntity;
-import de.starwit.persistence.entity.WeekYearAvailability;
+import de.starwit.persistence.projection.AggregatedVehicleRouteProjection;
+import de.starwit.persistence.projection.WeekYearAvailabilityProjection;
 import de.starwit.persistence.repository.VehicleDataRepository;
 import de.starwit.persistence.repository.VehicleRoutesRepository;
+import de.starwit.service.dto.AggregatedVehicleRouteDto;
+import de.starwit.service.dto.AggregatedVehicleRouteSectionDto;
+import de.starwit.service.mapper.AggregatedVehicleRouteMapper;
+import tools.jackson.databind.json.JsonMapper;
 
 @Service
 public class VehicleRouteService implements ServiceInterface<VehicleRouteEntity, VehicleRoutesRepository> {
 
     private final static Logger log = LoggerFactory.getLogger(VehicleRouteService.class);
+
+    @Autowired
+    private JsonMapper mapper;
 
     @Autowired
     VehicleRoutesRepository repository;
@@ -41,8 +51,13 @@ public class VehicleRouteService implements ServiceInterface<VehicleRouteEntity,
         return repository;
     }
 
-    @Value("${spring.data.detection.scale:50}")
-    private int scale;
+    @Value("${spring.data.vehicle-routes.aggregationIntervalMs:2000}")
+    private int aggregationIntervalMs;
+
+    @Value("${spring.data.vehicle-routes.sectionMaxGapMs:4000}")
+    private int routeSectionMaxGapMs;
+
+    private AggregatedVehicleRouteMapper vehicleRouteMapper = new AggregatedVehicleRouteMapper();
 
     public List<VehicleRouteEntity> findAllByVehicle(String name) {
         VehicleDataEntity vehicle = vehicleRepository.findByStreamKey(name);
@@ -53,17 +68,20 @@ public class VehicleRouteService implements ServiceInterface<VehicleRouteEntity,
         }
     }
 
-    public List<VehicleRouteEntity> findAllByVehicleAndTimeFrame(String streamKey, ZonedDateTime startTime,
+    public List<AggregatedVehicleRouteSectionDto> findAllByVehicleAndTimeFrame(String streamKey,
+            ZonedDateTime startTime,
             ZonedDateTime endTime) {
         VehicleDataEntity vehicle = vehicleRepository.findByStreamKey(streamKey);
         if (vehicle != null) {
-            return repository.findAllByVehicleDataAndUpdateTimestampBetween(vehicle.getId(), startTime, endTime, scale);
+            return processAndMapAggregatedRoutes(
+                    repository.findAllByVehicleDataAndUpdateTimestampBetween(vehicle.getId(), startTime, endTime,
+                            aggregationIntervalMs));
         } else {
             return null;
         }
     }
 
-    public List<VehicleRouteEntity> findByVehicleAndCalendarWeek(String name, int year, int week) {
+    public List<AggregatedVehicleRouteSectionDto> findByVehicleAndCalendarWeek(String name, int year, int week) {
         LocalDate startOfWeek = LocalDate
                 .ofYearDay(year, 1)
                 .with(IsoFields.WEEK_OF_WEEK_BASED_YEAR, week)
@@ -79,8 +97,65 @@ public class VehicleRouteService implements ServiceInterface<VehicleRouteEntity,
         ZonedDateTime endZdt = ZonedDateTime.of(end, zoneId);
 
         VehicleDataEntity vehicle = vehicleRepository.findByStreamKey(name);
+        if (vehicle != null) {
+            return processAndMapAggregatedRoutes(
+                    repository.findAllByVehicleDataAndUpdateTimestampBetween(vehicle.getId(), startZdt, endZdt,
+                            aggregationIntervalMs));
+        } else {
+            return null;
+        }
+    }
 
-        return repository.findAllByVehicleDataAndUpdateTimestampBetween(vehicle.getId(), startZdt, endZdt, scale);
+    private List<AggregatedVehicleRouteSectionDto> processAndMapAggregatedRoutes(
+            List<AggregatedVehicleRouteProjection> projections) {
+        List<AggregatedVehicleRouteDto> points = vehicleRouteMapper.toDtoList(projections);
+
+        List<AggregatedVehicleRouteSectionDto> sections = splitAtGaps(points);
+        for (AggregatedVehicleRouteSectionDto section : sections) {
+            setPrevLocations(section.getSectionPoints());
+        }
+
+        return sections;
+    }
+
+    private List<AggregatedVehicleRouteSectionDto> splitAtGaps(List<AggregatedVehicleRouteDto> section) {
+        List<AggregatedVehicleRouteSectionDto> splitSections = new ArrayList<>();
+
+        if (section.isEmpty()) {
+            return splitSections;
+        }
+
+        AggregatedVehicleRouteSectionDto currentSplit = new AggregatedVehicleRouteSectionDto();
+        Instant currentTimestamp = null;
+        Instant prevTimestamp = section.get(0).getTimestamp();
+
+        for (AggregatedVehicleRouteDto point : section) {
+            currentTimestamp = point.getTimestamp();
+
+            if (prevTimestamp.plus(this.routeSectionMaxGapMs, ChronoUnit.MILLIS).isBefore(currentTimestamp)) {
+                // gap between two points is larger than configured maximum -> split section
+                splitSections.add(currentSplit);
+                currentSplit = new AggregatedVehicleRouteSectionDto();
+            }
+
+            currentSplit.getSectionPoints().add(point);
+
+            prevTimestamp = currentTimestamp;
+        }
+
+        if (currentSplit.getSectionPoints().size() > 0) {
+            splitSections.add(currentSplit);
+        }
+
+        return splitSections;
+    }
+
+    private List<AggregatedVehicleRouteDto> setPrevLocations(List<AggregatedVehicleRouteDto> section) {
+        for (int i = 1; i < section.size(); i++) {
+            section.get(i).setPrevLatitude(section.get(i - 1).getLatitude());
+            section.get(i).setPrevLongitude(section.get(i - 1).getLongitude());
+        }
+        return section;
     }
 
     /**
@@ -90,7 +165,7 @@ public class VehicleRouteService implements ServiceInterface<VehicleRouteEntity,
      */
     public Map<Integer, List<Integer>> getAvailableTimeFrames() {
         HashMap<Integer, List<Integer>> result = new HashMap<>();
-        List<WeekYearAvailability> timeFrames = repository.findAvailableWeeksAndYears();
+        List<WeekYearAvailabilityProjection> timeFrames = repository.findAvailableWeeksAndYears();
         for (var timeFrame : timeFrames) {
             if (!result.containsKey(timeFrame.year())) {
                 result.put(timeFrame.year(), new LinkedList<>());

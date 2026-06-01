@@ -10,12 +10,12 @@ class VehicleRoutesRest extends CrudRest {
         return axios.get(this.baseUrl + "/vehicle/" + name);
     }
 
-    findAllByVehicleAndTimeframe(name, start, end) {
-        return axios.get(this.baseUrl + "/timeframe/" + name + '/' + start + "/" + end);
+    findAggregatedByVehicleAndTimeframe(name, start, end) {
+        return axios.get(this.baseUrl + "/timeframe/aggregated/" + name + '/' + start + "/" + end);
     }
 
-    findAllByVehicleAndWeek(name, year, week) {
-        return axios.get(this.baseUrl + "/calendarweek/" + name + '/' + year + "/" + week);
+    findAggregatedByVehicleAndWeek(name, year, week) {
+        return axios.get(this.baseUrl + "/calendarweek/aggregated/" + name + '/' + year + "/" + week);
     }
 
     findAvailableTimeFrames() {
