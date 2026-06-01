@@ -46,7 +46,7 @@ public class ConfigurationController {
             if ("location_lat".equals(ce.getKeyname())) {
                 latitude = Double.parseDouble(ce.getValuefield());
             }
-            if ("location_long".equals(ce.getKeyname())) {
+            if ("location_lon".equals(ce.getKeyname())) {
                 longitude = Double.parseDouble(ce.getValuefield());
             }
             if ("city".equals(ce.getKeyname())) {
