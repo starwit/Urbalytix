@@ -80,7 +80,7 @@ spec:
               value: {{ .Values.auth.clientSecret }}
             {{- else }}
             - name: SPRING_PROFILES_ACTIVE
-              value: default
+              value: dev
             {{- end }}
             {{- if .Values.app.feature_collection.enabled }}
             - name: INFRA_TRASH_ENDPOINT
