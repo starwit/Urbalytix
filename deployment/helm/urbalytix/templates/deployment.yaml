@@ -8,6 +8,8 @@ spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       {{- include "urbalytix.selectorLabels" . | nindent 6 }}
@@ -86,9 +88,9 @@ spec:
             - name: INFRA_TRASH_SECRET
               value: {{ .Values.app.feature_collection.secret | quote}}
             {{- end }}
-            {{- if .Values.app.spring_data.redis_active }}
             - name: SPRING_DATA_REDIS_ACTIVE
-              value: "true"
+              value: {{ .Values.app.spring_data.redis_active | quote }}
+            {{- if .Values.app.spring_data.redis_active }}
             - name: SPRING_DATA_REDIS_HOST
               value: {{ .Values.app.spring_data.redis_host | quote}}
             - name: SPRING_DATA_REDIS_PORT

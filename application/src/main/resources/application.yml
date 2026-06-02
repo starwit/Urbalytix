@@ -15,6 +15,10 @@ springdoc:
     csrf:
       enabled: 'true'
 spring:
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.data.redis.autoconfigure.DataRedisAutoConfiguration
+      - org.springframework.boot.data.redis.autoconfigure.DataRedisRepositoriesAutoConfiguration
   flyway:
     baseline-on-migrate: 'true'
     locations: classpath:db/migration
