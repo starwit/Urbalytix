@@ -25,7 +25,9 @@ app:
     aggregator_stream_prefix: aggregator # if aggregation messages are published under a different name
     positionsource_stream_prefix: positionsource # if position messages are published under a different name
     detection_stream_prefix: objectdetector # if detection messages are published under a different name
-    detection_scale: 20 # scale factor of vehicle route density
+    vehicle_routes:
+      aggregationIntervalMs: 2000 # aggregate raw points into sub-sections by time interval
+      sectionMaxGapMs: 4000 # split route sections if data gap is larger than set value (by timestamp)
 
 service:
   port: 8081

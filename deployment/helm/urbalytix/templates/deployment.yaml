@@ -51,9 +51,11 @@ spec:
               value: {{ .Values.database.username }}
             - name: SPRING_DATASOURCE_PASSWORD
               value: {{ .Values.database.password }}
+            - name: SPRING_DATA_VEHICLE-ROUTES_AGGREGATIONINTERVALMS
+              value: {{ .Values.app.spring_data.vehicle_routes.aggregationIntervalMs | quote }}
+            - name: SPRING_DATA_VEHICLE-ROUTES_SECTIONMAXGAPMS
+              value: {{ .Values.app.spring_data.vehicle_routes.sectionMaxGapMs | quote }}
             {{- if .Values.auth.enabled }}
-            - name: SPRING_DATA_DETECTION_SCALE
-              value: {{ .Values.app.spring_data.detection_scale | quote }}
             - name: SPRING_PROFILES_ACTIVE
               value: auth
             - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER-URI
