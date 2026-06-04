@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.google.protobuf.InvalidProtocolBufferException;
 
 import de.starwit.service.impl.DetectionCountService;
+import de.starwit.service.impl.MessageMonotonicityService;
 import de.starwit.visionapi.Analytics.DetectionCountMessage;
 
 @Service
@@ -22,6 +23,9 @@ public class DetectionCountMessageListener implements StreamListener<String, Map
     @Autowired
     private DetectionCountService service;
 
+    @Autowired
+    private MessageMonotonicityService monotonicityService;
+
     @Override
     public void onMessage(MapRecord<String, String, String> message) {
         log.debug("DetectionCount message received.");
@@ -31,6 +35,14 @@ public class DetectionCountMessageListener implements StreamListener<String, Map
 
         try {
             detectionCountMessage = DetectionCountMessage.parseFrom(Base64.getDecoder().decode(b64Proto));
+
+            var monotonicityResult = monotonicityService.advanceTimestamp(message.getStream(), detectionCountMessage.getTimestampUtcMs());
+            if (!monotonicityResult.accepted()) {
+                log.info("Dropping DetectionCountMessage with non-monotonic timestamp from stream '{}' (skew {} ms)", 
+                    message.getStream(), monotonicityResult.timestampSkew());
+                return;
+            }
+
             service.createDetectionCountFromRedis(detectionCountMessage);
         } catch (InvalidProtocolBufferException e) {
             log.warn("Received invalid proto");
