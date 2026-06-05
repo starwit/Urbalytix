@@ -27,6 +27,13 @@ app:
     detection_stream_prefix: objectdetector # if detection messages are published under a different name
     detection_scale: 20 # scale factor of vehicle route density
 
+  # mapping external roles to the standard internal ones
+  security:
+    rolemapping:
+      admin: urbalytix_admin
+      user: urbalytix_user
+      reader: urbalytix_reader
+
 service:
   port: 8081
   

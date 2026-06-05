@@ -1,6 +1,12 @@
 # Urbalytics Manual
+Here you can find information on how to deploy and run Urbalytix.
 
 ## Installation
+
+### Deployment Architecture
+Following image shows the target environment in which Urbalytix is supposed to run.
+
+![](Architecture-Urbalytix.svg)
 
 ### Deployment to Kubernetes using Helm
 
@@ -18,14 +24,29 @@ The following custom values.yaml will make application available under hostname 
 
 ```yaml
 app:
-  context_path: ""
+  context_path: "/urbalytix"
 
-database:
-  hostname: hostname
-  port: 5432
-  database: urbalytix
-  username: urbalytix
-  password: password
+  # configuration for an endpoint from which app will collect GeoJSON features
+  feature_collection:
+    enabled: true
+    endpoint: https://hostname:port
+    secret: supersecret
+
+  spring_data: # Configuration to connect to Redis/ValKey
+    redis_active: false # only if true connection config is used
+    redis_host: localhost
+    redis_port: 6379
+    aggregator_stream_prefix: aggregator # if aggregation messages are published under a different name
+    positionsource_stream_prefix: positionsource # if position messages are published under a different name
+    detection_stream_prefix: objectdetector # if detection messages are published under a different name
+    detection_scale: 20 # scale factor of vehicle route density
+
+  # mapping external roles to standard internal ones
+  security:
+    rolemapping:
+      admin: urbalytix_admin
+      user: urbalytix_user
+      reader: urbalytix_reader
 
 ingress:
   enabled: true

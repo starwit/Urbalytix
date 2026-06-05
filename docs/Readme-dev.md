@@ -5,7 +5,7 @@ This document describes how setup a local development environment and how to sta
 
 __Prerequisites__ 
 
-* Java JDK 21 or later
+* Java JDK 25 or later
 * Maven 3
 * PostgreSQL (available for development via docker-compose scripts)
 * Keycloak for authentication (optional)

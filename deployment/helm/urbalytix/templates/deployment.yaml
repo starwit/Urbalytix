@@ -80,6 +80,12 @@ spec:
             - name: SPRING_PROFILES_ACTIVE
               value: default
             {{- end }}
+            - name: SECURITY_ROLEMAPPING_ADMIN
+              value: {{ .Values.app.security.rolemapping.admin | quote }}
+            - name: SECURITY_ROLEMAPPING_USER
+              value: {{ .Values.app.security.rolemapping.user | quote }}
+            - name: SECURITY_ROLEMAPPING_READER
+              value: {{ .Values.app.security.rolemapping.reader | quote }}
             {{- if .Values.app.feature_collection.enabled }}
             - name: INFRA_TRASH_ENDPOINT
               value: {{ .Values.app.feature_collection.endpoint | quote}}
