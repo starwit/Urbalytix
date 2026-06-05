@@ -13,16 +13,16 @@ export function defineUserAbility(roles = []) {
         } else {
             // User role can read/view most things
             if (roles.includes('user')) {
-                can(['read', 'create', 'update'], ['DetectionOverview', 'DetectionComparison', 'Vehicles', 'StreetCatalog']);
+                can(['read', 'create', 'update'], 'app');
             }
 
             // Reader role can only read
             if (roles.includes('reader')) {
-                can('read', ['DetectionOverview', 'DetectionComparison', 'Vehicles', 'StreetCatalog']);
+                can('read', 'app');
             }
 
             // By default, cannot access configuration
-            cannot('manage', 'Configuration');
+            cannot('manage', 'admin');
         }
     });
 }
@@ -36,10 +36,6 @@ export const Actions = {
 };
 
 export const Subjects = {
-    CONFIGURATION: 'Configuration',
-    DETECTION_OVERVIEW: 'DetectionOverview',
-    DETECTION_COMPARISON: 'DetectionComparison',
-    VEHICLES: 'Vehicles',
-    STREET_CATALOG: 'StreetCatalog',
-    ALL: 'all',
+    APP: 'app,',
+    ADMIN: 'admin'
 };

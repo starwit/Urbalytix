@@ -58,7 +58,7 @@ function CustomAppBar() {
                                 <DifferenceIcon />
                             </IconButton>
                             <Divider orientation="vertical" variant="middle" flexItem />
-                            <Can I="manage" a="ALL">
+                            <Can I="manage" a="ADMIN">
                                 <AdminMenu />
                             </Can>
                             <Divider orientation="vertical" variant="middle" flexItem />
