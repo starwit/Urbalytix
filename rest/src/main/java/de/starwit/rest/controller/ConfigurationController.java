@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import de.starwit.allowedroles.IsAdmin;
 import de.starwit.persistence.entity.ConfigurationEntity;
 import de.starwit.service.impl.ConfigurationService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -61,12 +62,14 @@ public class ConfigurationController {
 
     @Operation(summary = "Get all configuration entries")
     @GetMapping(value = "/")
+    @IsAdmin
     public List<ConfigurationEntity> getAllConfigurations() {
         return configurationService.getRepository().findAll();
     }
 
     @Operation(summary = "Set all configuration entries")
     @PostMapping(value = "/")
+    @IsAdmin
     public ResponseEntity<List<ConfigurationEntity>> setConfiguration(@RequestBody List<ConfigurationEntity> configs) {
         try {
             List<ConfigurationEntity> result = configurationService.saveOrUpdateList(configs);
@@ -79,6 +82,7 @@ public class ConfigurationController {
 
     @Operation(summary = "Set configuration entry by key")
     @PostMapping(value = "/setbykey")
+    @IsAdmin
     public ResponseEntity<ConfigurationEntity> setConfigurationByKey(@RequestBody ConfigurationEntity config) {
 
         try {

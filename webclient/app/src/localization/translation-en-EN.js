@@ -146,6 +146,7 @@ const translationEnEN = {
     "config.item.wastedetection.port": "Port Waste Detection Service",
     "config.item.wastedetection.stream.aggregator": "Aggregation stream name for Waste Detection Service",
     "config.item.wastedetection.stream.positionsource": "Position source stream name for Waste Detection Service",
-    "config.item.wastedetection.stream.detection": "Detection stream name for Waste Detection Service"
+    "config.item.wastedetection.stream.detection": "Detection stream name for Waste Detection Service",
+    "userInfo.guest": "Guest User"
 };
 export default translationEnEN;

@@ -18,6 +18,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.GrantedAuthority;
@@ -50,6 +51,7 @@ import lombok.RequiredArgsConstructor;
 @Profile({ "auth", "auth-dev" })
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity
 public class SecurityConfig {
 
     static final Logger LOG = LoggerFactory.getLogger(SecurityConfig.class);
@@ -111,6 +113,9 @@ public class SecurityConfig {
     @RequiredArgsConstructor
     static class GrantedAuthoritiesMapperImpl implements GrantedAuthoritiesMapper {
 
+        @Autowired
+        private RoleMapper roleMapper;
+
         @SuppressWarnings("unchecked")
         @Override
         public Collection<? extends GrantedAuthority> mapAuthorities(
@@ -130,7 +135,8 @@ public class SecurityConfig {
                             LOG.error("claims do not contain 'realm_access' map");
                             return;
                         }
-                        final List<String> roles = (List<String>) realmAccessMap.get("roles");
+                        List<String> roles = (List<String>) realmAccessMap.get("roles");
+                        roles = roleMapper.mapAllRoles(roles);
 
                         mappedAuthorities.addAll(
                                 roles.stream().map(role -> new SimpleGrantedAuthority("ROLE_" + role)).toList());

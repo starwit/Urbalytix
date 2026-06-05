@@ -14,6 +14,9 @@ import {
 } from "@mui/material";
 import general from "../assets/images/logo_color.png";
 import AdminMenu from '../features/adminarea/AdminMenu';
+import UserInfo from './user/UserInfo';
+import {Can} from '@casl/react';
+import {AbilityAssigner} from '../security/AbilityAssigner';
 
 
 function CustomAppBar() {
@@ -55,8 +58,11 @@ function CustomAppBar() {
                                 <DifferenceIcon />
                             </IconButton>
                             <Divider orientation="vertical" variant="middle" flexItem />
-                            <AdminMenu />
+                            <Can I="manage" a="ALL">
+                                <AdminMenu />
+                            </Can>
                             <Divider orientation="vertical" variant="middle" flexItem />
+                            <UserInfo />
                             <IconButton href="./logout" size="large">
                                 <LogoutIcon />
                             </IconButton>

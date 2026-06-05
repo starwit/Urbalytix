@@ -146,6 +146,7 @@ const translationDeDE = {
     "config.item.wastedetection.port": "Port Abfalldetektionsservice",
     "config.item.wastedetection.stream.aggregator": "Aggregation Aboname for Abfalldetektionsservice",
     "config.item.wastedetection.stream.positionsource": "Position Aboname for Abfalldetektionsservice",
-    "config.item.wastedetection.stream.detection": "Detection Aboname for Abfalldetektionsservice"
+    "config.item.wastedetection.stream.detection": "Detection Aboname for Abfalldetektionsservice",
+    "userInfo.guest": "Guest User"
 };
 export default translationDeDE;

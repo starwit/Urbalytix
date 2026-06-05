@@ -4,6 +4,8 @@
     "license": "AGPLv3",
     "private": true,
     "dependencies": {
+        "@casl/ability": "^7.0.0",
+        "@casl/react": "^7.0.0",
         "@deck.gl/aggregation-layers": "9.2.4",
         "@deck.gl/core": "9.2.4",
         "@deck.gl/extensions": "9.2.4",
