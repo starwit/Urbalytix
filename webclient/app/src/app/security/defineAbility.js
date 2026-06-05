@@ -9,11 +9,11 @@ export function defineUserAbility(roles = []) {
     return defineAbility((can, cannot) => {
         // Admin can do everything
         if (roles.includes('admin')) {
-            can('manage', 'all');
+            can('manage', ['all', 'app', 'config', 'admin']);
         } else {
             // User role can read/view most things
             if (roles.includes('user')) {
-                can(['read', 'create', 'update'], 'app');
+                can(['read', 'create', 'update'], ['app', 'config']);
             }
 
             // Reader role can only read
@@ -36,6 +36,8 @@ export const Actions = {
 };
 
 export const Subjects = {
-    APP: 'app,',
-    ADMIN: 'admin'
+    APP: 'app',
+    CONFIG: 'config',
+    ADMIN: 'admin',
+    ALL: 'all'
 };

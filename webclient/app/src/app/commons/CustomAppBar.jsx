@@ -16,7 +16,6 @@ import general from "../assets/images/logo_color.png";
 import AdminMenu from '../features/adminarea/AdminMenu';
 import UserInfo from './user/UserInfo';
 import {Can} from '@casl/react';
-import {AbilityAssigner} from '../security/AbilityAssigner';
 
 
 function CustomAppBar() {
@@ -58,7 +57,7 @@ function CustomAppBar() {
                                 <DifferenceIcon />
                             </IconButton>
                             <Divider orientation="vertical" variant="middle" flexItem />
-                            <Can I="manage" a="ADMIN">
+                            <Can I="read" a="config">
                                 <AdminMenu />
                             </Can>
                             <Divider orientation="vertical" variant="middle" flexItem />

@@ -17,6 +17,7 @@ export function AbilityAssigner({children}) {
                 setAbility(guestAbility);
             } else {
                 setAbility(defineUserAbility(response.data.roles));
+                console.log(defineUserAbility(response.data.roles));
             }
         });
     }, []);
