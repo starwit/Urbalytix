@@ -15,17 +15,17 @@ import org.springframework.test.util.ReflectionTestUtils;
 
 import de.starwit.persistence.entity.VehicleDataEntity;
 import de.starwit.persistence.repository.VehicleDataRepository;
-import de.starwit.service.impl.MessageMonotonicityService;
-import de.starwit.service.impl.MessageMonotonicityService.AdvanceTimestampResult;
+import de.starwit.service.messagelistener.MessageMonotonicityCache;
+import de.starwit.service.messagelistener.MessageMonotonicityCache.CheckTimestampResult;
 
 @ExtendWith(MockitoExtension.class)
-public class MessageMonotonicityServiceTest {
+public class MessageMonotonicityCacheTest {
 
     @Mock
     private VehicleDataRepository vehicleDataRepository;
 
     @InjectMocks
-    private MessageMonotonicityService testee;
+    private MessageMonotonicityCache testee;
 
     @BeforeEach
     public void setUp() {
@@ -38,7 +38,7 @@ public class MessageMonotonicityServiceTest {
     public void testFirstTimestampAccepted_noDbEntry() {
         when(vehicleDataRepository.findByStreamKey("vehicle1")).thenReturn(null);
 
-        AdvanceTimestampResult result = testee.advanceTimestamp("prefix:vehicle1", 1000L);
+        CheckTimestampResult result = testee.checkTimestamp("prefix:vehicle1", 1000L);
 
         assertTrue(result.accepted());
         assertEquals(0L, result.timestampSkew());
@@ -50,7 +50,7 @@ public class MessageMonotonicityServiceTest {
         entity.setLastUpdate(ZonedDateTime.parse("1970-01-01T00:00:00.500Z"));
         when(vehicleDataRepository.findByStreamKey("vehicle1")).thenReturn(entity);
 
-        AdvanceTimestampResult result = testee.advanceTimestamp("prefix:vehicle1", 1000L);
+        CheckTimestampResult result = testee.checkTimestamp("prefix:vehicle1", 1000L);
 
         assertTrue(result.accepted());
         assertEquals(0L, result.timestampSkew());
@@ -62,7 +62,7 @@ public class MessageMonotonicityServiceTest {
         entity.setLastUpdate(ZonedDateTime.parse("1970-01-01T00:00:02.000Z")); // 2000ms
         when(vehicleDataRepository.findByStreamKey("vehicle1")).thenReturn(entity);
 
-        AdvanceTimestampResult result = testee.advanceTimestamp("prefix:vehicle1", 1000L);
+        CheckTimestampResult result = testee.checkTimestamp("prefix:vehicle1", 1000L);
 
         assertFalse(result.accepted());
         assertEquals(1000L, result.timestampSkew());
@@ -72,8 +72,8 @@ public class MessageMonotonicityServiceTest {
     public void testSecondTimestampAccepted_whenNewer() {
         when(vehicleDataRepository.findByStreamKey("vehicle1")).thenReturn(null);
 
-        testee.advanceTimestamp("prefix:vehicle1", 1000L);
-        AdvanceTimestampResult result = testee.advanceTimestamp("prefix:vehicle1", 2000L);
+        testee.checkTimestamp("prefix:vehicle1", 1000L);
+        CheckTimestampResult result = testee.checkTimestamp("prefix:vehicle1", 2000L);
 
         assertTrue(result.accepted());
         assertEquals(0L, result.timestampSkew());
@@ -83,8 +83,8 @@ public class MessageMonotonicityServiceTest {
     public void testSecondTimestampRejected_whenOlder() {
         when(vehicleDataRepository.findByStreamKey("vehicle1")).thenReturn(null);
 
-        testee.advanceTimestamp("prefix:vehicle1", 2000L);
-        AdvanceTimestampResult result = testee.advanceTimestamp("prefix:vehicle1", 1000L);
+        testee.checkTimestamp("prefix:vehicle1", 2000L);
+        CheckTimestampResult result = testee.checkTimestamp("prefix:vehicle1", 1000L);
 
         assertFalse(result.accepted());
         assertEquals(1000L, result.timestampSkew());
@@ -94,8 +94,8 @@ public class MessageMonotonicityServiceTest {
     public void testSameTimestampRejected() {
         when(vehicleDataRepository.findByStreamKey("vehicle1")).thenReturn(null);
 
-        testee.advanceTimestamp("prefix:vehicle1", 1000L);
-        AdvanceTimestampResult result = testee.advanceTimestamp("prefix:vehicle1", 1000L);
+        testee.checkTimestamp("prefix:vehicle1", 1000L);
+        CheckTimestampResult result = testee.checkTimestamp("prefix:vehicle1", 1000L);
 
         assertFalse(result.accepted());
         assertEquals(0L, result.timestampSkew());
@@ -105,9 +105,9 @@ public class MessageMonotonicityServiceTest {
     public void testLazyInit_calledOnlyOnce_perStreamKey() {
         when(vehicleDataRepository.findByStreamKey("vehicle1")).thenReturn(null);
 
-        testee.advanceTimestamp("prefix:vehicle1", 1000L);
-        testee.advanceTimestamp("prefix:vehicle1", 2000L);
-        testee.advanceTimestamp("prefix:vehicle1", 3000L);
+        testee.checkTimestamp("prefix:vehicle1", 1000L);
+        testee.checkTimestamp("prefix:vehicle1", 2000L);
+        testee.checkTimestamp("prefix:vehicle1", 3000L);
 
         verify(vehicleDataRepository, times(1)).findByStreamKey("vehicle1");
     }
@@ -117,9 +117,9 @@ public class MessageMonotonicityServiceTest {
         when(vehicleDataRepository.findByStreamKey("vehicleA")).thenReturn(null);
         when(vehicleDataRepository.findByStreamKey("vehicleB")).thenReturn(null);
 
-        testee.advanceTimestamp("prefix:vehicleA", 5000L);
+        testee.checkTimestamp("prefix:vehicleA", 5000L);
 
-        AdvanceTimestampResult resultB = testee.advanceTimestamp("prefix:vehicleB", 1000L);
+        CheckTimestampResult resultB = testee.checkTimestamp("prefix:vehicleB", 1000L);
 
         assertTrue(resultB.accepted());
         assertEquals(0L, resultB.timestampSkew());
@@ -131,7 +131,7 @@ public class MessageMonotonicityServiceTest {
         entity.setLastUpdate(null);
         when(vehicleDataRepository.findByStreamKey("vehicle1")).thenReturn(entity);
 
-        AdvanceTimestampResult result = testee.advanceTimestamp("prefix:vehicle1", 1000L);
+        CheckTimestampResult result = testee.checkTimestamp("prefix:vehicle1", 1000L);
 
         assertTrue(result.accepted());
         assertEquals(0L, result.timestampSkew());
@@ -143,7 +143,7 @@ public class MessageMonotonicityServiceTest {
     public void testDisabled_monotonicTimestampAccepted() {
         ReflectionTestUtils.setField(testee, "enabled", false);
 
-        AdvanceTimestampResult result = testee.advanceTimestamp("prefix:vehicle1", 1000L);
+        CheckTimestampResult result = testee.checkTimestamp("prefix:vehicle1", 1000L);
 
         assertTrue(result.accepted());
         assertEquals(0L, result.timestampSkew());
@@ -153,8 +153,8 @@ public class MessageMonotonicityServiceTest {
     public void testDisabled_nonMonotonicTimestampAccepted() {
         ReflectionTestUtils.setField(testee, "enabled", false);
 
-        testee.advanceTimestamp("prefix:vehicle1", 5000L);
-        AdvanceTimestampResult result = testee.advanceTimestamp("prefix:vehicle1", 1000L);
+        testee.checkTimestamp("prefix:vehicle1", 5000L);
+        CheckTimestampResult result = testee.checkTimestamp("prefix:vehicle1", 1000L);
 
         assertTrue(result.accepted());
         assertEquals(0L, result.timestampSkew());
@@ -164,7 +164,7 @@ public class MessageMonotonicityServiceTest {
     public void testDisabled_repositoryNotQueried() {
         ReflectionTestUtils.setField(testee, "enabled", false);
 
-        testee.advanceTimestamp("prefix:vehicle1", 1000L);
+        testee.checkTimestamp("prefix:vehicle1", 1000L);
 
         verifyNoInteractions(vehicleDataRepository);
     }
