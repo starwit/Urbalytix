@@ -8,6 +8,8 @@ spec:
   {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
   {{- end }}
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       {{- include "urbalytix.selectorLabels" . | nindent 6 }}
@@ -49,9 +51,11 @@ spec:
               value: {{ .Values.database.username }}
             - name: SPRING_DATASOURCE_PASSWORD
               value: {{ .Values.database.password }}
+            - name: SPRING_DATA_VEHICLE-ROUTES_AGGREGATIONINTERVALMS
+              value: {{ .Values.app.spring_data.vehicle_routes.aggregationIntervalMs | quote }}
+            - name: SPRING_DATA_VEHICLE-ROUTES_SECTIONMAXGAPMS
+              value: {{ .Values.app.spring_data.vehicle_routes.sectionMaxGapMs | quote }}
             {{- if .Values.auth.enabled }}
-            - name: SPRING_DATA_DETECTION_SCALE
-              value: {{ .Values.app.spring_data.detection_scale | quote }}
             - name: SPRING_PROFILES_ACTIVE
               value: auth
             - name: SPRING_SECURITY_OAUTH2_RESOURCESERVER_JWT_ISSUER-URI
@@ -78,7 +82,7 @@ spec:
               value: {{ .Values.auth.clientSecret }}
             {{- else }}
             - name: SPRING_PROFILES_ACTIVE
-              value: default
+              value: dev
             {{- end }}
             {{- if .Values.app.feature_collection.enabled }}
             - name: INFRA_TRASH_ENDPOINT
@@ -86,9 +90,9 @@ spec:
             - name: INFRA_TRASH_SECRET
               value: {{ .Values.app.feature_collection.secret | quote}}
             {{- end }}
-            {{- if .Values.app.spring_data.redis_active }}
             - name: SPRING_DATA_REDIS_ACTIVE
-              value: "true"
+              value: {{ .Values.app.spring_data.redis_active | quote }}
+            {{- if .Values.app.spring_data.redis_active }}
             - name: SPRING_DATA_REDIS_HOST
               value: {{ .Values.app.spring_data.redis_host | quote}}
             - name: SPRING_DATA_REDIS_PORT
