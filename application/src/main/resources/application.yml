@@ -30,6 +30,7 @@ spring:
       detection: objectdetector
       aggregator: aggregator
       positionsource: positionsource
+      drop-non-monotonic-timestamps: 'true'
     rest:
       detection-strategy: annotated
     vehicle-routes:

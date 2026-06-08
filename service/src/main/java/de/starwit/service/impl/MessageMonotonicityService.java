@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import de.starwit.persistence.entity.VehicleDataEntity;
@@ -14,6 +15,9 @@ public class MessageMonotonicityService {
 
     @Autowired
     private VehicleDataRepository vehicleDataRepository;
+
+    @Value("${spring.data.stream.drop-non-monotonic-timestamps:true}")
+    private boolean enabled;
 
     private Map<String, Long> lastTimestampByStreamKey = new ConcurrentHashMap<>();
 
@@ -28,6 +32,10 @@ public class MessageMonotonicityService {
      * This is thread-safe and explicitly meant to be shared across threads.
      */
     public AdvanceTimestampResult advanceTimestamp(String streamKey, Long newTimestamp) {
+        if (!this.enabled) {
+            return new AdvanceTimestampResult(true, 0L);
+        }
+
         lazyInit(streamKey);
         
         // Attempt to update the timestamp
