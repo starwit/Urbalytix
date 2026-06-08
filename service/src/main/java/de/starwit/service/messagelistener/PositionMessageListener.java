@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import com.google.protobuf.InvalidProtocolBufferException;
 
 import de.starwit.service.impl.VehicleDataService;
+import de.starwit.service.messagelistener.MessageMonotonicityCache.CheckTimestampResult;
 import de.starwit.visionapi.Sae.PositionMessage;
 
 @Service
@@ -21,6 +22,9 @@ public class PositionMessageListener implements StreamListener<String, MapRecord
 
     @Autowired
     private VehicleDataService service;
+
+    @Autowired
+    private MessageMonotonicityCache monotonicityService;
 
     @Override
     public void onMessage(MapRecord<String, String, String> message) {
@@ -35,6 +39,15 @@ public class PositionMessageListener implements StreamListener<String, MapRecord
 
         try {
             positionMessage = PositionMessage.parseFrom(Base64.getDecoder().decode(b64Proto));
+
+            CheckTimestampResult monotonityResult = monotonicityService.checkTimestamp(message.getStream(),
+                    positionMessage.getTimestampUtcMs());
+            if (!monotonityResult.accepted()) {
+                log.info("Dropping PositionMessage with non-monotonic timestamp from stream '{}' (skew {} ms)",
+                        message.getStream(), monotonityResult.timestampSkew());
+                return;
+            }
+
             service.insertOrUpdatePosition(message.getStream(), positionMessage);
         } catch (InvalidProtocolBufferException e) {
             log.warn("Received invalid proto");
