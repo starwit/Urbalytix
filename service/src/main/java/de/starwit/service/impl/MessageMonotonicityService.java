@@ -49,7 +49,7 @@ public class MessageMonotonicityService {
         // The comparatively slow mappingFunction can block other map operations and thereby other threads
         // but as it only happens once per stream during the entire application runtime, this is tolerable
         lastTimestampByStreamKey.computeIfAbsent(streamKey, key -> {
-            VehicleDataEntity vehicleData = vehicleDataRepository.findByStreamKey(streamKey);
+            VehicleDataEntity vehicleData = vehicleDataRepository.findByStreamKey(streamKey.split(":")[1]);
             if (vehicleData != null && vehicleData.getLastUpdate() != null) {
                 return vehicleData.getLastUpdate().toInstant().toEpochMilli();
             } else {
