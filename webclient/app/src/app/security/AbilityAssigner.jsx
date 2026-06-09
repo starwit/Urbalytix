@@ -13,7 +13,7 @@ export function AbilityAssigner({children}) {
 
     useEffect(() => {
         userRest.getCurrentUserInfo().then(response => {
-            if (response.data.authenicated === false) {
+            if (response.data.authenticated === false) {
                 setAbility(guestAbility);
             } else {
                 setAbility(defineUserAbility(response.data.roles));
