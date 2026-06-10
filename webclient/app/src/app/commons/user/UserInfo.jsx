@@ -3,28 +3,17 @@ import PersonIcon from '@mui/icons-material/Person';
 import {useTranslation} from "react-i18next";
 import {useEffect, useMemo, useState} from "react";
 import UserRest from "../../services/UserRest";
+import {useAuth} from "../../security/AuthContext";
 
 export default function UserInfo() {
 
     const {t, i18n} = useTranslation();
-    const [userInfo, setUserInfo] = useState({});
-
-    const userRest = useMemo(() => new UserRest(), []);
-
-    useEffect(() => {
-        userRest.getCurrentUserInfo().then(response => {
-            if (response.data.authenticated === false) {
-                setUserInfo({name: t("userInfo.guest")});
-            } else {
-                setUserInfo(response.data);
-            }
-        });
-    }, []);
+    const auth = useAuth();
 
     return (
         <>
             <IconButton size="large">
-                <Tooltip title={userInfo.name} >
+                <Tooltip title={auth?.roles?.join(", ") || t("userInfo.guest")} >
                     <PersonIcon />
                 </Tooltip>
             </IconButton >
