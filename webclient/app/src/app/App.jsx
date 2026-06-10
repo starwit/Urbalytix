@@ -2,16 +2,16 @@ import React from "react";
 import MainContentRouter from "./MainContentRouter";
 import {CssBaseline} from "@mui/material";
 import ErrorHandler from "./commons/errorHandler/ErrorHandler";
-import {AbilityAssigner} from "./security/AbilityAssigner";
+import {AuthProvider} from "./security/AuthContext";
 
 function App() {
     return (
         <React.Fragment>
             <ErrorHandler>
                 <CssBaseline />
-                <AbilityAssigner>
+                <AuthProvider>
                     <MainContentRouter />
-                </AbilityAssigner>
+                </AuthProvider>
             </ErrorHandler>
         </React.Fragment>
     );
