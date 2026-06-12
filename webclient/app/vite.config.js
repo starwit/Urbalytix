@@ -10,7 +10,7 @@ export default defineConfig(({command, mode}) => {
       plugins: [
         react(),
         env.MOCK_AUTH === "true" && {
-          name: "noauth-mock",
+          name: "mock-auth",
           configureServer(server) {
             server.middlewares.use("/urbalytix/api/user/current", (req, res, next) => {
               if (req.method === "GET") {

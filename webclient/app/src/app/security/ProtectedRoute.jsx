@@ -33,7 +33,7 @@ export function ProtectedRoute({
     if (!canAccess) {
         return fallback || (
             <Alert severity="warning">
-                You do not have permission to access this resource. Required role: admin
+                You do not have permission to access this resource.
             </Alert>
         );
     }
