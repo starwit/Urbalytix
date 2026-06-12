@@ -1,12 +1,28 @@
 # Urbalytix
+Urbalytix is a software product, that offers a number of functions, that help cities to run everyday business. Core features are measurement of waste type distribution in an area and the management of a service vehicle, fleet.
 
-This repository contains a software module written in Java, that can run analytical jobs, to condense raw tracking data from Starwit's Awareness Engine (SAE) into usable knowledge. Software is targeted to be run in a Kubernetes cluster. Thus this repo produces a [Docker image](https://hub.docker.com/repository/docker/starwitorg/Urbalytix/general) and Urbalytix can be deployed using Helm.
+For a more detailed function overview see [Starwit's webpage](https://starwit-technologies.de/products/urbalytix/).
+
+
+This software is open source and see section [license](#license--usage) how you can contribute.
 
 ## What does it do?
-TODO
+Next image shows an example of waste distribution data. Here all collected data from service vehicles is visualized. Urbalytix can display various types of waste and how their distribution changed over time.
+
+![](docs/waste-visualization.png)
+
+Visualizing service vehicles routes is shown in the next image. It is easy to track which areas of a citey were serviced and also at which speed that happened.
+
+![](docs/vehicle-routes.png)
+
+Users can also test, if detection of waste is correct. The following screenshot shows an example for recorded and detected waste.
+
+![](docs/detection-check.png)
 
 ## How to install & use
-Refer to the [software's manual](docs/Readme-manual.md) for instruction how to install and use Urbalytix
+Urbalytix is targeted to run on a Kubernetes cluster and ships with the necessary container and scripts. All necessary artifacts can be found on Docker hub [here](https://hub.docker.com/r/starwitorg/urbalytix) and [here](https://hub.docker.com/r/starwitorg/urbalytix-chart).
+
+Refer to the [software's manual](docs/Readme-manual.md) for instructions how to install and use Urbalytix.
 
 ## How to develop
 If you want to add functions to Urbalytix, [dev readme](docs/Readme-dev.md) contains all information you need to build & run the software.

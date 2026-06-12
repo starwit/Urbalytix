@@ -84,6 +84,12 @@ spec:
             - name: SPRING_PROFILES_ACTIVE
               value: dev
             {{- end }}
+            - name: SECURITY_ROLEMAPPING_ADMIN
+              value: {{ .Values.app.security.rolemapping.admin | quote }}
+            - name: SECURITY_ROLEMAPPING_USER
+              value: {{ .Values.app.security.rolemapping.user | quote }}
+            - name: SECURITY_ROLEMAPPING_READER
+              value: {{ .Values.app.security.rolemapping.reader | quote }}
             {{- if .Values.app.feature_collection.enabled }}
             - name: INFRA_TRASH_ENDPOINT
               value: {{ .Values.app.feature_collection.endpoint | quote}}
@@ -103,6 +109,8 @@ spec:
               value: {{ .Values.app.spring_data.positionsource_stream_prefix | quote}}
             - name: SPRING_DATA_STREAM_DETECTION
               value: {{ .Values.app.spring_data.detection_stream_prefix | quote}}
+            - name: SPRING_DATA_STREAM_DROP_NON_MONOTONIC_TIMESTAMPS
+              value: {{ .Values.app.spring_data.drop_non_monotonic_timestamps | quote}}
             {{- end }}
             {{- with .Values.extraEnv }}
             {{- tpl . $ | nindent 12 }}

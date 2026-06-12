@@ -6,6 +6,7 @@ import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import {useEffect, useRef, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {Link} from "react-router-dom";
+import {Can} from "@casl/react";
 
 function AdminMenu(props) {
     const [open, setOpen] = useState(false);
@@ -88,10 +89,12 @@ function AdminMenu(props) {
                                         <ListItemIcon><EditRoadIcon fontSize="small" /></ListItemIcon>
                                         <ListItemText>{t("menu.config.road")}</ListItemText>
                                     </MenuItem>
-                                    <MenuItem component={Link} to={"/configuration"} onClick={handleClose}>
-                                        <ListItemIcon><TuneIcon fontSize="small" /></ListItemIcon>
-                                        <ListItemText>{t("menu.config.config")}</ListItemText>
-                                    </MenuItem>
+                                    <Can I='manage' a='admin'>
+                                        <MenuItem component={Link} to={"/configuration"} onClick={handleClose}>
+                                            <ListItemIcon><TuneIcon fontSize="small" /></ListItemIcon>
+                                            <ListItemText>{t("menu.config.config")}</ListItemText>
+                                        </MenuItem>
+                                    </Can>
                                 </MenuList>
                             </ClickAwayListener>
                         </Paper>
