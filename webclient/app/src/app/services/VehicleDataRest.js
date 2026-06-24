@@ -12,10 +12,7 @@ class VehicleDataRest extends CrudRest {
             return response;
         }
         for (const vehicle of response.data) {
-            const lastUpdate = new Date(vehicle.lastUpdate);
-            const diffInSeconds = ((new Date() - lastUpdate) / 1000);
-            vehicle.status = diffInSeconds <= 30 ? "online" : "offline";
-            vehicle.lastUpdate = lastUpdate.toLocaleString();
+            vehicle.lastUpdate = new Date(vehicle.lastUpdate).toLocaleString();
         }
         return response;
     }
@@ -26,10 +23,7 @@ class VehicleDataRest extends CrudRest {
             return [];
         }
         for (const vehicle of response.data) {
-            const lastUpdate = new Date(vehicle.lastUpdate);
-            const diffInSeconds = ((new Date() - lastUpdate) / 1000);
-            vehicle.status = diffInSeconds <= 30 ? "online" : "offline";
-            vehicle.lastUpdate = lastUpdate.toLocaleString();
+            vehicle.lastUpdate = new Date(vehicle.lastUpdate).toLocaleString();
         }
 
         return response;

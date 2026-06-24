@@ -5,6 +5,8 @@ import java.util.Map;
 
 import org.locationtech.jts.geom.Point;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import de.starwit.persistence.entity.VehicleDataEntity;
 
 public class VehicleStatisticsDto {
@@ -20,6 +22,9 @@ public class VehicleStatisticsDto {
     private Point location;
 
     private ZonedDateTime lastUpdate;
+
+    @JsonProperty("isOnline")
+    private boolean isOnline;
 
     Map<ZonedDateTime, Double> distances = new java.util.HashMap<>();
 
@@ -83,6 +88,14 @@ public class VehicleStatisticsDto {
 
     public void setLastUpdate(ZonedDateTime lastUpdate) {
         this.lastUpdate = lastUpdate;
+    }
+
+    public boolean isOnline() {
+        return isOnline;
+    }
+
+    public void setOnline(boolean isOnline) {
+        this.isOnline = isOnline;
     }
 
     public Map<ZonedDateTime, Double> getDistances() {

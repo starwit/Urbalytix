@@ -23,7 +23,7 @@ function renderTooltip({layer, object}) {
     }
 
     if (layer.id.startsWith("IconLayer-vehicle-positions")) {
-        return `${object.name}\n${object.lastUpdate}\n${object.status}`;
+        return `${object.name}\n${object.lastUpdate}\n${object.isOnline ? "online" : "offline"}`;
     }
 
 }

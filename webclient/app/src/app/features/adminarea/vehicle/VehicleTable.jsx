@@ -60,14 +60,14 @@ function VehicleTable(props) {
             flex: 0.2
         },
         {
-            field: "status",
+            field: "isOnline",
             headerName: t("vehicledata.status"),
             flex: 0.08,
             editable: false,
             renderCell: vehicle => {
                 return (
-                    <Tooltip title={t(`vehicle.status.${vehicle.row.status}`)}>
-                        <VehicleIcon color={vehicle.row.status == "online" ? "success" : "error"} />
+                    <Tooltip title={t(`vehicle.status.${vehicle.row.isOnline ? "online" : "offline"}`)}>
+                        <VehicleIcon color={vehicle.row.isOnline ? "success" : "error"} />
                     </Tooltip >
                 );
             }

@@ -136,6 +136,8 @@ const translationEnEN = {
     "config.category.general": "General",
     "config.category.map": "Map",
     "config.category.datasources": "Data Sources",
+    "config.category.vehicle": "Vehicles",
+    "config.item.vehicledata.onlineThresholdSec": "Vehicle online threshold (seconds)",
     "config.item.location_lon": "Map default longitude",
     "config.item.location_lat": "Map default latitude",
     "config.item.city": "City name",

@@ -136,6 +136,8 @@ const translationDeDE = {
     "config.category.general": "Allgemein",
     "config.category.map": "Karte",
     "config.category.datasources": "Datenquellen",
+    "config.category.vehicle": "Fahrzeuge",
+    "config.item.vehicledata.onlineThresholdSec": "Fahrzeug Online-Schwelle (Sekunden)",
     "config.item.location_lon": "Längengrad Kartenansicht",
     "config.item.location_lat": "Breitengrad Kartenansicht",
     "config.item.city": "Stadtname",
