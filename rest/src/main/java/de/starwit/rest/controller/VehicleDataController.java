@@ -38,9 +38,8 @@ public class VehicleDataController {
 
     @Operation(summary = "Get all vehicles")
     @GetMapping
-    public List<VehicleDataEntity> findAll() {
-        List<VehicleDataEntity> list = this.vehicleDataService.findAll();
-        return list;
+    public List<VehicleStatisticsDto> findAll() {
+        return this.vehicleDataService.findAllWithStatus();
     }
 
     @Operation(summary = "Get all vehicles with statistics")

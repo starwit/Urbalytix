@@ -157,7 +157,7 @@ export class MapLayerFactory {
         return new IconLayer({
             id: `IconLayer-vehicle-positions`,
             data: positionData,
-            getColor: d => d.status === 'online' ? [100, 155, 100] : [155, 50, 50],
+            getColor: d => d.isOnline ? [100, 155, 100] : [155, 50, 50],
             getIcon: d => 'marker',
             getPosition: d => d.location ? d.location : [d.longitude, d.latitude],
             sizeUnits: "meters",

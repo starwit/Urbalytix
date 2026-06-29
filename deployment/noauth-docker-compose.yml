@@ -30,6 +30,18 @@ services:
     ports:
       - "5050:80"
 
+  valkey:
+    image: valkey/valkey:9.0.3
+    command: ["valkey-server", "/usr/local/etc/valkey/valkey.conf"]
+    ports:
+      - 6379:6379
+    volumes:
+      - ./valkey/valkey.conf:/usr/local/etc/valkey/valkey.conf
+    healthcheck:
+      test: "[ \"$(valkey-cli ping)\" = \"PONG\" ] && exit 0 || exit 1"
+      interval: 1s
+      start_period: 5s
+
 volumes:
   pgadmin:
   db-urbalytix:

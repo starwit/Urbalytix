@@ -50,6 +50,16 @@ Once all steps ran successfully application will be reachable with the following
   * default user/password is admin/admin
   * keycloak can be reached under <http://localost:8081/auth>
 
+### Mock authentication
+When developing the frontend with the Vite dev server you usually don't want to run a full Keycloak instance. The dev server can mock the authentication endpoint instead, so the application treats you as a logged-in user.
+
+This is controlled via environment variables in `webclient/app/.env`:
+
+* `MOCK_AUTH=true` enables the mock. The Vite dev server intercepts `GET /urbalytix/api/user/current` and returns an authenticated user. Set it to anything else (or remove it) to disable the mock and use the real backend/Keycloak.
+* `MOCK_AUTH_ROLES` is a comma-separated list of roles assigned to the mocked user (e.g. `MOCK_AUTH_ROLES=admin,user`). If omitted, the user defaults to `admin`.
+
+The mock only applies to the Vite dev server (`npm run dev`); it has no effect on the packaged application.
+
 ### Run necessary infra
 Application needs various infrastructure to run e.g. PostgreSQL database. Folder [deployment](../deployment/) contains a number of Docker Compose scripts to run these. 
 

@@ -13,9 +13,6 @@ class VehicleDataRest extends CrudRest {
         }
         for (const vehicle of response.data) {
             vehicle.lastUpdate = new Date(vehicle.lastUpdate).toLocaleString();
-            const now = new Date();
-            const diffInSeconds = ((now - new Date(vehicle.lastUpdate)) / 1000);
-            vehicle.status = diffInSeconds <= 30 ? "online" : "offline";
         }
         return response;
     }
@@ -27,9 +24,6 @@ class VehicleDataRest extends CrudRest {
         }
         for (const vehicle of response.data) {
             vehicle.lastUpdate = new Date(vehicle.lastUpdate).toLocaleString();
-            const now = new Date();
-            const diffInSeconds = ((now - new Date(vehicle.lastUpdate)) / 1000);
-            vehicle.status = diffInSeconds <= 30 ? "online" : "offline";
         }
 
         return response;

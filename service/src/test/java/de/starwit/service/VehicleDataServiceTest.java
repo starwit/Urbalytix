@@ -13,6 +13,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import de.starwit.persistence.entity.VehicleRouteEntity;
 import de.starwit.persistence.repository.VehicleDataRepository;
 import de.starwit.persistence.repository.VehicleRoutesRepository;
+import de.starwit.service.impl.ConfigurationService;
 import de.starwit.service.impl.VehicleDataService;
 import de.starwit.visionapi.Common.GeoCoordinate;
 import de.starwit.visionapi.Common.MovementVector;
@@ -20,6 +21,9 @@ import de.starwit.visionapi.Sae.PositionMessage;
 
 @SpringBootTest(classes = { VehicleDataService.class, GeometryFactory.class })
 public class VehicleDataServiceTest {
+
+    @MockitoBean
+    private ConfigurationService configurationService;
 
     @MockitoBean
     private VehicleDataRepository dataRepository;

@@ -1,6 +1,7 @@
 package de.starwit.service.impl;
 
 import java.math.BigDecimal;
+import java.time.Duration;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -15,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import de.starwit.persistence.entity.ConfigurationEntity;
 import de.starwit.persistence.entity.VehicleDataEntity;
 import de.starwit.persistence.entity.VehicleRouteEntity;
 import de.starwit.persistence.repository.VehicleDataRepository;
@@ -27,6 +29,9 @@ public class VehicleDataService implements ServiceInterface<VehicleDataEntity, V
 
     private Logger log = LoggerFactory.getLogger(this.getClass());
 
+    private static final String ONLINE_THRESHOLD_KEY = "vehicledata.onlineThresholdSec";
+    private static final long DEFAULT_ONLINE_THRESHOLD_SEC = 30;
+
     // TODO get from configuration
     ZoneId timeZone = ZoneId.of("Europe/Berlin");
 
@@ -37,6 +42,9 @@ public class VehicleDataService implements ServiceInterface<VehicleDataEntity, V
     private VehicleRoutesRepository routesRepository;
 
     @Autowired
+    private ConfigurationService configurationService;
+
+    @Autowired
     private GeometryFactory geometryFactory;
 
     @Override
@@ -44,12 +52,30 @@ public class VehicleDataService implements ServiceInterface<VehicleDataEntity, V
         return repository;
     }
 
+    /**
+     * Returns all vehicles as DTOs including their current online/offline status,
+     * without the (expensive) per-timeframe distance aggregation. Used by the map
+     * view, which polls this frequently.
+     */
+    public List<VehicleStatisticsDto> findAllWithStatus() {
+        long thresholdSec = getOnlineThresholdSec();
+        List<VehicleStatisticsDto> result = new ArrayList<>();
+        for (VehicleDataEntity vehicle : repository.findAll()) {
+            VehicleStatisticsDto dto = new VehicleStatisticsDto(vehicle);
+            dto.setOnline(isOnline(vehicle.getLastUpdate(), thresholdSec));
+            result.add(dto);
+        }
+        return result;
+    }
+
     public List<VehicleStatisticsDto> findAllWithDistances(ZonedDateTime startTime, ZonedDateTime endTime) {
+        long thresholdSec = getOnlineThresholdSec();
         List<VehicleStatisticsDto> result = new ArrayList<>();
         List<VehicleDataEntity> vehicles = repository.findAll();
         log.debug("Calculating distances for " + vehicles.size() + " vehicles");
         for (VehicleDataEntity vehicle : vehicles) {
             VehicleStatisticsDto dto = new VehicleStatisticsDto(vehicle);
+            dto.setOnline(isOnline(vehicle.getLastUpdate(), thresholdSec));
             result.add(dto);
         }
 
@@ -71,6 +97,33 @@ public class VehicleDataService implements ServiceInterface<VehicleDataEntity, V
 
         return result;
 
+    }
+
+    /**
+     * Reads the configured online threshold (in seconds), falling back to
+     * {@value #DEFAULT_ONLINE_THRESHOLD_SEC} when the config entry is missing or
+     * not a valid number.
+     */
+    private long getOnlineThresholdSec() {
+        ConfigurationEntity config = configurationService.findByKey(ONLINE_THRESHOLD_KEY);
+        if (config == null) {
+            return DEFAULT_ONLINE_THRESHOLD_SEC;
+        }
+        try {
+            return Long.parseLong(config.getValuefield());
+        } catch (NumberFormatException e) {
+            log.warn("Invalid value '{}' for config key {}, falling back to default {}s",
+                    config.getValuefield(), ONLINE_THRESHOLD_KEY, DEFAULT_ONLINE_THRESHOLD_SEC);
+            return DEFAULT_ONLINE_THRESHOLD_SEC;
+        }
+    }
+
+    private boolean isOnline(ZonedDateTime lastUpdate, long thresholdSec) {
+        if (lastUpdate == null) {
+            return false;
+        }
+        long secondsSinceUpdate = Duration.between(lastUpdate, ZonedDateTime.now(timeZone)).getSeconds();
+        return secondsSinceUpdate <= thresholdSec;
     }
 
     public void insertOrUpdatePosition(String streamKey, PositionMessage positionMessage) {
