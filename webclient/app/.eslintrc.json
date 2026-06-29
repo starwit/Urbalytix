@@ -1,10 +1,14 @@
 {
     "env": {
         "browser": true,
-        "es2021": true
+        "es2021": true,
+        "node": true
     },
     "extends": [
+        "eslint:recommended",
         "plugin:react/recommended",
+        "plugin:react-hooks/recommended",
+        "plugin:import/recommended",
         "google"
     ],
     "parserOptions": {
@@ -15,39 +19,120 @@
         "sourceType": "module"
     },
     "plugins": [
-        "react"
+        "react",
+        "react-hooks",
+        "import"
     ],
+    "settings": {
+        "react": {
+            "version": "detect"
+        }
+    },
     "ignorePatterns": ["**/*.ico", "**/*.css", "**/translations*.js","**/*.svg","**/*.png"],
     "rules": {
-        "max-len": [
-            "warn", {"code": 180, "tabWidth": 4,
-                "ignoreUrls": true
+        "require-jsdoc": 0,
+        "no-console": [
+            "warn",
+            {
+                "allow": ["warn", "error"]
             }
         ],
-        "indent": [
-            "warn",
-            4
+        "no-unused-vars": [
+            "error",
+            {
+                "argsIgnorePattern": "^_",
+                "varsIgnorePattern": "^_"
+            }
         ],
+        "no-duplicate-imports": "error",
+        "no-multiple-empty-lines": [
+            "error",
+            {"max": 1, "maxEOF": 0}
+        ],
+        "eqeqeq": ["error", "always"],
+        "curly": ["error", "all"],
+        "no-implicit-coercion": "error",
+        "no-eval": "error",
+        "no-implied-eval": "error",
+        "no-loop-func": "error",
+        "no-magic-numbers": [
+            "warn",
+            {
+                "ignore": [-1, 0, 1, 2],
+                "ignoreArrayIndexes": true
+            }
+        ],
+        "complexity": ["warn", {"max": 10}],
+        "max-lines": [
+            "warn",
+            {
+                "max": 200,
+                "skipBlankLines": true,
+                "skipComments": true
+            }
+        ],
+        "max-depth": ["warn", {"max": 4}],
+        "max-len": [
+            "warn",
+            {
+                "code": 120,
+                "tabWidth": 2,
+                "ignoreUrls": true,
+                "ignoreStrings": true,
+                "ignoreTemplateLiterals": true
+            }
+        ],
+        "indent": ["error", 2],
         "quotes": [
-            "warn",
-            "double"
+            "error",
+            "single",
+            {"avoidEscape": true}
         ],
-        "react/prop-types": 0,
-        "comma-dangle": [
-            "warn",
-            "never"
-        ],
+        "semi": ["error", "always"],
+        "comma-dangle": ["error", "always-multiline"],
         "new-cap": [
             "warn",
+            {"capIsNew": false}
+        ],
+        "react/prop-types": "warn",
+        "react/no-array-index-key": "warn",
+        "react/jsx-no-constructed-context-values": "warn",
+        "react/jsx-filename-extension": [
+            "warn",
+            {"extensions": [".jsx", ".js"]}
+        ],
+        "react-hooks/rules-of-hooks": "error",
+        "react-hooks/exhaustive-deps": "warn",
+        "import/order": [
+            "error",
             {
-                "capIsNew": false
+                "groups": [
+                    "builtin",
+                    "external",
+                    "internal",
+                    "parent",
+                    "sibling",
+                    "index"
+                ],
+                "pathGroups": [
+                    {
+                        "pattern": "react",
+                        "group": "external",
+                        "position": "before"
+                    }
+                ],
+                "pathGroupsExcludedImportTypes": ["react"],
+                "newlines-between": "always",
+                "alphabetize": {
+                    "order": "asc",
+                    "caseInsensitive": true
+                }
             }
         ],
-        "require-jsdoc": [
-            "warn",
-            {
-                "require": {
-                    "FunctionDeclaration": false,
+        "import/no-unresolved": "error",
+        "import/no-unused-modules": "warn"
+    }
+}
                     "MethodDefinition": false,
                     "ClassDeclaration": false,
                     "ArrowFunctionExpression": false,

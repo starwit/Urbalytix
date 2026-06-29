@@ -1,62 +1,87 @@
-import axios from "axios";
-import {useTranslation} from "react-i18next";
-import {toast} from "react-toastify";
+import {useEffect} from 'react';
+import PropTypes from 'prop-types';
+import {useTranslation} from 'react-i18next';
+import {toast} from 'react-toastify';
+import {apiClient} from '../../services/api/apiClient';
 
-function ErrorHandler(props) {
+/**
+ * Global Error Handler Component
+ * Sets up centralized error handling for all API requests
+ * @param {Object} props - Component props
+ * @param {React.ReactNode} props.children - Child components
+ * @returns {React.ReactNode} Child components wrapped with error handling
+ */
+function ErrorHandler({children}) {
     const {t} = useTranslation();
 
-    if (axios.interceptors.response.handlers.length === 0) {
-        axios.interceptors.response.use(
-            function (response) {
-                // Any status code that lie within the range of 2xx cause this function to trigger
-                // Do something with response data
-                return response;
-            },
-            function (error) {
-                let errorMessage = "error.unknown";
+    useEffect(() => {
+        /**
+         * Handle API errors with user-friendly messages
+         */
+        const setupErrorHandling = () => {
+            const responseInterceptor = apiClient.interceptors.response.use(
+                (response) => response,
+                (error) => {
+                    let errorMessage = 'error.unknown';
 
-                if (error?.request) {
-                    if (navigator.onLine) {
-                        errorMessage = "error.serverOffline";
-                        console.error("Server cannot be reached.");
-                    } else {
-                        errorMessage = "error.userOffline";
-                        console.log("User seems to be offline. Cannot complete request.");
+                    if (error?.request && !error?.response) {
+                        // Network error
+                        if (navigator.onLine) {
+                            errorMessage = 'error.serverOffline';
+                            console.error('Server cannot be reached.');
+                        } else {
+                            errorMessage = 'error.userOffline';
+                            console.log('User seems to be offline. Cannot complete request.');
+                        }
+                    } else if (error?.response) {
+                        // Server response with error status
+                        const {config, data, status} = error.response;
+
+                        // Use backend error message if available
+                        if (data?.messageKey) {
+                            errorMessage = data.messageKey;
+                        } else {
+                            // Map HTTP method to error message
+                            const methodErrorMap = {
+                                get: 'error.general.get',
+                                delete: 'error.general.delete',
+                                post: 'error.general.create',
+                                put: 'error.general.update',
+                            };
+
+                            errorMessage = methodErrorMap[config?.method] || 'error.unknown';
+                        }
+
+                        console.error(
+                            `A ${config?.method} request failed with status code ${status}:`,
+                            data,
+                            config
+                        );
                     }
+
+                    // Display error toast
+                    toast.error(t(errorMessage), {
+                        position: 'bottom-left',
+                        autoClose: 3000,
+                    });
+
+                    return Promise.reject(error);
                 }
-                if (error?.response) {
-                    const {config, data, status} = error.response;
-                    switch (config.method) {
-                        case "get":
-                            errorMessage = "error.general.get";
-                            break;
-                        case "delete":
-                            errorMessage = "error.general.delete";
-                            break;
-                        case "post":
-                            errorMessage = "error.general.create";
-                            break;
-                        case "put":
-                            errorMessage = "error.general.update";
-                            break;
-                        default:
-                            errorMessage = "error.unknown";
-                    }
+            );
 
-                    if (data.messageKey) {
-                        errorMessage = data.messageKey;
-                    }
+            return () => {
+                apiClient.interceptors.response.eject(responseInterceptor);
+            };
+        };
 
-                    console.error(`A ${config.method} request failed with status code ${status}:`, data, config);
-                }
+        setupErrorHandling();
+    }, [t]);
 
-                toast.error(t(errorMessage));
-                return Promise.reject(error);
-            }
-        );
-    }
-
-    return props.children;
+    return children;
 }
+
+ErrorHandler.propTypes = {
+    children: PropTypes.node.isRequired,
+};
 
 export default ErrorHandler;
