@@ -1282,7 +1282,7 @@
     "password": "",
     "port": "",
     "host": "",
-    "from": "",
+    "from": "noreply@example.com",
     "fromDisplayName": "",
     "user": "",
     "ssl": "",
